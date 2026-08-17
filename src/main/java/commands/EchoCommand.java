@@ -1,5 +1,7 @@
 package commands;
 
+import ui.UI;
+
 /**
  * Echoes a command that Panda does not handle specially yet.
  */
@@ -17,6 +19,6 @@ public class EchoCommand implements Command {
 
     @Override
     public void execute() {
-        System.out.println(" " + input);
+        UI.printMessage(input);
     }
 }

@@ -1,6 +1,7 @@
 import commands.ByeCommand;
 import commands.Command;
 import commands.EchoCommand;
+import ui.UI;
 
 import java.util.Scanner;
 
@@ -8,8 +9,6 @@ import java.util.Scanner;
  * Starts Panda's command-line interaction with the user.
  */
 public class Panda {
-    private static final String DIVIDER = "____________________________________________________________";
-
     /**
      * Prints Panda's welcome message.
      */
@@ -28,11 +27,7 @@ public class Panda {
                 '-----------'          \\ \\._,\\ '/|  |   |  |             \\ \\._,\\ '/
                                         `--'  `" '--'   '--'              `--'  `"\s
                 """;
-        System.out.println(DIVIDER);
-        System.out.print(banner);
-        System.out.println("Hello! I'm Panda.");
-        System.out.println("What can I do for you?");
-        System.out.println(DIVIDER);
+        UI.printMessage(banner + "\nHello! I'm Panda." + "\nWhat can I do for you?");
     }
 
     /**
@@ -59,12 +54,9 @@ public class Panda {
         Scanner scanner = new Scanner(System.in);
         while (true) {
             String input = scanner.nextLine();
-            System.out.println(DIVIDER);
 
             Command command = getCommand(input);
             command.execute();
-
-            System.out.println(DIVIDER);
         }
     }
 }
