@@ -2,7 +2,9 @@ import commands.ByeCommand;
 import commands.Command;
 import commands.AddTaskCommand;
 import commands.ListTasksCommand;
-import tasklist.TaskList;
+import commands.MarkTaskCommand;
+import commands.UnmarkTaskCommand;
+import task.TaskList;
 import ui.UI;
 
 import java.util.Scanner;
@@ -44,6 +46,12 @@ public class Panda {
         }
         if (input.equals("list")) {
             return new ListTasksCommand();
+        }
+        if (input.matches("mark\\s+\\d+")) {
+            return new MarkTaskCommand(Integer.parseInt(input.substring(4).strip()));
+        }
+        if (input.matches("unmark\\s+\\d+")) {
+            return new UnmarkTaskCommand(Integer.parseInt(input.substring(6).strip()));
         }
         return new AddTaskCommand(input);
     }

@@ -1,7 +1,7 @@
-# Panda Assistant: Level-2
+# Panda Assistant: Level-3
 
 Panda is a command-line personal assistant under development.
-New feature added is being able to add items into a list and print the list, instead of echoing user inputs. 
+New feature added is the ability to mark and unmark tasks to track whether a task has been completed or not.
 
 
 
@@ -33,15 +33,33 @@ Panda is able to:
 - Greet users
 - Add tasks into a list
 - Display the list
+- Mark a task as done
+- Unmark a task
 - Terminate program on command
 
 ### Display the Tasklist
 To display the list stored in the program, user may input `list` to display the task list.
 Note that leading and trailing spaces in the program are ignored.
 
-### Add items into Tasklist
+### Add tasks into Tasklist
 After the program has started, any user input (other than `bye` and `list`) are considered tasks by Panda.
 They will be added into the task list.
+
+### Mark tasks as done
+Tasks are added into the task list as undone. 
+Upon completion, users may mark tasks as completed by running the command `mark <int>`, where `<int>` is to be replaced
+with the task index of the task in the list.
+
+If there are no values or more than one values after the `mark` command, or the value passed is not an integer, 
+it will be treated as a task to add into the list instead.
+
+### Unmark tasks
+Given a scenario where a user wrongly marks a task as done, or realises that he/she has actually not
+completed the task, user may unmark the task using the command `unmark <int>`, where `<int>` is to be replaced
+with the task index of the task in the list.
+
+If there are no values or more than one values after the `unmark` command, or the value passed is not an integer,
+it will be treated as a task to add into the list instead.
 
 #### Example Run
 
@@ -50,22 +68,48 @@ list                    ← User Input
 ____________________________________________________________
 ~~~ Empty List ~~~
 ____________________________________________________________
-Buy food                ← User Input
+mark                    ← User Input
 ____________________________________________________________
-added: Buy food
+added: mark
+____________________________________________________________
+unmark                  ← User Input
+____________________________________________________________
+added: unmark
+____________________________________________________________
+unmark 1 3 5             ← User Input
+____________________________________________________________
+added: unmark 1 3 5
 ____________________________________________________________
 list                    ← User Input
 ____________________________________________________________
-1. Buy food
+Here are the tasks in your list:
+1.[ ] mark
+2.[ ] unmark
+3.[ ] unmark 1 3 5
 ____________________________________________________________
-Do laundry              ← User Input
+mark 2                  ← User Input
 ____________________________________________________________
-added: Do laundry
+Nice! I've marked this task as done:
+  [X] unmark
 ____________________________________________________________
 list                    ← User Input
 ____________________________________________________________
-1. Buy food
-2. Do laundry
+Here are the tasks in your list:
+1.[ ] mark
+2.[X] unmark
+3.[ ] unmark 1 3 5
+____________________________________________________________
+unmark 2                ← User Input
+____________________________________________________________
+OK, I've marked this task as not done yet:
+  [ ] unmark
+____________________________________________________________
+list                    ← User Input
+____________________________________________________________
+Here are the tasks in your list:
+1.[ ] mark
+2.[ ] unmark
+3.[ ] unmark 1 3 5
 ____________________________________________________________
 ```
 
