@@ -1,7 +1,7 @@
-# Panda Assistant: Level-1
+# Panda Assistant: Level-2
 
 Panda is a command-line personal assistant under development.
-New feature added at this level is being able to echo the user's commands.
+New feature added is being able to add items into a list and print the list, instead of echoing user inputs. 
 
 
 
@@ -31,18 +31,41 @@ New feature added at this level is being able to echo the user's commands.
 ## Current Features
 Panda is able to:
 - Greet users
-- Echo user's input
+- Add tasks into a list
+- Display the list
 - Terminate program on command
 
-### Echoing user Input
-After the program has started, any user input (other than `bye`) will be echoed by Panda.
+### Display the Tasklist
+To display the list stored in the program, user may input `list` to display the task list.
+Note that leading and trailing spaces in the program are ignored.
+
+### Add items into Tasklist
+After the program has started, any user input (other than `bye` and `list`) are considered tasks by Panda.
+They will be added into the task list.
 
 #### Example Run
 
 ```text
-Value  <-- User Input
+list                    ← User Input
 ____________________________________________________________
-Value
+~~~ Empty List ~~~
+____________________________________________________________
+Buy food                ← User Input
+____________________________________________________________
+added: Buy food
+____________________________________________________________
+list                    ← User Input
+____________________________________________________________
+1. Buy food
+____________________________________________________________
+Do laundry              ← User Input
+____________________________________________________________
+added: Do laundry
+____________________________________________________________
+list                    ← User Input
+____________________________________________________________
+1. Buy food
+2. Do laundry
 ____________________________________________________________
 ```
 

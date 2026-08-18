@@ -1,5 +1,6 @@
 package commands;
 
+import tasklist.TaskList;
 import ui.UI;
 
 /**
@@ -7,7 +8,7 @@ import ui.UI;
  */
 public class ByeCommand implements Command {
     @Override
-    public void execute() {
+    public void execute(TaskList taskList) {
         UI.printMessage("Bye. Hope to see you again soon!");
         System.exit(0);
     }

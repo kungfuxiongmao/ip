@@ -1,6 +1,8 @@
 import commands.ByeCommand;
 import commands.Command;
-import commands.EchoCommand;
+import commands.AddTaskCommand;
+import commands.ListTasksCommand;
+import tasklist.TaskList;
 import ui.UI;
 
 import java.util.Scanner;
@@ -40,7 +42,10 @@ public class Panda {
         if (input.equals("bye")) {
             return new ByeCommand();
         }
-        return new EchoCommand(input);
+        if (input.equals("list")) {
+            return new ListTasksCommand();
+        }
+        return new AddTaskCommand(input);
     }
 
     /**
@@ -52,11 +57,12 @@ public class Panda {
         greet();
 
         Scanner scanner = new Scanner(System.in);
+        TaskList taskList = new TaskList();
         while (true) {
-            String input = scanner.nextLine();
+            String input = scanner.nextLine().strip();
 
             Command command = getCommand(input);
-            command.execute();
+            command.execute(taskList);
         }
     }
 }
