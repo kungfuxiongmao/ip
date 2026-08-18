@@ -1,7 +1,7 @@
-# Panda Assistant
+# Panda Assistant: Level-1
 
 Panda is a command-line personal assistant under development.
-At Level-0, Panda is only able to greet users.
+New feature added at this level is being able to echo the user's commands.
 
 
 
@@ -31,6 +31,29 @@ At Level-0, Panda is only able to greet users.
 ## Current Features
 Panda is able to:
 - Greet users
+- Echo user's input
+- Terminate program on command
+
+### Echoing user Input
+After the program has started, any user input (other than `bye`) will be echoed by Panda.
+
+#### Example Run
+
+```text
+Value  <-- User Input
+____________________________________________________________
+Value
+____________________________________________________________
+```
+
+### Terminate Program on Command
+To terminate the program, input `bye`. The program should print:
+
+```
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
 
 ## AI Declaration
 - AI have been used in the development to AI-4:
