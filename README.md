@@ -1,7 +1,7 @@
-# Panda Assistant: Level-5
+# Panda Assistant: A-Enums
 
 Panda is a command-line personal assistant under development.
-This version now supports deletion of tasks. 
+This version incorporates Java enumerations in the Parser class.
 
                                                             _______               
                 _________   _...._                  _..._   \  ___ `'.            

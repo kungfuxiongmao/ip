@@ -18,6 +18,44 @@ import parser.commandparser.UnmarkTaskCommandParser;
  * Converts user-entered text into commands Panda can execute.
  */
 public class Parser {
+
+    /**
+     * Maps supported command keywords to parsers that validate their arguments.
+     */
+    private enum CommandType {
+        BYE("bye", new ByeCommandParser()),
+        LIST("list", new ListTasksCommandParser()),
+        MARK("mark", new MarkTaskCommandParser()),
+        UNMARK("unmark", new UnmarkTaskCommandParser()),
+        DELETE("delete", new DeleteTaskCommandParser()),
+        TODO("todo", new AddTodoCommandParser()),
+        DEADLINE("deadline", new AddDeadlineCommandParser()),
+        EVENT("event", new AddEventCommandParser());
+
+        private final String keyword;
+        private final CommandParser commandParser;
+
+        CommandType(String keyword, CommandParser commandParser) {
+            this.keyword = keyword;
+            this.commandParser = commandParser;
+        }
+
+        /**
+         * Returns the argument parser for the supplied command keyword.
+         *
+         * @param keyword command keyword entered by the user
+         * @return matching command parser, or {@code null} if the keyword is not supported
+         */
+        static CommandParser getCommandParser(String keyword) {
+            for (CommandType command : values()) {
+                if (command.keyword.equals(keyword)) {
+                    return command.commandParser;
+                }
+            }
+            return null;
+        }
+    }
+
     /**
      * Removes surrounding whitespace before matching the input to a command.
      *
@@ -52,28 +90,11 @@ public class Parser {
         String command = commandParts[0];
         String arguments = commandParts.length == 2 ? commandParts[1] : "";
 
-        return getCommandParser(command, input).parseArguments(arguments);
+        CommandParser commandParser = CommandType.getCommandParser(command);
+        if (commandParser == null) {
+            throw new NoCommandFoundException(input);
+        }
+        return commandParser.parseArguments(arguments);
     }
 
-    /**
-     * Returns the parser responsible for arguments of a recognised command keyword.
-     *
-     * @param command command keyword entered by the user
-     * @param input complete cleaned user input
-     * @return parser for the command keyword
-     * @throws NoCommandFoundException if the keyword is not recognised
-     */
-    private static CommandParser getCommandParser(String command, String input) throws NoCommandFoundException {
-        return switch (command) {
-        case "bye" -> new ByeCommandParser();
-        case "list" -> new ListTasksCommandParser();
-        case "mark" -> new MarkTaskCommandParser();
-        case "unmark" -> new UnmarkTaskCommandParser();
-        case "delete" -> new DeleteTaskCommandParser();
-        case "todo" -> new AddTodoCommandParser();
-        case "deadline" -> new AddDeadlineCommandParser();
-        case "event" -> new AddEventCommandParser();
-        default -> throw new NoCommandFoundException(input);
-        };
-    }
 }
