@@ -1,12 +1,16 @@
 package task;
 
-public class Task {
+/**
+ * Represents a task with shared completion state.
+ * Concrete subclasses supply their own type-specific details when displayed.
+ */
+public abstract class Task {
     private boolean marked;
-    private String content;
+    private String description;
 
-    public Task(String content) {
+    protected Task(String description) {
         this.marked = false;
-        this.content = content;
+        this.description = description;
     }
 
     public void mark() {
@@ -24,9 +28,9 @@ public class Task {
     @Override
     public String toString() {
         if (marked) {
-            return "[X] " + this.content;
+            return "[X] " + this.description;
         } else {
-            return "[ ] " + this.content;
+            return "[ ] " + this.description;
         }
     }
 }

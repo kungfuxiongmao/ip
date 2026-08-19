@@ -1,9 +1,5 @@
-import commands.ByeCommand;
 import commands.Command;
-import commands.AddTaskCommand;
-import commands.ListTasksCommand;
-import commands.MarkTaskCommand;
-import commands.UnmarkTaskCommand;
+import parser.Parser;
 import task.TaskList;
 import ui.UI;
 
@@ -35,28 +31,6 @@ public class Panda {
     }
 
     /**
-     * Maps user input to the command that should handle it.
-     *
-     * @param input command text entered by the user
-     * @return the command that handles the input
-     */
-    private static Command getCommand(String input) {
-        if (input.equals("bye")) {
-            return new ByeCommand();
-        }
-        if (input.equals("list")) {
-            return new ListTasksCommand();
-        }
-        if (input.matches("mark\\s+\\d+")) {
-            return new MarkTaskCommand(Integer.parseInt(input.substring(4).strip()));
-        }
-        if (input.matches("unmark\\s+\\d+")) {
-            return new UnmarkTaskCommand(Integer.parseInt(input.substring(6).strip()));
-        }
-        return new AddTaskCommand(input);
-    }
-
-    /**
      * Runs Panda until a command ends the program.
      *
      * @param args command-line arguments (not used)
@@ -67,9 +41,8 @@ public class Panda {
         Scanner scanner = new Scanner(System.in);
         TaskList taskList = new TaskList();
         while (true) {
-            String input = scanner.nextLine().strip();
-
-            Command command = getCommand(input);
+            String input = scanner.nextLine();
+            Command command = Parser.parse(input);
             command.execute(taskList);
         }
     }

@@ -20,13 +20,52 @@ public class TaskList {
     }
 
     /**
-     * Adds a task to this list.
+     * Creates and adds a to-do task.
      *
-     * @param task text entered by the user
+     * @param description description of the task
+     * @return the newly added task
      */
-    public void add(String task) {
-        tasks[size] = new Task(task);
+    public Task addTodo(String description) {
+        return add(new Todo(description));
+    }
+
+    /**
+     * Creates and adds a deadline task.
+     *
+     * @param description description of the task
+     * @param dueDate date by which the task is due
+     * @return the newly added task
+     */
+    public Task addDeadline(String description, String dueDate) {
+        return add(new Deadline(description, dueDate));
+    }
+
+    /**
+     * Creates and adds an event task.
+     *
+     * @param description description of the event
+     * @param dateTimeFrom event start date and time
+     * @param dateTimeTo event end date and time
+     * @return the newly added task
+     */
+    public Task addEvent(String description, String dateTimeFrom, String dateTimeTo) {
+        return add(new Event(description, dateTimeFrom, dateTimeTo));
+    }
+
+    /**
+     * Returns the number of tasks currently in this list.
+     *
+     * @return task count
+     */
+    public int getSize() {
+        return size;
+    }
+
+    /** Adds an already-created task to this list. */
+    private Task add(Task task) {
+        tasks[size] = task;
         size++;
+        return task;
     }
 
     /**

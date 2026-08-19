@@ -1,26 +1,27 @@
 package commands;
 
+import task.Task;
 import task.TaskList;
 import ui.UI;
 
 /**
- * Adds text entered by the user to Panda's task list.
+ * Base command for adding a task and displaying its shared confirmation.
  */
-public class AddTaskCommand implements Command {
-    private final String task;
+public abstract class AddTaskCommand implements Command {
 
     /**
-     * Creates a command that adds the supplied task.
+     * Adds this command's specific task type to the supplied list.
      *
-     * @param task task text to store
+     * @param taskList list receiving the task
+     * @return the newly added task
      */
-    public AddTaskCommand(String task) {
-        this.task = task;
-    }
+    protected abstract Task addTask(TaskList taskList);
 
     @Override
-    public void execute(TaskList taskList) {
-        taskList.add(task);
-        UI.printMessage("added: " + task);
+    public final void execute(TaskList taskList) {
+        Task task = addTask(taskList);
+        UI.printMessage("Got it. I've added this task:" + System.lineSeparator()
+                + "  " + task + System.lineSeparator()
+                + "Now you have " + taskList.getSize() + " tasks in the list.");
     }
 }
