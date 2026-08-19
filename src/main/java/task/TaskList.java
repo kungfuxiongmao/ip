@@ -2,6 +2,7 @@ package task;
 
 import exceptions.task.TaskAlreadyMarkedException;
 import exceptions.task.TaskAlreadyUnmarkedException;
+import exceptions.task.InvalidTaskListIndexException;
 
 /**
  * Stores the tasks entered during the current Panda session.
@@ -73,13 +74,13 @@ public class TaskList {
      *
      * @param taskNumber number displayed beside the task
      * @return the task that was marked
-     * @throws ArrayIndexOutOfBoundsException if the number does not identify a task in this list
+     * @throws InvalidTaskListIndexException if the number does not identify a task in this list
      * @throws TaskAlreadyMarkedException if the task is already marked
      */
-    public Task markEvent(int taskNumber) throws TaskAlreadyMarkedException {
+    public Task markEvent(int taskNumber) throws TaskAlreadyMarkedException, InvalidTaskListIndexException {
         int arrayIndex = taskNumber - 1;
         if (arrayIndex < 0 || arrayIndex >= size) {
-            throw new ArrayIndexOutOfBoundsException("Maximum number of tasks is: " + this.size);
+            throw new InvalidTaskListIndexException(taskNumber, size);
         }
 
         Task task = tasks[arrayIndex];
@@ -95,13 +96,13 @@ public class TaskList {
      *
      * @param taskNumber number displayed beside the task
      * @return the task that was unmarked
-     * @throws ArrayIndexOutOfBoundsException if the number does not identify a task in this list
+     * @throws InvalidTaskListIndexException if the number does not identify a task in this list
      * @throws TaskAlreadyUnmarkedException if the task is already unmarked
      */
-    public Task unmarkEvent(int taskNumber) throws TaskAlreadyUnmarkedException {
+    public Task unmarkEvent(int taskNumber) throws TaskAlreadyUnmarkedException, InvalidTaskListIndexException {
         int arrayIndex = taskNumber - 1;
         if (arrayIndex < 0 || arrayIndex >= size) {
-            throw new ArrayIndexOutOfBoundsException("Maximum number of tasks is: " + this.size);
+            throw new InvalidTaskListIndexException(taskNumber, size);
         }
 
         Task task = tasks[arrayIndex];

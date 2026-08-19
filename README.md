@@ -1,8 +1,7 @@
-# Panda Assistant: Level-4
+# Panda Assistant: Level-5
 
 Panda is a command-line personal assistant under development.
-This version provides support for different types of tasks, namely `Todo`, `Deadline` and `Event`.
-
+This version has made significant improvements to the error handling.
 
                                                             _______               
                 _________   _...._                  _..._   \  ___ `'.            
@@ -47,19 +46,13 @@ Note that leading and trailing spaces in the program are ignored.
 Panda supports three types of tasks: Todo, Deadline and Event
 
 - **Todo**: Todo tasks are tasks without a specific deadline or time period.
-They can be used as a gentle reminder. [Default]
+They can be used as a gentle reminder.
 
 
 ```
     todo <description>
 ```
 
-**Todo**s are the default task type and users may drop the ``todo`` keyword when wanting to add a
-Todo task.
-
-```
-    <description>
-```
 
 
 - **Deadline**: Deadline tasks are tasks with a specific deadline.
@@ -81,16 +74,82 @@ Tasks are added into the task list as undone.
 Upon completion, users may mark tasks as completed by running the command `mark <int>`, where `<int>` is to be replaced
 with the task index of the task in the list.
 
-If there are no values or more than one values after the `mark` command, or the value passed is not an integer, 
-it will be treated as a task to add into the list instead.
+If the task number is missing, not an integer, or followed by extra values, the application throws an
+exception, which is handled by the global `ExceptionHandler`. Panda displays the expected command format.
 
 ### Unmark tasks
 Given a scenario where a user wrongly marks a task as done, or realises that he/she has actually not
 completed the task, user may unmark the task using the command `unmark <int>`, where `<int>` is to be replaced
 with the task index of the task in the list.
 
-If there are no values or more than one values after the `unmark` command, or the value passed is not an integer,
-it will be treated as a task to add into the list instead.
+If the task number is missing, not an integer, or followed by extra values, the application throws an 
+exception, which is handled by the global `ExceptionHandler`. Panda displays the expected command format.
+
+### Input Validation with the Parser
+
+Panda first identifies the command keyword, then sends the remaining text to that command's parser. The command parser
+checks that the arguments follow the required format before creating a command. Unknown commands and malformed arguments
+causes an exception to be thrown.
+
+### Exception Handling
+
+Panda checks command input before executing it and displays helpful messages when it cannot continue with a command.
+
+#### Customised Exceptions
+Exceptions thrown by the application are instances of ApplicationException. Each exception stores a user-facing 
+error message that describes the error based on the application's current state. This provides a consistent mechanism 
+for handling exceptions and standardises the presentation of error messages throughout the application.
+
+#### Handling ApplicationException
+
+After valid input creates a command, application logic can still reject it. For example, `TaskList` checks whether a task
+number exists and whether a task can be marked or unmarked. These errors are thrown as application exceptions and passed
+to the global `ExceptionHandler`, which displays the exception's message and keeps Panda running.
+
+For example:
+
+```text
+unknown command                           ← User Input
+____________________________________________________________
+OOPS! Panda does not know the "unknown command" command yet. :<
+____________________________________________________________
+todo read book                            ← User Input
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+____________________________________________________________
+mark                                     ← User Input
+____________________________________________________________
+OOPS! Panda needs the mark command written like this: "mark TASK_NUMBER"
+____________________________________________________________
+mark 0                                   ← User Input
+____________________________________________________________
+OOPS! I think you made a mistake, task number cannot be 0
+____________________________________________________________
+mark 1                                   ← User Input
+____________________________________________________________
+Nice! I've marked this task as done:
+  [T][X] read book
+____________________________________________________________
+mark 1                                   ← User Input
+____________________________________________________________
+OOPS! Panda has already marked this task as done:
+  [T][X] read book
+No extra tick needed. :>
+____________________________________________________________
+unmark 1                                 ← User Input
+____________________________________________________________
+OK, I've marked this task as not done yet:
+  [T][ ] read book
+____________________________________________________________
+unmark 1                                 ← User Input
+____________________________________________________________
+OOPS! Panda has already marked this task as not done:
+  [T][ ] read book
+No extra un-tick needed. :>
+____________________________________________________________
+```
 
 ### Terminate Program on Command
 To terminate the program, input `bye`. The program should print:

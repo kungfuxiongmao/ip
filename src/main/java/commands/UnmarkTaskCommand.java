@@ -1,6 +1,5 @@
 package commands;
 
-import exceptions.task.TaskAlreadyUnmarkedException;
 import task.Task;
 import task.TaskList;
 import ui.UI;
@@ -21,16 +20,9 @@ public class UnmarkTaskCommand implements Command {
     }
 
     @Override
-    public void execute(TaskList taskList) {
-        try {
-            Task task = taskList.unmarkEvent(taskNumber);
-            UI.printMessage("OK, I've marked this task as not done yet:"
-                    + System.lineSeparator() + "  " + task);
-        } catch (ArrayIndexOutOfBoundsException exception) {
-            UI.printMessage("Invalid task number");
-        } catch (TaskAlreadyUnmarkedException exception) {
-            UI.printMessage(exception.getTask() + System.lineSeparator()
-                    + "This task has already been unmarked.");
-        }
+    public void execute(TaskList taskList) throws exceptions.ApplicationException {
+        Task task = taskList.unmarkEvent(taskNumber);
+        UI.printMessage("OK, I've marked this task as not done yet:"
+                + System.lineSeparator() + "  " + task);
     }
 }

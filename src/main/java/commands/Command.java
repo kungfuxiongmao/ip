@@ -1,5 +1,6 @@
 package commands;
 
+import exceptions.ApplicationException;
 import task.TaskList;
 
 /**
@@ -10,5 +11,5 @@ public interface Command {
      * Performs this command.
      *
      */
-    void execute(TaskList taskList);
+    void execute(TaskList taskList) throws ApplicationException;
 }

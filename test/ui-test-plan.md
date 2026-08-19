@@ -49,11 +49,11 @@ Bye. Hope to see you again soon!
 ____________________________________________________________
 ```
 
-## Test case: Add to-do, event, deadline, and fallback to-do tasks
+## Test case: Add to-do, event, and deadline tasks
 
 ### Aim
 
-Verify that the parser creates to-do, deadline, and event tasks, and that unmatched input defaults to a to-do task.
+Verify that the parser creates to-do, deadline, and event tasks from valid commands.
 
 ### Command
 
@@ -67,7 +67,6 @@ javac -d out/ui-test $(find src/main/java -name '*.java') && java -cp out/ui-tes
 todo borrow book
 deadline return book /by Sunday
 event project meeting /from Mon 2pm /to 4pm
-read book
 list
 bye
 ```
@@ -108,16 +107,10 @@ Got it. I've added this task:
 Now you have 3 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
-  [T][ ] read book
-Now you have 4 tasks in the list.
-____________________________________________________________
-____________________________________________________________
 Here are the tasks in your list:
 1.[T][ ] borrow book
 2.[D][ ] return book (by: Sunday)
 3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
-4.[T][ ] read book
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!
@@ -188,11 +181,11 @@ Bye. Hope to see you again soon!
 ____________________________________________________________
 ```
 
-## Test case: Reject invalid and repeated task state changes
+## Test case: Handle parser, task-list, and task-state errors
 
 ### Aim
 
-Verify that marking and unmarking an out-of-range task number reports an error, and that repeated marking or unmarking reports the existing task state.
+Verify that the global exception handler displays messages for unknown commands, invalid mark usage, invalid task indexes, and repeated task-state changes.
 
 ### Command
 
@@ -203,7 +196,11 @@ javac -d out/ui-test $(find src/main/java -name '*.java') && java -cp out/ui-tes
 ### Inputs
 
 ```text
+unknown command
 todo read book
+mark
+mark abc
+mark 1 2
 mark 2
 unmark 2
 mark 1
@@ -234,31 +231,160 @@ Hello! I'm Panda.
 What can I do for you?
 ____________________________________________________________
 ____________________________________________________________
+OOPS! Panda does not know the "unknown command" command yet. :<
+____________________________________________________________
+____________________________________________________________
 Got it. I've added this task:
   [T][ ] read book
 Now you have 1 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
-Invalid task number
+OOPS! Panda needs the mark command written like this: "mark TASK_NUMBER" 
 ____________________________________________________________
 ____________________________________________________________
-Invalid task number
+OOPS! Panda needs the mark command written like this: "mark TASK_NUMBER" 
+____________________________________________________________
+____________________________________________________________
+OOPS! Panda needs the mark command written like this: "mark TASK_NUMBER" 
+____________________________________________________________
+____________________________________________________________
+OOPS! Panda cannot find task number 2; there are only 1 task(s) in the list. 
+____________________________________________________________
+____________________________________________________________
+OOPS! Panda cannot find task number 2; there are only 1 task(s) in the list. 
 ____________________________________________________________
 ____________________________________________________________
 Nice! I've marked this task as done:
   [T][X] read book
 ____________________________________________________________
 ____________________________________________________________
-[T][X] read book
-This task has already been marked.
+OOPS! Panda has already marked this task as done:
+  [T][X] read book
+No extra tick needed. :>
 ____________________________________________________________
 ____________________________________________________________
 OK, I've marked this task as not done yet:
   [T][ ] read book
 ____________________________________________________________
 ____________________________________________________________
-[T][ ] read book
-This task has already been unmarked.
+OOPS! Panda has already marked this task as not done:
+  [T][ ] read book
+No extra un-tick needed. :>
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## Test case: Reject malformed command values
+
+### Aim
+
+Verify that blank and unknown input, plus every supported command with malformed arguments, displays its informative usage error and allows Panda to continue.
+
+### Command
+
+```sh
+javac -d out/ui-test $(find src/main/java -name '*.java') && java -cp out/ui-test Panda
+```
+
+### Inputs
+
+```text
+   
+unknown command
+bye later
+list all
+todo
+deadline return book
+deadline /by Sunday
+deadline return book /by
+event meeting
+event meeting /from Monday
+event /from Monday /to Tuesday
+event meeting /from Monday /to
+mark
+mark one
+mark 1 2
+unmark
+unmark one
+unmark 1 2
+bye
+```
+
+### Expected output
+
+```text
+____________________________________________________________
+                                            _______                
+_________   _...._                  _..._   \  ___ `'.             
+\        |.'      '-.             .'     '.  ' |--.\  \            
+ \        .'```'.    '.          .   .-.   . | |    \  '           
+  \      |       \     \   __    |  '   '  | | |     |  '    __    
+   |     |        |    |.:--.'.  |  |   |  | | |     |  | .:--.'.  
+   |      \      /    ./ |   \ | |  |   |  | | |     ' .'/ |   \ | 
+   |     |\`'-.-'   .' `" __ | | |  |   |  | | |___.' /' `" __ | | 
+   |     | '-....-'`    .'.''| | |  |   |  |/_______.'/   .'.''| | 
+  .'     '.            / /   | |_|  |   |  |\_______|/   / /   | |_
+'-----------'          \ \._,\ '/|  |   |  |             \ \._,\ '/
+                        `--'  `" '--'   '--'              `--'  `" 
+
+Hello! I'm Panda.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+OOPS! Panda needs a command before it can help. :>
+____________________________________________________________
+____________________________________________________________
+OOPS! Panda does not know the "unknown command" command yet. :<
+____________________________________________________________
+____________________________________________________________
+OOPS! Panda needs the bye command written like this: "bye" 
+____________________________________________________________
+____________________________________________________________
+OOPS! Panda needs the list command written like this: "list" 
+____________________________________________________________
+____________________________________________________________
+OOPS! Panda needs the todo command written like this: "todo DESCRIPTION" 
+____________________________________________________________
+____________________________________________________________
+OOPS! Panda needs the deadline command written like this: "deadline DESCRIPTION /by DATE" 
+____________________________________________________________
+____________________________________________________________
+OOPS! Panda needs the deadline command written like this: "deadline DESCRIPTION /by DATE" 
+____________________________________________________________
+____________________________________________________________
+OOPS! Panda needs the deadline command written like this: "deadline DESCRIPTION /by DATE" 
+____________________________________________________________
+____________________________________________________________
+OOPS! Panda needs the event command written like this: "event DESCRIPTION /from START /to END" 
+____________________________________________________________
+____________________________________________________________
+OOPS! Panda needs the event command written like this: "event DESCRIPTION /from START /to END" 
+____________________________________________________________
+____________________________________________________________
+OOPS! Panda needs the event command written like this: "event DESCRIPTION /from START /to END" 
+____________________________________________________________
+____________________________________________________________
+OOPS! Panda needs the event command written like this: "event DESCRIPTION /from START /to END" 
+____________________________________________________________
+____________________________________________________________
+OOPS! Panda needs the mark command written like this: "mark TASK_NUMBER" 
+____________________________________________________________
+____________________________________________________________
+OOPS! Panda needs the mark command written like this: "mark TASK_NUMBER" 
+____________________________________________________________
+____________________________________________________________
+OOPS! Panda needs the mark command written like this: "mark TASK_NUMBER" 
+____________________________________________________________
+____________________________________________________________
+OOPS! Panda needs the unmark command written like this: "unmark TASK_NUMBER" 
+____________________________________________________________
+____________________________________________________________
+OOPS! Panda needs the unmark command written like this: "unmark TASK_NUMBER" 
+____________________________________________________________
+____________________________________________________________
+OOPS! Panda needs the unmark command written like this: "unmark TASK_NUMBER" 
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!

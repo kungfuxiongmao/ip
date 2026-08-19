@@ -1,12 +1,12 @@
 package exceptions.task;
 
+import exceptions.ApplicationException;
 import task.Task;
 
 /**
  * Signals an attempt to unmark a task that is already unmarked.
  */
-public class TaskAlreadyUnmarkedException extends Exception {
-    private final Task task;
+public class TaskAlreadyUnmarkedException extends ApplicationException {
 
     /**
      * Creates an exception that identifies the task that was unmarked twice.
@@ -14,15 +14,7 @@ public class TaskAlreadyUnmarkedException extends Exception {
      * @param task unmarked task the user tried to unmark again
      */
     public TaskAlreadyUnmarkedException(Task task) {
-        this.task = task;
-    }
-
-    /**
-     * Returns the task that was already unmarked.
-     *
-     * @return unmarked task
-     */
-    public Task getTask() {
-        return task;
+        super("OOPS! Panda has already marked this task as not done:" + System.lineSeparator()
+                + "  " + task + System.lineSeparator() + "No extra un-tick needed. :>");
     }
 }

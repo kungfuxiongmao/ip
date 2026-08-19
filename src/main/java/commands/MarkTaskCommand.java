@@ -1,6 +1,5 @@
 package commands;
 
-import exceptions.task.TaskAlreadyMarkedException;
 import task.Task;
 import task.TaskList;
 import ui.UI;
@@ -21,16 +20,9 @@ public class MarkTaskCommand implements Command {
     }
 
     @Override
-    public void execute(TaskList taskList) {
-        try {
-            Task task = taskList.markEvent(taskNumber);
-            UI.printMessage("Nice! I've marked this task as done:"
-                    + System.lineSeparator() + "  " + task);
-        } catch (ArrayIndexOutOfBoundsException exception) {
-            UI.printMessage("Invalid task number");
-        } catch (TaskAlreadyMarkedException exception) {
-            UI.printMessage(exception.getTask() + System.lineSeparator()
-                    + "This task has already been marked.");
-        }
+    public void execute(TaskList taskList) throws exceptions.ApplicationException {
+        Task task = taskList.markEvent(taskNumber);
+        UI.printMessage("Nice! I've marked this task as done:"
+                + System.lineSeparator() + "  " + task);
     }
 }

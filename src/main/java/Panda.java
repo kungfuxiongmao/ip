@@ -1,6 +1,8 @@
 import commands.Command;
+import exceptions.ApplicationException;
 import parser.Parser;
 import task.TaskList;
+import ui.ExceptionHandler;
 import ui.UI;
 
 import java.util.Scanner;
@@ -42,8 +44,12 @@ public class Panda {
         TaskList taskList = new TaskList();
         while (true) {
             String input = scanner.nextLine();
-            Command command = Parser.parse(input);
-            command.execute(taskList);
+            try {
+                Command command = Parser.parse(input);
+                command.execute(taskList);
+            } catch (ApplicationException exception) {
+                ExceptionHandler.handle(exception);
+            }
         }
     }
 }

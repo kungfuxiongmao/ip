@@ -1,12 +1,12 @@
 package exceptions.task;
 
+import exceptions.ApplicationException;
 import task.Task;
 
 /**
  * Signals an attempt to mark a task that has already been marked.
  */
-public class TaskAlreadyMarkedException extends Exception {
-    private final Task task;
+public class TaskAlreadyMarkedException extends ApplicationException {
 
     /**
      * Creates an exception that identifies the task that was marked twice.
@@ -14,15 +14,7 @@ public class TaskAlreadyMarkedException extends Exception {
      * @param task marked task the user tried to mark again
      */
     public TaskAlreadyMarkedException(Task task) {
-        this.task = task;
-    }
-
-    /**
-     * Returns the task that was already marked.
-     *
-     * @return marked task
-     */
-    public Task getTask() {
-        return task;
+        super("OOPS! Panda has already marked this task as done:" + System.lineSeparator()
+                + "  " + task + System.lineSeparator() + "No extra tick needed. :>");
     }
 }

@@ -1,13 +1,16 @@
 package parser;
 
-import commands.AddDeadlineCommand;
-import commands.AddEventCommand;
-import commands.AddTodoCommand;
-import commands.ByeCommand;
 import commands.Command;
-import commands.ListTasksCommand;
-import commands.MarkTaskCommand;
-import commands.UnmarkTaskCommand;
+import exceptions.parser.NoCommandFoundException;
+import exceptions.parser.ParseException;
+import parser.commandparser.ByeCommandParser;
+import parser.commandparser.CommandParser;
+import parser.commandparser.DeadlineCommandParser;
+import parser.commandparser.EventCommandParser;
+import parser.commandparser.ListCommandParser;
+import parser.commandparser.MarkCommandParser;
+import parser.commandparser.TodoCommandParser;
+import parser.commandparser.UnmarkCommandParser;
 
 
 /**
@@ -20,7 +23,7 @@ public class Parser {
      * @param input text entered by the user
      * @return command that corresponds to the input
      */
-    public static Command parse(String input) {
+    public static Command parse(String input) throws ParseException {
         return matchCommand(processInput(input));
     }
 
@@ -35,38 +38,40 @@ public class Parser {
     }
 
     /**
-     * Matches cleaned input to its command, treating unrecognised input as a task.
+     * Matches the command keyword, then delegates argument validation to its command parser.
      *
      * @param input user input without surrounding whitespace
      * @return command that handles the input
      */
-    private static Command matchCommand(String input) {
-        if (input.equals("bye")) {
-            return new ByeCommand();
+    private static Command matchCommand(String input) throws ParseException {
+        if (input.isEmpty()) {
+            throw new NoCommandFoundException(input);
         }
-        if (input.equals("list")) {
-            return new ListTasksCommand();
-        }
-        if (input.matches("mark\\s+\\d+")) {
-            return new MarkTaskCommand(Integer.parseInt(input.substring(4).strip()));
-        }
-        if (input.matches("unmark\\s+\\d+")) {
-            return new UnmarkTaskCommand(Integer.parseInt(input.substring(6).strip()));
-        }
+        String[] commandParts = input.split("\\s+", 2);
+        String command = commandParts[0];
+        String arguments = commandParts.length == 2 ? commandParts[1] : "";
 
-        if (input.matches("todo\\s+.+")) {
-            return new AddTodoCommand(input.replaceFirst("todo\\s+", ""));
-        }
-        if (input.matches("deadline\\s+.+?\\s+/by\\s+.+")) {
-            String[] deadlineParts = input.substring("deadline".length()).strip()
-                    .split("\\s+/by\\s+", 2);
-            return new AddDeadlineCommand(deadlineParts[0].replaceFirst("deadline\\s+", ""), deadlineParts[1]);
-        }
-        if (input.matches("event\\s+.+?\\s+/from\\s+.+?\\s+/to\\s+.+")) {
-            String[] eventParts = input.substring("event".length()).strip()
-                    .split("\\s+/from\\s+|\\s+/to\\s+", 3);
-            return new AddEventCommand(eventParts[0], eventParts[1], eventParts[2]);
-        }
-        return new AddTodoCommand(input);
+        return getCommandParser(command, input).parseArguments(arguments);
+    }
+
+    /**
+     * Returns the parser responsible for arguments of a recognised command keyword.
+     *
+     * @param command command keyword entered by the user
+     * @param input complete cleaned user input
+     * @return parser for the command keyword
+     * @throws NoCommandFoundException if the keyword is not recognised
+     */
+    private static CommandParser getCommandParser(String command, String input) throws NoCommandFoundException {
+        return switch (command) {
+        case "bye" -> new ByeCommandParser();
+        case "list" -> new ListCommandParser();
+        case "mark" -> new MarkCommandParser();
+        case "unmark" -> new UnmarkCommandParser();
+        case "todo" -> new TodoCommandParser();
+        case "deadline" -> new DeadlineCommandParser();
+        case "event" -> new EventCommandParser();
+        default -> throw new NoCommandFoundException(input);
+        };
     }
 }
