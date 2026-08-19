@@ -1,7 +1,7 @@
 # Panda Assistant: Level-5
 
 Panda is a command-line personal assistant under development.
-This version has made significant improvements to the error handling.
+This version now supports deletion of tasks. 
 
                                                             _______               
                 _________   _...._                  _..._   \  ___ `'.            
@@ -14,39 +14,46 @@ This version has made significant improvements to the error handling.
                    |     | '-....-'`    .'.''| | |  |   |  |/_______.'/   .'.''| |
                   .'     '.            / /   | |_|  |   |  |\_______|/   / /   | |_
                 '-----------'          \ \._,\ '/|  |   |  |             \ \._,\ '/
-                                        `--'  `" '--'   '--'              `--'  `"s
+                                        `--'  `" '--'   '--'              `--'  `"
 ## Setting up of Panda
 
 ### Prerequisites
+
 - JDK 25
-- IntelliJ IDEA
+- IntelliJ IDEA (optional)
 
-1. Run `git clone https://github.com/kungfuxiongmao/ip.git`
+1. Clone the repository: `git clone https://github.com/kungfuxiongmao/ip.git`
 
-### To run the program:
-1. Run `main` in `./src/main/java/Panda.java`
+### Run the program
+
+Compile and run Panda from the project root:
+
+```sh
+javac -d out $(find src/main/java -name '*.java') && java -cp out Panda
+```
+
 
 ## Current Features
+
 Panda is able to:
+
 - Greet users
-- Add tasks into a list (Tasks are split into **Todo**, **Deadline** and **Event** types)
-- Display the list
-- Mark a task as done
-- Unmark a task
-- Terminate program on command
+- Add tasks to a list (**Todo**, **Deadline**, and **Event**)
+- Display the task list
+- Mark and unmark a task
+- Delete a task
+- Terminate the program on command
 
-### Display the Tasklist
-To display the list stored in the program, user may input `list` to display the task list.
-Note that leading and trailing spaces in the program are ignored.
+### Display the task list
+Enter `list` to display the task list. Leading and trailing whitespace in a command is ignored.
 
 
-### Add tasks into Tasklist
+### Add tasks to the task list
 #### Support for multiple types of tasks
 
-Panda supports three types of tasks: Todo, Deadline and Event
+Panda supports three types of tasks: Todo, Deadline, and Event.
 
-- **Todo**: Todo tasks are tasks without a specific deadline or time period.
-They can be used as a gentle reminder.
+- **Todo**: A task without a specific deadline or time period; it can be used as a gentle reminder.
 
 
 ```
@@ -55,14 +62,12 @@ They can be used as a gentle reminder.
 
 
 
-- **Deadline**: Deadline tasks are tasks with a specific deadline.
-  The /by flag is used to specify the deadline.
+- **Deadline**: A task with a specific deadline. Use `/by` to specify the deadline.
 
 ```
     deadline task-description /by task-deadline
 ```
-- **Event**: An event is a task with a specific start and end time.
-The `/from` and `/to` flag are used to specify the time period.
+- **Event**: A task with a specific start and end time. Use `/from` and `/to` to specify the time period.
 
 ```
     event task-description /from start-datetime /to end-datetime
@@ -70,26 +75,29 @@ The `/from` and `/to` flag are used to specify the time period.
 
 
 ### Mark tasks as done
-Tasks are added into the task list as undone. 
-Upon completion, users may mark tasks as completed by running the command `mark <int>`, where `<int>` is to be replaced
-with the task index of the task in the list.
 
-If the task number is missing, not an integer, or followed by extra values, the application throws an
-exception, which is handled by the global `ExceptionHandler`. Panda displays the expected command format.
+Tasks are added to the task list as undone. Upon completion, mark a task as completed with `mark TASK_NUMBER`, 
+where `TASK_NUMBER` is the one-based number displayed by `list`.
+
+If the task number is missing, not an integer, or followed by extra values, Panda displays the expected command format.
 
 ### Unmark tasks
-Given a scenario where a user wrongly marks a task as done, or realises that he/she has actually not
-completed the task, user may unmark the task using the command `unmark <int>`, where `<int>` is to be replaced
-with the task index of the task in the list.
+If a task was marked accidentally, unmark it with `unmark TASK_NUMBER`, 
+where `TASK_NUMBER` is the one-based number displayed by `list`.
 
-If the task number is missing, not an integer, or followed by extra values, the application throws an 
-exception, which is handled by the global `ExceptionHandler`. Panda displays the expected command format.
+If the task number is missing, not an integer, or followed by extra values, Panda displays the expected command format.
+
+### Delete tasks
+
+Remove a task with `delete TASK_NUMBER`, where `TASK_NUMBER` is the one-based number displayed by `list`. 
+Panda confirms the task that was removed, reports the new task count, and renumbers the remaining tasks. 
+Panda rejects missing, non-numeric, or out-of-range task numbers.
 
 ### Input Validation with the Parser
 
 Panda first identifies the command keyword, then sends the remaining text to that command's parser. The command parser
-checks that the arguments follow the required format before creating a command. Unknown commands and malformed arguments
-cause an exception to be thrown.
+checks that the arguments follow the required format before creating a command. 
+Unknown commands and malformed arguments cause an exception to be thrown.
 
 ### Exception Handling
 
@@ -103,8 +111,9 @@ for handling exceptions and standardises the presentation of error messages thro
 #### Handling ApplicationException
 
 After valid input creates a command, application logic can still reject it. For example, `TaskList` checks whether a task
-number exists and whether a task can be marked or unmarked. These errors are thrown as application exceptions and passed
-to the global `ExceptionHandler`, which displays the exception's message and keeps Panda running.
+number exists and whether a task can be marked, unmarked, or deleted. 
+These errors are thrown as application exceptions and passed to the global `ExceptionHandler`, 
+which displays the exception's message and keeps Panda running.
 
 For example:
 
@@ -184,63 +193,76 @@ list                                        ← User Input
 ____________________________________________________________ 
 ~~~ Empty List ~~~ 
 ____________________________________________________________ 
-todo Borrow book                            ← User Input
+todo borrow book                            ← User Input
 ____________________________________________________________ 
 Got it. I've added this task: 
-  [T][ ] Borrow book 
+  [T][ ] borrow book 
 Now you have 1 tasks in the list. 
 ____________________________________________________________ 
-Read book                                   ← User Input
+todo read book                              ← User Input
 ____________________________________________________________ 
 Got it. I've added this task: 
-  [T][ ] Read book 
+  [T][ ] read book 
 Now you have 2 tasks in the list. 
 ____________________________________________________________ 
-deadline Return book /by Thursday           ← User Input
+deadline return book /by Thursday           ← User Input
 ____________________________________________________________ 
 Got it. I've added this task: 
-  [D][ ] Return book (by: Thursday) 
+  [D][ ] return book (by: Thursday) 
 Now you have 3 tasks in the list. 
 ____________________________________________________________ 
-event Meeting /from Wednesday 12pm /to 2pm  ← User Input
+event meeting /from Wednesday 12pm /to 2pm  ← User Input
 ____________________________________________________________ 
 Got it. I've added this task: 
-  [E][ ] Meeting (from: Wednesday 12pm to: 2pm) 
+  [E][ ] meeting (from: Wednesday 12pm to: 2pm) 
 Now you have 4 tasks in the list. 
 ____________________________________________________________ 
 list                                        ← User Input
 ____________________________________________________________ 
 Here are the tasks in your list: 
-1.[T][ ] Borrow book 
-2.[T][ ] Read book 
-3.[D][ ] Return book (by: Thursday) 
-4.[E][ ] Meeting (from: Wednesday 12pm to: 2pm) 
+1.[T][ ] borrow book 
+2.[T][ ] read book 
+3.[D][ ] return book (by: Thursday) 
+4.[E][ ] meeting (from: Wednesday 12pm to: 2pm) 
 ____________________________________________________________ 
 mark 2                                      ← User Input
 ____________________________________________________________ 
 Nice! I've marked this task as done: 
-  [T][X] Read book 
+  [T][X] read book 
 ____________________________________________________________ 
 list                                        ← User Input
 ____________________________________________________________ 
 Here are the tasks in your list: 
-1.[T][ ] Borrow book 
-2.[T][X] Read book 
-3.[D][ ] Return book (by: Thursday) 
-4.[E][ ] Meeting (from: Wednesday 12pm to: 2pm) 
+1.[T][ ] borrow book 
+2.[T][X] read book 
+3.[D][ ] return book (by: Thursday) 
+4.[E][ ] meeting (from: Wednesday 12pm to: 2pm) 
 ____________________________________________________________ 
 unmark 2                                    ← User Input
 ____________________________________________________________ 
 OK, I've marked this task as not done yet: 
-  [T][ ] Read book 
+  [T][ ] read book 
 ____________________________________________________________ 
 list                                        ← User Input
 ____________________________________________________________ 
 Here are the tasks in your list: 
-1.[T][ ] Borrow book 
-2.[T][ ] Read book 
-3.[D][ ] Return book (by: Thursday) 
-4.[E][ ] Meeting (from: Wednesday 12pm to: 2pm) 
+1.[T][ ] borrow book 
+2.[T][ ] read book 
+3.[D][ ] return book (by: Thursday) 
+4.[E][ ] meeting (from: Wednesday 12pm to: 2pm) 
+____________________________________________________________ 
+delete 3                                    ← User Input
+____________________________________________________________ 
+Noted. I've removed this task:
+  [D][ ] return book (by: Thursday)
+Now you have 3 tasks in the list.
+____________________________________________________________ 
+list                                        ← User Input
+____________________________________________________________ 
+Here are the tasks in your list:
+1.[T][ ] borrow book
+2.[T][ ] read book
+3.[E][ ] meeting (from: Wednesday 12pm to: 2pm)
 ____________________________________________________________ 
 bye                                         ← User Input
 ____________________________________________________________ 
@@ -250,10 +272,13 @@ ____________________________________________________________
 
 
 ## AI Declaration
-- AI have been used in the development to AI-4:
-- 'Think' and compare: 
-Think of how you would do the task manually. Get AI to do it. Compare the solution you 'imagined' with the one AI produced.
-
-#### Usual Workflow
-- I will think of how to implement the code, explain how I want the classes, methods and event flows to be like and get AI to implement. 
-- I will then make minor adjustments to finalise how I want the code to be like.
+- AI (Codex) have been used in the development of this project up to level AI-4:
+  - 'Think' and compare: 
+  Think of how you would do the task manually. Get AI to do it. 
+  Compare the solution you 'imagined' with the one AI produced.
+  - Definitely, after AI has completed the tasks, I will modify the code (if necessary) to how I envision it to be.
+- Some portions of the code only use level AI-3:
+  - Hand-code to start, get AI to finish: You hand-code a minimal version, just a proof-of-concept. 
+  Get AI to strengthen it to a full-fledged version e.g., handle edge cases, add tests.
+  - This is generally so when developing new structure to the repository.
+  - This is to ensure that I retain control over the core components to build structure for AI to expand on.

@@ -8,6 +8,7 @@ import parser.commandparser.CommandParser;
 import parser.commandparser.AddDeadlineCommandParser;
 import parser.commandparser.AddEventCommandParser;
 import parser.commandparser.AddTodoCommandParser;
+import parser.commandparser.DeleteTaskCommandParser;
 import parser.commandparser.ListTasksCommandParser;
 import parser.commandparser.MarkTaskCommandParser;
 import parser.commandparser.UnmarkTaskCommandParser;
@@ -68,6 +69,7 @@ public class Parser {
         case "list" -> new ListTasksCommandParser();
         case "mark" -> new MarkTaskCommandParser();
         case "unmark" -> new UnmarkTaskCommandParser();
+        case "delete" -> new DeleteTaskCommandParser();
         case "todo" -> new AddTodoCommandParser();
         case "deadline" -> new AddDeadlineCommandParser();
         case "event" -> new AddEventCommandParser();

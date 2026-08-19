@@ -4,20 +4,20 @@ import exceptions.task.TaskAlreadyMarkedException;
 import exceptions.task.TaskAlreadyUnmarkedException;
 import exceptions.task.InvalidTaskListIndexException;
 
+import java.util.ArrayList;
+
 /**
  * Stores the tasks entered during the current Panda session.
  * Tasks are kept only in memory and are discarded when Panda closes.
  */
 public class TaskList {
-    private static final int MAX_TASKS = 100;
-    private final Task[] tasks;
-    private int size;
+    private final ArrayList<Task> tasks;
 
     /**
-     * Creates an empty task list with room for up to 100 tasks.
+     * Creates an empty task list.
      */
     public TaskList() {
-        this.tasks = new Task[MAX_TASKS];
+        this.tasks = new ArrayList<>();
     }
 
     /**
@@ -59,13 +59,12 @@ public class TaskList {
      * @return task count
      */
     public int getSize() {
-        return size;
+        return tasks.size();
     }
 
     /** Adds an already-created task to this list. */
     private Task add(Task task) {
-        tasks[size] = task;
-        size++;
+        tasks.add(task);
         return task;
     }
 
@@ -79,11 +78,11 @@ public class TaskList {
      */
     public Task markEvent(int taskNumber) throws TaskAlreadyMarkedException, InvalidTaskListIndexException {
         int arrayIndex = taskNumber - 1;
-        if (arrayIndex < 0 || arrayIndex >= size) {
-            throw new InvalidTaskListIndexException(taskNumber, size);
+        if (arrayIndex < 0 || arrayIndex >= tasks.size()) {
+            throw new InvalidTaskListIndexException(taskNumber, tasks.size());
         }
 
-        Task task = tasks[arrayIndex];
+        Task task = tasks.get(arrayIndex);
         if (task.isMarked()) {
             throw new TaskAlreadyMarkedException(task);
         }
@@ -101,16 +100,31 @@ public class TaskList {
      */
     public Task unmarkEvent(int taskNumber) throws TaskAlreadyUnmarkedException, InvalidTaskListIndexException {
         int arrayIndex = taskNumber - 1;
-        if (arrayIndex < 0 || arrayIndex >= size) {
-            throw new InvalidTaskListIndexException(taskNumber, size);
+        if (arrayIndex < 0 || arrayIndex >= tasks.size()) {
+            throw new InvalidTaskListIndexException(taskNumber, tasks.size());
         }
 
-        Task task = tasks[arrayIndex];
+        Task task = tasks.get(arrayIndex);
         if (!task.isMarked()) {
             throw new TaskAlreadyUnmarkedException(task);
         }
         task.unmark();
         return task;
+    }
+
+    /**
+     * Removes the task with the supplied one-based task number.
+     *
+     * @param taskNumber number displayed beside the task
+     * @return the removed task
+     * @throws InvalidTaskListIndexException if the number does not identify a task in this list
+     */
+    public Task delete(int taskNumber) throws InvalidTaskListIndexException {
+        int arrayIndex = taskNumber - 1;
+        if (arrayIndex < 0 || arrayIndex >= tasks.size()) {
+            throw new InvalidTaskListIndexException(taskNumber, tasks.size());
+        }
+        return tasks.remove(arrayIndex);
     }
 
     /**
@@ -120,15 +134,15 @@ public class TaskList {
      */
     @Override
     public String toString() {
-        if (size == 0) {
+        if (tasks.isEmpty()) {
             return "~~~ Empty List ~~~";
         }
         StringBuilder result = new StringBuilder("Here are the tasks in your list:")
                 .append(System.lineSeparator());
-        for (int index = 0; index < size; index++) {
+        for (int index = 0; index < tasks.size(); index++) {
             result.append(index + 1)
                     .append(".")
-                    .append(tasks[index].toString())
+                    .append(tasks.get(index))
                     .append(System.lineSeparator());
         }
         return result.toString().stripTrailing();
