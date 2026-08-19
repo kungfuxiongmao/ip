@@ -89,7 +89,7 @@ exception, which is handled by the global `ExceptionHandler`. Panda displays the
 
 Panda first identifies the command keyword, then sends the remaining text to that command's parser. The command parser
 checks that the arguments follow the required format before creating a command. Unknown commands and malformed arguments
-causes an exception to be thrown.
+cause an exception to be thrown.
 
 ### Exception Handling
 

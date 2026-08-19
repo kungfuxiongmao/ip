@@ -5,12 +5,12 @@ import exceptions.parser.NoCommandFoundException;
 import exceptions.parser.ParseException;
 import parser.commandparser.ByeCommandParser;
 import parser.commandparser.CommandParser;
-import parser.commandparser.DeadlineCommandParser;
-import parser.commandparser.EventCommandParser;
-import parser.commandparser.ListCommandParser;
-import parser.commandparser.MarkCommandParser;
-import parser.commandparser.TodoCommandParser;
-import parser.commandparser.UnmarkCommandParser;
+import parser.commandparser.AddDeadlineCommandParser;
+import parser.commandparser.AddEventCommandParser;
+import parser.commandparser.AddTodoCommandParser;
+import parser.commandparser.ListTasksCommandParser;
+import parser.commandparser.MarkTaskCommandParser;
+import parser.commandparser.UnmarkTaskCommandParser;
 
 
 /**
@@ -65,12 +65,12 @@ public class Parser {
     private static CommandParser getCommandParser(String command, String input) throws NoCommandFoundException {
         return switch (command) {
         case "bye" -> new ByeCommandParser();
-        case "list" -> new ListCommandParser();
-        case "mark" -> new MarkCommandParser();
-        case "unmark" -> new UnmarkCommandParser();
-        case "todo" -> new TodoCommandParser();
-        case "deadline" -> new DeadlineCommandParser();
-        case "event" -> new EventCommandParser();
+        case "list" -> new ListTasksCommandParser();
+        case "mark" -> new MarkTaskCommandParser();
+        case "unmark" -> new UnmarkTaskCommandParser();
+        case "todo" -> new AddTodoCommandParser();
+        case "deadline" -> new AddDeadlineCommandParser();
+        case "event" -> new AddEventCommandParser();
         default -> throw new NoCommandFoundException(input);
         };
     }

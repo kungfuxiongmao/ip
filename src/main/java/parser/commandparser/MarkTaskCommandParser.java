@@ -4,8 +4,8 @@ import commands.Command;
 import commands.MarkTaskCommand;
 import exceptions.parser.InvalidArgumentException;
 
-/** Parses arguments for the {@code mark} command. */
-public class MarkCommandParser implements CommandParser {
+/** Parses arguments for the {@code MarkTaskCommand}. */
+public class MarkTaskCommandParser implements CommandParser {
 
     @Override
     public Command parseArguments(String arguments) throws InvalidArgumentException {

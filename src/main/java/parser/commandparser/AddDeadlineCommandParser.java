@@ -4,8 +4,8 @@ import commands.AddDeadlineCommand;
 import commands.Command;
 import exceptions.parser.InvalidArgumentException;
 
-/** Parses arguments for the {@code deadline} command. */
-public class DeadlineCommandParser implements CommandParser {
+/** Parses arguments for a command that adds a deadline task. */
+public class AddDeadlineCommandParser implements CommandParser {
 
     @Override
     public Command parseArguments(String arguments) throws InvalidArgumentException {

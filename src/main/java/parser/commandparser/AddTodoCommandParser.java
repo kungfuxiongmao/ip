@@ -4,8 +4,8 @@ import commands.AddTodoCommand;
 import commands.Command;
 import exceptions.parser.InvalidArgumentException;
 
-/** Parses arguments for the {@code todo} command. */
-public class TodoCommandParser implements CommandParser {
+/** Parses arguments for a command that adds a to-do task. */
+public class AddTodoCommandParser implements CommandParser {
 
     @Override
     public Command parseArguments(String arguments) throws InvalidArgumentException {

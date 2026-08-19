@@ -4,8 +4,8 @@ import commands.AddEventCommand;
 import commands.Command;
 import exceptions.parser.InvalidArgumentException;
 
-/** Parses arguments for the {@code event} command. */
-public class EventCommandParser implements CommandParser {
+/** Parses arguments for a command that adds an event task. */
+public class AddEventCommandParser implements CommandParser {
 
     @Override
     public Command parseArguments(String arguments) throws InvalidArgumentException {
