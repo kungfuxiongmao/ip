@@ -8,7 +8,7 @@ import ui.UI;
  */
 public class ListTasksCommand implements Command {
     @Override
-    public void execute(TaskList taskList) {
-        UI.printMessage(taskList.toString());
+    public void execute() {
+        UI.printMessage(TaskList.getInstance().toString());
     }
 }

@@ -20,7 +20,7 @@ public class AddDeadlineCommand extends AddTaskCommand {
     }
 
     @Override
-    protected Task addTask(TaskList taskList) {
-        return taskList.addDeadline(description, dueDate);
+    protected Task addTask() {
+        return TaskList.getInstance().addDeadline(description, dueDate);
     }
 }

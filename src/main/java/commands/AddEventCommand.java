@@ -23,7 +23,7 @@ public class AddEventCommand extends AddTaskCommand {
     }
 
     @Override
-    protected Task addTask(TaskList taskList) {
-        return taskList.addEvent(description, dateTimeFrom, dateTimeTo);
+    protected Task addTask() {
+        return TaskList.getInstance().addEvent(description, dateTimeFrom, dateTimeTo);
     }
 }

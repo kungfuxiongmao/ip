@@ -5,19 +5,51 @@ import exceptions.task.TaskAlreadyUnmarkedException;
 import exceptions.task.InvalidTaskListIndexException;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Stores the tasks entered during the current Panda session.
  * Tasks are kept only in memory and are discarded when Panda closes.
  */
 public class TaskList {
+    private static TaskList instance;
     private final ArrayList<Task> tasks;
 
     /**
      * Creates an empty task list.
      */
-    public TaskList() {
+    private TaskList() {
         this.tasks = new ArrayList<>();
+    }
+
+    /**
+     * Initializes the singleton task list with the supplied tasks.
+     * The tasks are copied into the internal list so that later changes to the
+     * supplied list cannot change this task list.
+     *
+     * @param initialTasks tasks to include when creating the singleton
+     * @return the initialized singleton instance
+     * @throws IllegalStateException if the singleton has already been initialized
+     */
+    public static TaskList of(List<Task> initialTasks) {
+        if (instance != null) {
+            throw new IllegalStateException("TaskList has already been initialized");
+        }
+        instance = new TaskList();
+        instance.tasks.addAll(initialTasks);
+        return instance;
+    }
+
+    /**
+     * Returns the singleton task list, initializing an empty one if necessary.
+     *
+     * @return the singleton instance
+     */
+    public static TaskList getInstance() {
+        if (instance == null) {
+            instance = new TaskList();
+        }
+        return instance;
     }
 
     /**

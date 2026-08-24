@@ -10,16 +10,16 @@ import ui.UI;
 public abstract class AddTaskCommand implements Command {
 
     /**
-     * Adds this command's specific task type to the supplied list.
+     * Adds this command's specific task type to the singleton task list.
      *
-     * @param taskList list receiving the task
      * @return the newly added task
      */
-    protected abstract Task addTask(TaskList taskList);
+    protected abstract Task addTask();
 
     @Override
-    public final void execute(TaskList taskList) {
-        Task task = addTask(taskList);
+    public final void execute() {
+        TaskList taskList = TaskList.getInstance();
+        Task task = addTask();
         UI.printMessage("Got it. I've added this task:" + System.lineSeparator()
                 + "  " + task + System.lineSeparator()
                 + "Now you have " + taskList.getSize() + " tasks in the list.");

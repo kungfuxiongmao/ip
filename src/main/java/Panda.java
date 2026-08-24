@@ -5,6 +5,7 @@ import task.TaskList;
 import ui.ExceptionHandler;
 import ui.UI;
 
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -41,12 +42,12 @@ public class Panda {
         greet();
 
         Scanner scanner = new Scanner(System.in);
-        TaskList taskList = new TaskList();
+        TaskList.of(List.of());
         while (true) {
             String input = scanner.nextLine();
             try {
                 Command command = Parser.parse(input);
-                command.execute(taskList);
+                command.execute();
             } catch (ApplicationException exception) {
                 ExceptionHandler.handle(exception);
             }

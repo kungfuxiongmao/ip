@@ -17,7 +17,7 @@ public class AddTodoCommand extends AddTaskCommand {
     }
 
     @Override
-    protected Task addTask(TaskList taskList) {
-        return taskList.addTodo(description);
+    protected Task addTask() {
+        return TaskList.getInstance().addTodo(description);
     }
 }
