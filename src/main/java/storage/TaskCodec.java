@@ -6,6 +6,8 @@ import task.Event;
 import task.Task;
 import task.Todo;
 
+import java.util.Objects;
+
 /**
  * Converts tasks to and from Panda's line-based save format.
  */
@@ -54,6 +56,9 @@ public final class TaskCodec {
         String[] fields = line.split("\\|", -1);
         for (int index = 0; index < fields.length; index++) {
             fields[index] = fields[index].strip();
+            if (Objects.equals(fields[index], "")) {
+                throw new FileCorruptedException("Missing data");
+            }
         }
 
         String taskType = fields[0];

@@ -39,7 +39,8 @@ public final class SaveManager {
                 tasks.add(TaskCodec.decode(line));
             }
         } catch (FileCorruptedException exception) {
-            UI.printMessage("The saved file is broken... I can only restart your task list.");
+            UI.printMessage("The saved file is broken... I can only restart your task list.\n"
+                    + exception.getMessage());
             return null;
         }
         return tasks;
