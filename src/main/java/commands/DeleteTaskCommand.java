@@ -20,7 +20,8 @@ public class DeleteTaskCommand implements Command {
     }
 
     @Override
-    public void execute(TaskList taskList) throws exceptions.ApplicationException {
+    public void execute() throws exceptions.ApplicationException {
+        TaskList taskList = TaskList.getInstance();
         Task task = taskList.delete(taskNumber);
         UI.printMessage("Noted. I've removed this task:" + System.lineSeparator()
                 + "  " + task + System.lineSeparator()

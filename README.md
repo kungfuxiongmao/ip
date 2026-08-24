@@ -1,7 +1,8 @@
 # Panda Assistant: A-Enums
 
 Panda is a command-line personal assistant under development.
-This version incorporates Java enumerations in the Parser class.
+This version incorporates state persistence between rounds of usage, through a serialisation 
+save system. 
 
                                                             _______               
                 _________   _...._                  _..._   \  ___ `'.            
@@ -42,6 +43,7 @@ Panda is able to:
 - Display the task list
 - Mark and unmark a task
 - Delete a task
+- Save task list and read task list from saves
 - Terminate the program on command
 
 ### Display the task list
@@ -92,6 +94,14 @@ If the task number is missing, not an integer, or followed by extra values, Pand
 Remove a task with `delete TASK_NUMBER`, where `TASK_NUMBER` is the one-based number displayed by `list`. 
 Panda confirms the task that was removed, reports the new task count, and renumbers the remaining tasks. 
 Panda rejects missing, non-numeric, or out-of-range task numbers.
+
+### Save System
+Tasks are saved in `/data/tasks.txt`. 
+A saved file is automatically read and loaded into the task list on start up. 
+On termination, the state of the task list is also overwritten into the save file.
+Note that in the case that the file is corrupted, Panda will inform you and continue with
+an empty task list.
+
 
 ### Input Validation with the Parser
 

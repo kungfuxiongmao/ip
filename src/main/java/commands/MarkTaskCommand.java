@@ -20,8 +20,8 @@ public class MarkTaskCommand implements Command {
     }
 
     @Override
-    public void execute(TaskList taskList) throws exceptions.ApplicationException {
-        Task task = taskList.markEvent(taskNumber);
+    public void execute() throws exceptions.ApplicationException {
+        Task task = TaskList.getInstance().markEvent(taskNumber);
         UI.printMessage("Nice! I've marked this task as done:"
                 + System.lineSeparator() + "  " + task);
     }

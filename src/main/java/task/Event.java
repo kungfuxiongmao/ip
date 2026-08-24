@@ -14,10 +14,28 @@ public class Event extends Task {
      * @param dateTimeFrom event start, kept in its input format
      * @param dateTimeTo event end, kept in its input format
      */
-    protected Event(String description, String dateTimeFrom, String dateTimeTo) {
+    public Event(String description, String dateTimeFrom, String dateTimeTo) {
         super(description);
         this.dateTimeFrom = dateTimeFrom;
         this.dateTimeTo = dateTimeTo;
+    }
+
+    /**
+     * Returns the event's start in its original input format.
+     *
+     * @return event start text
+     */
+    public String getDateTimeFrom() {
+        return dateTimeFrom;
+    }
+
+    /**
+     * Returns the event's end in its original input format.
+     *
+     * @return event end text
+     */
+    public String getDateTimeTo() {
+        return dateTimeTo;
     }
 
     @Override

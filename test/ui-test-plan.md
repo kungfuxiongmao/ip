@@ -521,3 +521,124 @@ ____________________________________________________________
 Bye. Hope to see you again soon!
 ____________________________________________________________
 ```
+
+## Test case: Load and save persisted tasks
+
+### Aim
+
+Verify that Panda loads all task types and marked states, then overwrites the save file with the updated task list on termination.
+
+### Setup
+
+```sh
+mkdir -p data
+cp test/fixtures/preloaded-tasks.txt data/tasks.txt
+```
+
+### Command
+
+```sh
+javac -d out/ui-test $(find src/main/java -name '*.java') && java -cp out/ui-test Panda && diff -u test/fixtures/expected-saved-tasks.txt data/tasks.txt
+```
+
+### Inputs
+
+```text
+list
+todo new task
+bye
+```
+
+### Expected output
+
+```text
+____________________________________________________________
+                                            _______                
+_________   _...._                  _..._   \  ___ `'.             
+\        |.'      '-.             .'     '.  ' |--.\  \            
+ \        .'```'.    '.          .   .-.   . | |    \  '           
+  \      |       \     \   __    |  '   '  | | |     |  '    __    
+   |     |        |    |.:--.'.  |  |   |  | | |     |  | .:--.'.  
+   |      \      /    ./ |   \ | |  |   |  | | |     ' .'/ |   \ | 
+   |     |\`'-.-'   .' `" __ | | |  |   |  | | |___.' /' `" __ | | 
+   |     | '-....-'`    .'.''| | |  |   |  |/_______.'/   .'.''| | 
+  .'     '.            / /   | |_|  |   |  |\_______|/   / /   | |_
+'-----------'          \ \._,\ '/|  |   |  |             \ \._,\ '/
+                        `--'  `" '--'   '--'              `--'  `" 
+
+Hello! I'm Panda.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[T][X] read book
+2.[D][ ] return book (by: June 6th)
+3.[E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+4.[T][X] join sports club
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] new task
+Now you have 5 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## Test case: Recover from a corrupted save file
+
+### Aim
+
+Verify that an invalid saved-task format initializes an empty task list instead of terminating Panda.
+
+### Setup
+
+```sh
+mkdir -p data
+cp test/fixtures/corrupted-tasks.txt data/tasks.txt
+```
+
+### Command
+
+```sh
+javac -d out/ui-test $(find src/main/java -name '*.java') && java -cp out/ui-test Panda
+```
+
+### Inputs
+
+```text
+list
+bye
+```
+
+### Expected output
+
+```text
+____________________________________________________________
+                                            _______                
+_________   _...._                  _..._   \  ___ `'.             
+\        |.'      '-.             .'     '.  ' |--.\  \            
+ \        .'```'.    '.          .   .-.   . | |    \  '           
+  \      |       \     \   __    |  '   '  | | |     |  '    __    
+   |     |        |    |.:--.'.  |  |   |  | | |     |  | .:--.'.  
+   |      \      /    ./ |   \ | |  |   |  | | |     ' .'/ |   \ | 
+   |     |\`'-.-'   .' `" __ | | |  |   |  | | |___.' /' `" __ | | 
+   |     | '-....-'`    .'.''| | |  |   |  |/_______.'/   .'.''| | 
+  .'     '.            / /   | |_|  |   |  |\_______|/   / /   | |_
+'-----------'          \ \._,\ '/|  |   |  |             \ \._,\ '/
+                        `--'  `" '--'   '--'              `--'  `" 
+
+Hello! I'm Panda.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+The saved file is broken... I can only restart your task list.
+____________________________________________________________
+____________________________________________________________
+~~~ Empty List ~~~
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```

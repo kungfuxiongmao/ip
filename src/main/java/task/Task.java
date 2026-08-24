@@ -6,7 +6,7 @@ package task;
  */
 public abstract class Task {
     private boolean marked;
-    private String description;
+    private final String description;
 
     protected Task(String description) {
         this.marked = false;
@@ -23,6 +23,15 @@ public abstract class Task {
 
     public boolean isMarked() {
         return this.marked;
+    }
+
+    /**
+     * Returns the task description.
+     *
+     * @return task description
+     */
+    public String getDescription() {
+        return description;
     }
 
     @Override
