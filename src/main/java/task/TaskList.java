@@ -3,6 +3,7 @@ package task;
 import exceptions.task.TaskAlreadyMarkedException;
 import exceptions.task.TaskAlreadyUnmarkedException;
 import exceptions.task.InvalidTaskListIndexException;
+import exceptions.task.TaskListAlreadyInstantiatedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +30,11 @@ public class TaskList {
      *
      * @param initialTasks tasks to include when creating the singleton
      * @return the initialized singleton instance
-     * @throws IllegalStateException if the singleton has already been initialized
+     * @throws TaskListAlreadyInstantiatedException if the singleton has already been initialized
      */
-    public static TaskList of(List<Task> initialTasks) {
+    public static TaskList of(List<Task> initialTasks) throws TaskListAlreadyInstantiatedException {
         if (instance != null) {
-            throw new IllegalStateException("TaskList has already been initialized");
+            throw new TaskListAlreadyInstantiatedException();
         }
         instance = new TaskList();
         instance.tasks.addAll(initialTasks);
@@ -92,6 +93,15 @@ public class TaskList {
      */
     public int getSize() {
         return tasks.size();
+    }
+
+    /**
+     * Returns an unmodifiable snapshot of the tasks currently in this list.
+     *
+     * @return snapshot of the current tasks
+     */
+    public List<Task> getTasks() {
+        return List.copyOf(tasks);
     }
 
     /** Adds an already-created task to this list. */

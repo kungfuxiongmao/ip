@@ -12,9 +12,18 @@ public class Deadline extends Task {
      * @param description description of the task
      * @param dueDate date by which the task is due, kept in its input format
      */
-    protected Deadline(String description, String dueDate) {
+    public Deadline(String description, String dueDate) {
         super(description);
         this.dueDate = dueDate;
+    }
+
+    /**
+     * Returns the deadline in its original input format.
+     *
+     * @return deadline text
+     */
+    public String getDueDate() {
+        return dueDate;
     }
 
     @Override
