@@ -16,9 +16,17 @@ import java.time.temporal.Temporal;
  */
 public final class DateTimeHelper {
 
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("d/M/uuuu")
+    private static final DateTimeFormatter DATE_INPUT = DateTimeFormatter.ofPattern("d/M/uuuu")
             .withResolverStyle(ResolverStyle.STRICT);
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("d/M/uuuu H:mm")
+    private static final DateTimeFormatter DATETIME_INPUT = DateTimeFormatter.ofPattern("d/M/uuuu H:mm")
+            .withResolverStyle(ResolverStyle.STRICT);
+
+    private static final DateTimeFormatter DATE_OUTPUT = DateTimeFormatter.ofPattern("d MMM yyyy");
+    private static final DateTimeFormatter DATETIME_OUTPUT = DateTimeFormatter.ofPattern("d MMM yyyy H:mm");
+
+    private static final DateTimeFormatter DATE_STORAGE = DateTimeFormatter.ofPattern("uuuu-MM-dd")
+            .withResolverStyle(ResolverStyle.STRICT);
+    private static final DateTimeFormatter DATETIME_STORAGE = DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm")
             .withResolverStyle(ResolverStyle.STRICT);
 
     private DateTimeHelper() {
@@ -37,13 +45,13 @@ public final class DateTimeHelper {
         }
         String trimmed = dateTime.strip();
         try {
-            LocalDateTime.parse(trimmed, DATE_TIME_FORMATTER);
+            LocalDateTime.parse(trimmed, DATETIME_INPUT);
             return true;
         } catch (DateTimeParseException e) {
             // Not a date-time; try validating as a date-only string
         }
         try {
-            LocalDate.parse(trimmed, DATE_FORMATTER);
+            LocalDate.parse(trimmed, DATE_INPUT);
             return true;
         } catch (DateTimeParseException e) {
             return false;
@@ -67,18 +75,18 @@ public final class DateTimeHelper {
         }
         String trimmed = dateTime.strip();
         try {
-            return LocalDateTime.parse(trimmed, DATE_TIME_FORMATTER);
+            return LocalDateTime.parse(trimmed, DATETIME_INPUT);
         } catch (DateTimeParseException e) {
             // Not a date-time; try parsing as a date-only string
         }
-        return LocalDate.parse(trimmed, DATE_FORMATTER);
+        return LocalDate.parse(trimmed, DATE_INPUT);
     }
 
     /**
-     * Formats a {@link Temporal} instance back into its string representation.
+     * Formats a {@link Temporal} instance into its user-facing display string representation.
      * <p>
-     * If the temporal is an instance of {@link LocalDateTime}, it is formatted as {@code "d/M/uuuu H:mm"}.
-     * If the temporal is an instance of {@link LocalDate}, it is formatted as {@code "d/M/uuuu"}.
+     * If the temporal is an instance of {@link LocalDateTime}, it is formatted as {@code "d MMM yyyy H:mm"}.
+     * If the temporal is an instance of {@link LocalDate}, it is formatted as {@code "d MMM yyyy"}.
      *
      * @param temporal the {@link Temporal} to format (must be {@link LocalDate} or {@link LocalDateTime})
      * @return the formatted date or date-time string
@@ -89,11 +97,63 @@ public final class DateTimeHelper {
             throw new IllegalArgumentException("Temporal object cannot be null");
         }
         if (temporal instanceof LocalDateTime) {
-            return DATE_TIME_FORMATTER.format(temporal);
+            return DATETIME_OUTPUT.format(temporal);
         }
         if (temporal instanceof LocalDate) {
-            return DATE_FORMATTER.format(temporal);
+            return DATE_OUTPUT.format(temporal);
         }
         throw new IllegalArgumentException("Unsupported Temporal type: " + temporal.getClass().getName());
+    }
+
+    /**
+     * Converts a {@link Temporal} instance to a serialized string for storage.
+     * <p>
+     * If the temporal is an instance of {@link LocalDateTime}, it is formatted using {@code "uuuu-MM-dd HH:mm"}.
+     * If the temporal is an instance of {@link LocalDate}, it is formatted using {@code "uuuu-MM-dd"}.
+     *
+     * @param temporal the {@link Temporal} to format for saving (must be {@link LocalDate} or {@link LocalDateTime})
+     * @return the serialized date or date-time string for storage
+     * @throws IllegalArgumentException if the temporal parameter is null or an unsupported type
+     */
+    public static String saveDate(Temporal temporal) {
+        if (temporal == null) {
+            throw new IllegalArgumentException("Temporal object cannot be null");
+        }
+        if (temporal instanceof LocalDateTime) {
+            return DATETIME_STORAGE.format(temporal);
+        }
+        if (temporal instanceof LocalDate) {
+            return DATE_STORAGE.format(temporal);
+        }
+        throw new IllegalArgumentException("Unsupported Temporal type: " + temporal.getClass().getName());
+    }
+
+    /**
+     * Parses a serialized date or date-time string from file storage into a {@link Temporal} instance.
+     * <p>
+     * Supports stored date-time ({@code "uuuu-MM-dd HH:mm"}) and date-only ({@code "uuuu-MM-dd"}) formats,
+     * falling back to user-input formats for backward compatibility.
+     *
+     * @param dateStr the saved date or date-time string to parse
+     * @return a {@link Temporal} representing the parsed date or date-time
+     * @throws DateTimeParseException if the input cannot be parsed using the storage format
+     * @throws IllegalArgumentException if the input is null or blank
+     */
+    public static Temporal loadDate(String dateStr) throws DateTimeParseException {
+        if (dateStr == null || dateStr.isBlank()) {
+            throw new IllegalArgumentException("Saved date/time string cannot be null or blank");
+        }
+        String trimmed = dateStr.strip();
+        try {
+            return LocalDateTime.parse(trimmed, DATETIME_STORAGE);
+        } catch (DateTimeParseException e) {
+            // Not a storage date-time; try parsing as storage date-only
+        }
+        try {
+            return LocalDate.parse(trimmed, DATE_STORAGE);
+        } catch (DateTimeParseException e) {
+            // Fall back to input format for backward compatibility
+            return parse(trimmed);
+        }
     }
 }

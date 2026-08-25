@@ -1,33 +1,37 @@
 package task;
 
+import java.time.temporal.Temporal;
+
+import util.datetime.DateTimeHelper;
+
 /**
  * A task that must be completed by a supplied date.
  */
 public class Deadline extends Task {
-    private final String dueDate;
+    private final Temporal dueDate;
 
     /**
      * Creates an unmarked deadline task.
      *
      * @param description description of the task
-     * @param dueDate date by which the task is due, kept in its input format
+     * @param dueDate date by which the task is due
      */
-    public Deadline(String description, String dueDate) {
+    public Deadline(String description, Temporal dueDate) {
         super(description);
         this.dueDate = dueDate;
     }
 
     /**
-     * Returns the deadline in its original input format.
+     * Returns the deadline date.
      *
-     * @return deadline text
+     * @return deadline date as a {@link Temporal}
      */
-    public String getDueDate() {
+    public Temporal getDueDate() {
         return dueDate;
     }
 
     @Override
     public String toString() {
-        return "[D]" + super.toString() + " (by: " + dueDate + ")";
+        return "[D]" + super.toString() + " (by: " + DateTimeHelper.format(dueDate) + ")";
     }
 }

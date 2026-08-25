@@ -5,7 +5,9 @@ import task.Deadline;
 import task.Event;
 import task.Task;
 import task.Todo;
+import util.datetime.DateTimeHelper;
 
+import java.time.format.DateTimeParseException;
 import java.util.Objects;
 
 /**
@@ -32,11 +34,13 @@ public final class TaskCodec {
             return String.join(DELIMITER, "T", state, description);
         }
         if (task instanceof Deadline deadline) {
-            return String.join(DELIMITER, "D", state, description, deadline.getDueDate());
+            return String.join(DELIMITER, "D", state, description,
+                    DateTimeHelper.saveDate(deadline.getDueDate()));
         }
         if (task instanceof Event event) {
             return String.join(DELIMITER, "E", state, description,
-                    event.getDateTimeFrom(), event.getDateTimeTo());
+                    DateTimeHelper.saveDate(event.getDateTimeFrom()),
+                    DateTimeHelper.saveDate(event.getDateTimeTo()));
         }
         throw new IllegalArgumentException("Unsupported task type: " + task.getClass().getName());
     }
@@ -74,12 +78,17 @@ public final class TaskCodec {
         }
 
         boolean marked = decodeState(fields[1]);
-        Task task = switch (taskType) {
-        case "T" -> new Todo(fields[2]);
-        case "D" -> new Deadline(fields[2], fields[3]);
-        case "E" -> new Event(fields[2], fields[3], fields[4]);
-        default -> throw new AssertionError("Task type was validated before decoding");
-        };
+        Task task;
+        try {
+            task = switch (taskType) {
+            case "T" -> new Todo(fields[2]);
+            case "D" -> new Deadline(fields[2], DateTimeHelper.loadDate(fields[3]));
+            case "E" -> new Event(fields[2], DateTimeHelper.loadDate(fields[3]), DateTimeHelper.loadDate(fields[4]));
+            default -> throw new AssertionError("Task type was validated before decoding");
+            };
+        } catch (DateTimeParseException | IllegalArgumentException e) {
+            throw new FileCorruptedException("Failed to parse date: " + e.getMessage());
+        }
 
         if (marked) {
             task.mark();

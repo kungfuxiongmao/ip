@@ -5,6 +5,7 @@ import exceptions.task.TaskAlreadyUnmarkedException;
 import exceptions.task.InvalidTaskListIndexException;
 import exceptions.task.TaskListAlreadyInstantiatedException;
 
+import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,10 +68,10 @@ public class TaskList {
      * Creates and adds a deadline task.
      *
      * @param description description of the task
-     * @param dueDate date by which the task is due
+     * @param dueDate date by which the task is due as a {@link Temporal}
      * @return the newly added task
      */
-    public Task addDeadline(String description, String dueDate) {
+    public Task addDeadline(String description, Temporal dueDate) {
         return add(new Deadline(description, dueDate));
     }
 
@@ -78,11 +79,11 @@ public class TaskList {
      * Creates and adds an event task.
      *
      * @param description description of the event
-     * @param dateTimeFrom event start date and time
-     * @param dateTimeTo event end date and time
+     * @param dateTimeFrom event start date and time as a {@link Temporal}
+     * @param dateTimeTo event end date and time as a {@link Temporal}
      * @return the newly added task
      */
-    public Task addEvent(String description, String dateTimeFrom, String dateTimeTo) {
+    public Task addEvent(String description, Temporal dateTimeFrom, Temporal dateTimeTo) {
         return add(new Event(description, dateTimeFrom, dateTimeTo));
     }
 

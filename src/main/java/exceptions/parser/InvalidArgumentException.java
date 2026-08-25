@@ -6,6 +6,15 @@ package exceptions.parser;
 public class InvalidArgumentException extends ParseException {
 
     /**
+     * Creates an exception with a custom error message.
+     *
+     * @param message explanation of the argument problem
+     */
+    public InvalidArgumentException(String message) {
+        super(message);
+    }
+
+    /**
      * Creates an exception that explains the expected command usage.
      *
      * @param command command whose arguments are invalid
