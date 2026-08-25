@@ -1,5 +1,6 @@
 package task;
 
+import java.time.LocalDate;
 import java.time.temporal.Temporal;
 
 import util.datetime.DateTimeHelper;
@@ -28,6 +29,16 @@ public class Deadline extends Task {
      */
     public Temporal getDueDate() {
         return dueDate;
+    }
+
+    @Override
+    public boolean checkDate(Temporal date) {
+        if (date == null) {
+            return false;
+        }
+        LocalDate targetDate = LocalDate.from(date);
+        LocalDate dueDateLocal = LocalDate.from(this.dueDate);
+        return dueDateLocal.equals(targetDate);
     }
 
     @Override

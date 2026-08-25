@@ -1,5 +1,6 @@
 package task;
 
+import java.time.LocalDate;
 import java.time.temporal.Temporal;
 
 import util.datetime.DateTimeHelper;
@@ -40,6 +41,17 @@ public class Event extends Task {
      */
     public Temporal getDateTimeTo() {
         return dateTimeTo;
+    }
+
+    @Override
+    public boolean checkDate(Temporal date) {
+        if (date == null) {
+            return false;
+        }
+        LocalDate targetDate = LocalDate.from(date);
+        LocalDate fromDate = LocalDate.from(this.dateTimeFrom);
+        LocalDate toDate = LocalDate.from(this.dateTimeTo);
+        return !targetDate.isBefore(fromDate) && !targetDate.isAfter(toDate);
     }
 
     @Override

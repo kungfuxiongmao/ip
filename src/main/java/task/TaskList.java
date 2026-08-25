@@ -4,6 +4,7 @@ import exceptions.task.TaskAlreadyMarkedException;
 import exceptions.task.TaskAlreadyUnmarkedException;
 import exceptions.task.InvalidTaskListIndexException;
 import exceptions.task.TaskListAlreadyInstantiatedException;
+import util.datetime.DateTimeHelper;
 
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
@@ -168,6 +169,37 @@ public class TaskList {
             throw new InvalidTaskListIndexException(taskNumber, tasks.size());
         }
         return tasks.remove(arrayIndex);
+    }
+
+    /**
+     * Returns a numbered, multi-line string representation of all tasks that occur on,
+     * are due on, or span across the specified date, using each task's original 1-based index in the list.
+     *
+     * @param date date to filter tasks by as a {@link Temporal}
+     * @return formatted list of matching tasks with original list numbers, or an empty list message if none match
+     */
+    public String getTasksOnDate(Temporal date) {
+        if (date == null) {
+            return "~~~ Empty List ~~~";
+        }
+        StringBuilder result = new StringBuilder("Here are the tasks for:")
+                .append(DateTimeHelper.format(date))
+                .append(System.lineSeparator());
+        boolean hasMatches = false;
+        for (int index = 0; index < tasks.size(); index++) {
+            Task task = tasks.get(index);
+            if (task.checkDate(date)) {
+                hasMatches = true;
+                result.append(index + 1)
+                        .append(".")
+                        .append(task)
+                        .append(System.lineSeparator());
+            }
+        }
+        if (!hasMatches) {
+            return "~~~ Empty List ~~~";
+        }
+        return result.toString().stripTrailing();
     }
 
     /**

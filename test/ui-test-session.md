@@ -52,8 +52,8 @@ javac -d out/ui-test $(find src/main/java -name '*.java') && java -cp out/ui-tes
 Console input:
 ~~~text
 todo borrow book
-deadline return book /by Sunday
-event project meeting /from Mon 2pm /to 4pm
+deadline return book /by 2/12/2019 18:00
+event project meeting /from 2/12/2019 14:00 /to 2/12/2019 16:00
 list
 bye
 ~~~
@@ -84,19 +84,19 @@ Now you have 1 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-  [D][ ] return book (by: Sunday)
+  [D][ ] return book (by: 2 Dec 2019 18:00)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-  [E][ ] project meeting (from: Mon 2pm to: 4pm)
+  [E][ ] project meeting (from: 2 Dec 2019 14:00 to: 2 Dec 2019 16:00)
 Now you have 3 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
 1.[T][ ] borrow book
-2.[D][ ] return book (by: Sunday)
-3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+2.[D][ ] return book (by: 2 Dec 2019 18:00)
+3.[E][ ] project meeting (from: 2 Dec 2019 14:00 to: 2 Dec 2019 16:00)
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!
@@ -116,7 +116,7 @@ javac -d out/ui-test $(find src/main/java -name '*.java') && java -cp out/ui-tes
 
 Console input:
 ~~~text
-event project meeting /from Mon 2pm /to 4pm
+event project meeting /from 2/12/2019 14:00 /to 2/12/2019 16:00
 mark 1
 unmark 1
 list
@@ -144,20 +144,20 @@ What can I do for you?
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-  [E][ ] project meeting (from: Mon 2pm to: 4pm)
+  [E][ ] project meeting (from: 2 Dec 2019 14:00 to: 2 Dec 2019 16:00)
 Now you have 1 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Nice! I've marked this task as done:
-  [E][X] project meeting (from: Mon 2pm to: 4pm)
+  [E][X] project meeting (from: 2 Dec 2019 14:00 to: 2 Dec 2019 16:00)
 ____________________________________________________________
 ____________________________________________________________
 OK, I've marked this task as not done yet:
-  [E][ ] project meeting (from: Mon 2pm to: 4pm)
+  [E][ ] project meeting (from: 2 Dec 2019 14:00 to: 2 Dec 2019 16:00)
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
-1.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+1.[E][ ] project meeting (from: 2 Dec 2019 14:00 to: 2 Dec 2019 16:00)
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!
@@ -402,8 +402,8 @@ javac -d out/ui-test $(find src/main/java -name '*.java') && java -cp out/ui-tes
 Console input:
 ~~~text
 todo read book
-deadline return book /by June 6th
-event project meeting /from Aug 6th 2pm /to 4pm
+deadline return book /by 6/6/2019 18:00
+event project meeting /from 6/8/2019 14:00 /to 6/8/2019 16:00
 todo join sports club
 todo borrow book
 mark 1
@@ -441,12 +441,12 @@ Now you have 1 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-  [D][ ] return book (by: June 6th)
+  [D][ ] return book (by: 6 Jun 2019 18:00)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-  [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+  [E][ ] project meeting (from: 6 Aug 2019 14:00 to: 6 Aug 2019 16:00)
 Now you have 3 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
@@ -465,7 +465,7 @@ Nice! I've marked this task as done:
 ____________________________________________________________
 ____________________________________________________________
 Nice! I've marked this task as done:
-  [D][X] return book (by: June 6th)
+  [D][X] return book (by: 6 Jun 2019 18:00)
 ____________________________________________________________
 ____________________________________________________________
 Nice! I've marked this task as done:
@@ -474,20 +474,20 @@ ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
 1.[T][X] read book
-2.[D][X] return book (by: June 6th)
-3.[E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+2.[D][X] return book (by: 6 Jun 2019 18:00)
+3.[E][ ] project meeting (from: 6 Aug 2019 14:00 to: 6 Aug 2019 16:00)
 4.[T][X] join sports club
 5.[T][ ] borrow book
 ____________________________________________________________
 ____________________________________________________________
 Noted. I've removed this task:
-  [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+  [E][ ] project meeting (from: 6 Aug 2019 14:00 to: 6 Aug 2019 16:00)
 Now you have 4 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
 1.[T][X] read book
-2.[D][X] return book (by: June 6th)
+2.[D][X] return book (by: 6 Jun 2019 18:00)
 3.[T][X] join sports club
 4.[T][ ] borrow book
 ____________________________________________________________
@@ -542,8 +542,8 @@ ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
 1.[T][X] read book
-2.[D][ ] return book (by: June 6th)
-3.[E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+2.[D][ ] return book (by: 6 Jun 2019 18:00)
+3.[E][ ] project meeting (from: 6 Aug 2019 14:00 to: 6 Aug 2019 16:00)
 4.[T][X] join sports club
 ____________________________________________________________
 ____________________________________________________________
@@ -600,6 +600,7 @@ What can I do for you?
 ____________________________________________________________
 ____________________________________________________________
 The saved file is broken... I can only restart your task list.
+Expected 4 fields but found 3
 ____________________________________________________________
 ____________________________________________________________
 ~~~ Empty List ~~~
