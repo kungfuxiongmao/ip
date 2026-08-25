@@ -15,7 +15,7 @@ Verify that Panda starts, accepts `bye`, displays a farewell, and exits normally
 ### Command
 
 ```sh
-javac -d out/ui-test $(find src/main/java -name '*.java') && java -cp out/ui-test Panda
+javac -d out/ui-test $(find src/main/java -name '*.java') && java -cp out/ui-test panda.Panda
 ```
 
 ### Inputs
@@ -58,7 +58,7 @@ Verify that the add-task command parsers create to-do, deadline, and event tasks
 ### Command
 
 ```sh
-javac -d out/ui-test $(find src/main/java -name '*.java') && java -cp out/ui-test Panda
+javac -d out/ui-test $(find src/main/java -name '*.java') && java -cp out/ui-test panda.Panda
 ```
 
 ### Inputs
@@ -126,7 +126,7 @@ Verify task-list logic: an event can be marked as done, unmarked, and displayed 
 ### Command
 
 ```sh
-javac -d out/ui-test $(find src/main/java -name '*.java') && java -cp out/ui-test Panda
+javac -d out/ui-test $(find src/main/java -name '*.java') && java -cp out/ui-test panda.Panda
 ```
 
 ### Inputs
@@ -190,7 +190,7 @@ Verify that the global exception handler displays messages for unknown commands,
 ### Command
 
 ```sh
-javac -d out/ui-test $(find src/main/java -name '*.java') && java -cp out/ui-test Panda
+javac -d out/ui-test $(find src/main/java -name '*.java') && java -cp out/ui-test panda.Panda
 ```
 
 ### Inputs
@@ -285,7 +285,7 @@ Verify that every command parser rejects blank, unknown, and malformed command v
 ### Command
 
 ```sh
-javac -d out/ui-test $(find src/main/java -name '*.java') && java -cp out/ui-test Panda
+javac -d out/ui-test $(find src/main/java -name '*.java') && java -cp out/ui-test panda.Panda
 ```
 
 ### Inputs
@@ -420,7 +420,7 @@ Verify that delete removes the requested task, preserves the remaining task orde
 ### Command
 
 ```sh
-javac -d out/ui-test $(find src/main/java -name '*.java') && java -cp out/ui-test Panda
+javac -d out/ui-test $(find src/main/java -name '*.java') && java -cp out/ui-test panda.Panda
 ```
 
 ### Inputs
@@ -538,7 +538,7 @@ cp test/fixtures/preloaded-tasks.txt data/tasks.txt
 ### Command
 
 ```sh
-javac -d out/ui-test $(find src/main/java -name '*.java') && java -cp out/ui-test Panda && diff -u test/fixtures/expected-saved-tasks.txt data/tasks.txt
+javac -d out/ui-test $(find src/main/java -name '*.java') && java -cp out/ui-test panda.Panda && diff -u test/fixtures/expected-saved-tasks.txt data/tasks.txt
 ```
 
 ### Inputs
@@ -602,7 +602,7 @@ cp test/fixtures/corrupted-tasks.txt data/tasks.txt
 ### Command
 
 ```sh
-javac -d out/ui-test $(find src/main/java -name '*.java') && java -cp out/ui-test Panda
+javac -d out/ui-test $(find src/main/java -name '*.java') && java -cp out/ui-test panda.Panda
 ```
 
 ### Inputs

@@ -30,7 +30,7 @@ save system.
 Compile and run Panda from the project root:
 
 ```sh
-javac -d out $(find src/main/java -name '*.java') && java -cp out Panda
+javac -d out $(find src/main/java -name '*.java') && java -cp out panda.Panda
 ```
 
 
