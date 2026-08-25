@@ -1,7 +1,7 @@
 package lifecycle;
 
 import exceptions.task.TaskListAlreadyInstantiatedException;
-import storage.SaveManager;
+import storage.Storage;
 import task.Task;
 import task.TaskList;
 import ui.ExceptionHandler;
@@ -30,7 +30,7 @@ public final class StartManager {
 
         List<Task> tasks;
         try {
-            tasks = SaveManager.readTasks();
+            tasks = Storage.readTasks();
         } catch (IOException exception) {
             UI.printMessage("Panda could not read the save file: " + exception.getMessage());
             tasks = null;
