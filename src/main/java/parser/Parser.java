@@ -9,8 +9,10 @@ import parser.commandparser.AddDeadlineCommandParser;
 import parser.commandparser.AddEventCommandParser;
 import parser.commandparser.AddTodoCommandParser;
 import parser.commandparser.DeleteTaskCommandParser;
+import parser.commandparser.DisplayDateCommandParser;
 import parser.commandparser.ListTasksCommandParser;
 import parser.commandparser.MarkTaskCommandParser;
+import parser.commandparser.TodayCommandParser;
 import parser.commandparser.UnmarkTaskCommandParser;
 
 
@@ -30,7 +32,9 @@ public class Parser {
         DELETE("delete", new DeleteTaskCommandParser()),
         TODO("todo", new AddTodoCommandParser()),
         DEADLINE("deadline", new AddDeadlineCommandParser()),
-        EVENT("event", new AddEventCommandParser());
+        EVENT("event", new AddEventCommandParser()),
+        TODAY("today", new TodayCommandParser()),
+        DISPLAY("display", new DisplayDateCommandParser());
 
         private final String keyword;
         private final CommandParser commandParser;
