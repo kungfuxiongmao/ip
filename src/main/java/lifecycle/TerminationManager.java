@@ -1,6 +1,6 @@
 package lifecycle;
 
-import storage.SaveManager;
+import storage.Storage;
 import task.TaskList;
 import ui.UI;
 
@@ -19,7 +19,7 @@ public final class TerminationManager {
      */
     public static void terminate() {
         try {
-            SaveManager.saveTasks(TaskList.getInstance().getTasks());
+            Storage.saveTasks(TaskList.getInstance().getTasks());
         } catch (IOException exception) {
             UI.printMessage("OOPS! Panda could not save tasks: " + exception.getMessage());
         }

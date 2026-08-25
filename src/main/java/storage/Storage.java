@@ -14,10 +14,10 @@ import java.util.List;
 /**
  * Reads and writes Panda's task save file.
  */
-public final class SaveManager {
+public final class Storage {
     private static final Path SAVE_FILE = Path.of("data", "tasks.txt");
 
-    private SaveManager() {
+    private Storage() {
     }
 
     /**
