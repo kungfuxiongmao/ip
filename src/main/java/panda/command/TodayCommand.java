@@ -10,6 +10,15 @@ import panda.ui.UI;
  */
 public class TodayCommand implements Command {
 
+    /**
+     * Constructs a {@code TodayCommand}.
+     */
+    public TodayCommand() {
+    }
+
+    /**
+     * Retrieves and displays tasks that fall on or span across the current system date.
+     */
     @Override
     public void execute() {
         LocalDate today = LocalDate.now();

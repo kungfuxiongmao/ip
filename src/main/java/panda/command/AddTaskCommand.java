@@ -10,12 +10,22 @@ import panda.ui.UI;
 public abstract class AddTaskCommand implements Command {
 
     /**
+     * Sole constructor for invocations by subclass constructors.
+     */
+    protected AddTaskCommand() {
+    }
+
+    /**
      * Adds this command's specific task type to the singleton task list.
      *
      * @return the newly added task
      */
     protected abstract Task addTask();
 
+    /**
+     * Executes the task addition by invoking {@link #addTask()}, then prints a standardized
+     * confirmation message displaying the added task and the updated task list size.
+     */
     @Override
     public final void execute() {
         TaskList taskList = TaskList.getInstance();

@@ -20,6 +20,11 @@ public class DeleteTaskCommand implements Command {
         this.taskNumber = taskNumber;
     }
 
+    /**
+     * Executes the task deletion from the task list and displays a confirmation message.
+     *
+     * @throws ApplicationException if the task number is out of bounds
+     */
     @Override
     public void execute() throws ApplicationException {
         TaskList taskList = TaskList.getInstance();

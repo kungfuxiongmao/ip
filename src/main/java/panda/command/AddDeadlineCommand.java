@@ -21,6 +21,11 @@ public class AddDeadlineCommand extends AddTaskCommand {
         this.dueDate = dueDate;
     }
 
+    /**
+     * Adds the deadline task to the singleton task list.
+     *
+     * @return the newly added {@link panda.task.Deadline} task
+     */
     @Override
     protected Task addTask() {
         return TaskList.getInstance().addDeadline(description, dueDate);

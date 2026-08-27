@@ -19,7 +19,11 @@ import panda.parser.commandparser.UnmarkTaskCommandParser;
 /**
  * Converts user-entered text into commands Panda can execute.
  */
-public class Parser {
+public final class Parser {
+
+    private Parser() {
+        // Utility class: prevent instantiation.
+    }
 
     /**
      * Maps supported command keywords to parsers that validate their arguments.
@@ -65,13 +69,14 @@ public class Parser {
      *
      * @param input text entered by the user
      * @return command that corresponds to the input
+     * @throws ParseException if the command is unrecognized or has invalid arguments
      */
     public static Command parse(String input) throws ParseException {
         return matchCommand(processInput(input));
     }
 
     /**
-     * Simple input processing - removal of surrounding whitespace
+     * Simple input processing - removal of surrounding whitespace.
      *
      * @param input text entered by the user
      * @return input without surrounding whitespace
@@ -85,6 +90,7 @@ public class Parser {
      *
      * @param input user input without surrounding whitespace
      * @return command that handles the input
+     * @throws ParseException if the input is empty, the command keyword is unknown, or arguments are invalid
      */
     private static Command matchCommand(String input) throws ParseException {
         if (input.isEmpty()) {

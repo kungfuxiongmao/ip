@@ -11,7 +11,10 @@ import panda.ui.ExceptionHandler;
 /**
  * Starts Panda's command-line interaction with the user.
  */
-public class Panda {
+public final class Panda {
+    private Panda() {
+        // Utility / entry point class: prevent instantiation.
+    }
     /**
      * Runs Panda until a command ends the program.
      *

@@ -106,7 +106,12 @@ public class TaskList {
         return List.copyOf(tasks);
     }
 
-    /** Adds an already-created task to this list. */
+    /**
+     * Adds an already-created task to this list.
+     *
+     * @param task the task to append to the list
+     * @return the added task
+     */
     private Task add(Task task) {
         tasks.add(task);
         return task;

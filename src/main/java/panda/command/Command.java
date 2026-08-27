@@ -9,6 +9,7 @@ public interface Command {
     /**
      * Performs this command.
      *
+     * @throws ApplicationException if an application-level error occurs during command execution
      */
     void execute() throws ApplicationException;
 }

@@ -11,7 +11,7 @@ import java.time.temporal.Temporal;
  * Utility class for parsing, validating, and formatting date and date-time values.
  * <p>
  * This class cannot be instantiated. It provides static helper methods to convert between
- * user-provided string inputs and Java {@link Temporal} representations ({@link LocalDate}
+ * user-facing string inputs, both inputs and outputs, and Java {@link Temporal} representations ({@link LocalDate}
  * and {@link LocalDateTime}), supporting inputs both with and without a time component.
  */
 public final class DateTimeHelper {
