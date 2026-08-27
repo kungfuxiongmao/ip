@@ -30,9 +30,9 @@ public class TaskList {
      * The tasks are copied into the internal list so that later changes to the
      * supplied list cannot change this task list.
      *
-     * @param initialTasks tasks to include when creating the singleton
-     * @return the initialized singleton instance
-     * @throws TaskListAlreadyInstantiatedException if the singleton has already been initialized
+     * @param initialTasks Tasks to include when creating the singleton.
+     * @return The initialized singleton instance.
+     * @throws TaskListAlreadyInstantiatedException If the singleton has already been initialized.
      */
     public static TaskList of(List<Task> initialTasks) throws TaskListAlreadyInstantiatedException {
         if (instance != null) {
@@ -46,7 +46,7 @@ public class TaskList {
     /**
      * Returns the singleton task list, initializing an empty one if necessary.
      *
-     * @return the singleton instance
+     * @return The singleton instance.
      */
     public static TaskList getInstance() {
         if (instance == null) {
@@ -58,8 +58,8 @@ public class TaskList {
     /**
      * Creates and adds a to-do task.
      *
-     * @param description description of the task
-     * @return the newly added task
+     * @param description Description of the task.
+     * @return The newly added task.
      */
     public Task addTodo(String description) {
         return add(new Todo(description));
@@ -68,9 +68,9 @@ public class TaskList {
     /**
      * Creates and adds a deadline task.
      *
-     * @param description description of the task
-     * @param dueDate date by which the task is due as a {@link Temporal}
-     * @return the newly added task
+     * @param description Description of the task.
+     * @param dueDate Date by which the task is due as a {@link Temporal}.
+     * @return The newly added task.
      */
     public Task addDeadline(String description, Temporal dueDate) {
         return add(new Deadline(description, dueDate));
@@ -79,10 +79,10 @@ public class TaskList {
     /**
      * Creates and adds an event task.
      *
-     * @param description description of the event
-     * @param dateTimeFrom event start date and time as a {@link Temporal}
-     * @param dateTimeTo event end date and time as a {@link Temporal}
-     * @return the newly added task
+     * @param description Description of the event.
+     * @param dateTimeFrom Event start date and time as a {@link Temporal}.
+     * @param dateTimeTo Event end date and time as a {@link Temporal}.
+     * @return The newly added task.
      */
     public Task addEvent(String description, Temporal dateTimeFrom, Temporal dateTimeTo) {
         return add(new Event(description, dateTimeFrom, dateTimeTo));
@@ -91,7 +91,7 @@ public class TaskList {
     /**
      * Returns the number of tasks currently in this list.
      *
-     * @return task count
+     * @return Task count.
      */
     public int getSize() {
         return tasks.size();
@@ -100,13 +100,15 @@ public class TaskList {
     /**
      * Returns an unmodifiable snapshot of the tasks currently in this list.
      *
-     * @return snapshot of the current tasks
+     * @return Snapshot of the current tasks.
      */
     public List<Task> getTasks() {
         return List.copyOf(tasks);
     }
 
-    /** Adds an already-created task to this list. */
+    /**
+     * Adds an already-created task to this list.
+     */
     private Task add(Task task) {
         tasks.add(task);
         return task;
@@ -115,10 +117,10 @@ public class TaskList {
     /**
      * Marks the task with the supplied one-based task number.
      *
-     * @param taskNumber number displayed beside the task
-     * @return the task that was marked
-     * @throws InvalidTaskListIndexException if the number does not identify a task in this list
-     * @throws TaskAlreadyMarkedException if the task is already marked
+     * @param taskNumber Number displayed beside the task.
+     * @return The task that was marked.
+     * @throws InvalidTaskListIndexException If the number does not identify a task in this list.
+     * @throws TaskAlreadyMarkedException If the task is already marked.
      */
     public Task markEvent(int taskNumber) throws TaskAlreadyMarkedException, InvalidTaskListIndexException {
         int arrayIndex = taskNumber - 1;
@@ -137,10 +139,10 @@ public class TaskList {
     /**
      * Removes the mark from the task with the supplied one-based task number.
      *
-     * @param taskNumber number displayed beside the task
-     * @return the task that was unmarked
-     * @throws InvalidTaskListIndexException if the number does not identify a task in this list
-     * @throws TaskAlreadyUnmarkedException if the task is already unmarked
+     * @param taskNumber Number displayed beside the task.
+     * @return The task that was unmarked.
+     * @throws InvalidTaskListIndexException If the number does not identify a task in this list.
+     * @throws TaskAlreadyUnmarkedException If the task is already unmarked.
      */
     public Task unmarkEvent(int taskNumber) throws TaskAlreadyUnmarkedException, InvalidTaskListIndexException {
         int arrayIndex = taskNumber - 1;
@@ -159,9 +161,9 @@ public class TaskList {
     /**
      * Removes the task with the supplied one-based task number.
      *
-     * @param taskNumber number displayed beside the task
-     * @return the removed task
-     * @throws InvalidTaskListIndexException if the number does not identify a task in this list
+     * @param taskNumber Number displayed beside the task.
+     * @return The removed task.
+     * @throws InvalidTaskListIndexException If the number does not identify a task in this list.
      */
     public Task delete(int taskNumber) throws InvalidTaskListIndexException {
         int arrayIndex = taskNumber - 1;
@@ -175,8 +177,8 @@ public class TaskList {
      * Returns a numbered, multi-line string representation of all tasks that occur on,
      * are due on, or span across the specified date, using each task's original 1-based index in the list.
      *
-     * @param date date to filter tasks by as a {@link Temporal}
-     * @return formatted list of matching tasks with original list numbers, or an empty list message if none match
+     * @param date Date to filter tasks by as a {@link Temporal}.
+     * @return Formatted list of matching tasks with original list numbers, or an empty list message if none match.
      */
     public String getTasksOnDate(Temporal date) {
         if (date == null) {
@@ -205,7 +207,7 @@ public class TaskList {
     /**
      * Returns all tasks as a numbered, multi-line string.
      *
-     * @return the formatted task list
+     * @return The formatted task list.
      */
     @Override
     public String toString() {

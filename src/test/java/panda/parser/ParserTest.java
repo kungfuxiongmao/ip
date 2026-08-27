@@ -1,5 +1,8 @@
 package panda.parser;
 
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.Test;
 
 import panda.command.AddDeadlineCommand;
@@ -16,9 +19,6 @@ import panda.command.UnmarkTaskCommand;
 import panda.exception.parser.InvalidArgumentException;
 import panda.exception.parser.InvalidDateException;
 import panda.exception.parser.NoCommandFoundException;
-
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Unit tests for {@link Parser}.
@@ -85,7 +85,8 @@ public class ParserTest {
     @Test
     public void parse_eventMissingParts_throwsInvalidArgumentException() {
         assertThrows(InvalidArgumentException.class, () -> Parser.parse("event meeting /from 15/10/2026 14:00"));
-        assertThrows(InvalidArgumentException.class, () -> Parser.parse("event /from 15/10/2026 14:00 /to 15/10/2026 16:00"));
+        assertThrows(InvalidArgumentException.class, () ->
+                Parser.parse("event /from 15/10/2026 14:00 /to 15/10/2026 16:00"));
     }
 
     @Test

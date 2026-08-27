@@ -3,58 +3,64 @@ package panda.task;
 import java.time.temporal.Temporal;
 
 /**
- * Represents a task with shared completion state.
- * Concrete subclasses supply their own type-specific details when displayed.
+ * Represents a single item tracked by Panda.
  */
 public abstract class Task {
-    private boolean marked;
     private final String description;
+    private boolean isMarked;
 
-    protected Task(String description) {
-        this.marked = false;
+    /**
+     * Creates an unmarked task with the given description.
+     *
+     * @param description Description of the task.
+     */
+    public Task(String description) {
         this.description = description;
-    }
-
-    public void mark() {
-        this.marked = true;
-    }
-
-    public void unmark() {
-        this.marked = false;
-    }
-
-    public boolean isMarked() {
-        return this.marked;
+        this.isMarked = false;
     }
 
     /**
-     * Returns the task description.
+     * Returns the description of this task.
      *
-     * @return task description
+     * @return Description text.
      */
     public String getDescription() {
         return description;
     }
 
     /**
-     * Checks whether this task falls on, is due on, or spans across the specified date.
-     * <p>
-     * The default implementation returns {@code false}. Subclasses with date components
-     * override this method to perform date-specific comparisons.
+     * Returns whether this task has been marked as done.
      *
-     * @param date the date to check against
-     * @return {@code true} if this task occurs on or spans across the specified date; {@code false} otherwise
+     * @return {@code true} if marked; {@code false} otherwise.
      */
-    public boolean checkDate(Temporal date) {
-        return false;
+    public boolean isMarked() {
+        return isMarked;
     }
+
+    /**
+     * Marks this task as done.
+     */
+    public void mark() {
+        this.isMarked = true;
+    }
+
+    /**
+     * Marks this task as not done.
+     */
+    public void unmark() {
+        this.isMarked = false;
+    }
+
+    /**
+     * Checks if this task occurs on, is due on, or spans across the specified date.
+     *
+     * @param date Date to check against as a {@link Temporal}.
+     * @return {@code true} if this task matches the specified date, {@code false} otherwise.
+     */
+    public abstract boolean checkDate(Temporal date);
 
     @Override
     public String toString() {
-        if (marked) {
-            return "[X] " + this.description;
-        } else {
-            return "[ ] " + this.description;
-        }
+        return "[" + (isMarked ? "X" : " ") + "] " + description;
     }
 }

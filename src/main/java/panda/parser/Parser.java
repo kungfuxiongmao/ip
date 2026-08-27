@@ -15,7 +15,6 @@ import panda.parser.commandparser.MarkTaskCommandParser;
 import panda.parser.commandparser.TodayCommandParser;
 import panda.parser.commandparser.UnmarkTaskCommandParser;
 
-
 /**
  * Converts user-entered text into commands Panda can execute.
  */
@@ -47,8 +46,8 @@ public class Parser {
         /**
          * Returns the argument parser for the supplied command keyword.
          *
-         * @param keyword command keyword entered by the user
-         * @return matching command parser, or {@code null} if the keyword is not supported
+         * @param keyword Command keyword entered by the user.
+         * @return Matching command parser, or {@code null} if the keyword is not supported.
          */
         static CommandParser getCommandParser(String keyword) {
             for (CommandType command : values()) {
@@ -63,18 +62,19 @@ public class Parser {
     /**
      * Removes surrounding whitespace before matching the input to a command.
      *
-     * @param input text entered by the user
-     * @return command that corresponds to the input
+     * @param input Text entered by the user.
+     * @return Command that corresponds to the input.
+     * @throws ParseException If parsing fails.
      */
     public static Command parse(String input) throws ParseException {
         return matchCommand(processInput(input));
     }
 
     /**
-     * Simple input processing - removal of surrounding whitespace
+     * Removes surrounding whitespace from the given input.
      *
-     * @param input text entered by the user
-     * @return input without surrounding whitespace
+     * @param input Text entered by the user.
+     * @return Input without surrounding whitespace.
      */
     private static String processInput(String input) {
         return input.strip();
@@ -83,8 +83,9 @@ public class Parser {
     /**
      * Matches the command keyword, then delegates argument validation to its command parser.
      *
-     * @param input user input without surrounding whitespace
-     * @return command that handles the input
+     * @param input User input without surrounding whitespace.
+     * @return Command that handles the input.
+     * @throws ParseException If no matching command is found or arguments are invalid.
      */
     private static Command matchCommand(String input) throws ParseException {
         if (input.isEmpty()) {
@@ -100,5 +101,4 @@ public class Parser {
         }
         return commandParser.parseArguments(arguments);
     }
-
 }

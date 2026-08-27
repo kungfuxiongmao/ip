@@ -8,7 +8,9 @@ import panda.exception.parser.InvalidArgumentException;
 import panda.exception.parser.InvalidDateException;
 import panda.util.datetime.DateTimeHelper;
 
-/** Parses arguments for a command that adds an event task. */
+/**
+ * Parses arguments for a command that adds an event task.
+ */
 public class AddEventCommandParser implements CommandParser {
 
     @Override

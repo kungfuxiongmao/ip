@@ -4,7 +4,9 @@ import panda.command.Command;
 import panda.command.UnmarkTaskCommand;
 import panda.exception.parser.InvalidArgumentException;
 
-/** Parses arguments for the {@code UnmarkTaskCommand}. */
+/**
+ * Parses arguments for the {@code unmark} command.
+ */
 public class UnmarkTaskCommandParser implements CommandParser {
 
     @Override

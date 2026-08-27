@@ -4,13 +4,15 @@ import java.io.IOException;
 
 import panda.storage.Storage;
 import panda.task.TaskList;
-import panda.ui.UI;
+import panda.ui.Ui;
 
 /**
  * Saves Panda's current task list when the application terminates normally.
  */
 public final class TerminationManager {
+
     private TerminationManager() {
+        // Utility class: prevent accidental instantiation.
     }
 
     /**
@@ -21,7 +23,7 @@ public final class TerminationManager {
         try {
             Storage.saveTasks(TaskList.getInstance().getTasks());
         } catch (IOException exception) {
-            UI.printMessage("OOPS! Panda could not save tasks: " + exception.getMessage());
+            Ui.printMessage("OOPS! Panda could not save tasks: " + exception.getMessage());
         }
         System.exit(0);
     }

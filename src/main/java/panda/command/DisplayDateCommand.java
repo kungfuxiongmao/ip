@@ -3,7 +3,7 @@ package panda.command;
 import java.time.temporal.Temporal;
 
 import panda.task.TaskList;
-import panda.ui.UI;
+import panda.ui.Ui;
 
 /**
  * Displays tasks occurring on, due on, or spanning across a specified date.
@@ -14,7 +14,7 @@ public class DisplayDateCommand implements Command {
     /**
      * Creates a command to display tasks on the specified date.
      *
-     * @param date date to filter tasks by as a {@link Temporal}
+     * @param date Date to filter tasks by as a {@link Temporal}.
      */
     public DisplayDateCommand(Temporal date) {
         this.date = date;
@@ -22,6 +22,6 @@ public class DisplayDateCommand implements Command {
 
     @Override
     public void execute() {
-        UI.printMessage(TaskList.getInstance().getTasksOnDate(date));
+        Ui.printMessage(TaskList.getInstance().getTasksOnDate(date));
     }
 }

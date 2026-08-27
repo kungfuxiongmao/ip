@@ -8,7 +8,7 @@ public class NoCommandFoundException extends ParseException {
     /**
      * Creates an exception for an unrecognised command.
      *
-     * @param input unrecognised input, or an empty string for blank input
+     * @param input Unrecognised input, or an empty string for blank input.
      */
     public NoCommandFoundException(String input) {
         super(input.isEmpty()

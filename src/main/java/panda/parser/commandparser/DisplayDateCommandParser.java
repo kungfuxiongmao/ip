@@ -8,7 +8,9 @@ import panda.exception.parser.InvalidArgumentException;
 import panda.exception.parser.InvalidDateException;
 import panda.util.datetime.DateTimeHelper;
 
-/** Parses arguments for a command that displays tasks matching a specific date. */
+/**
+ * Parses arguments for a command that displays tasks matching a specific date.
+ */
 public class DisplayDateCommandParser implements CommandParser {
 
     @Override

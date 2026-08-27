@@ -9,21 +9,22 @@ import panda.storage.Storage;
 import panda.task.Task;
 import panda.task.TaskList;
 import panda.ui.ExceptionHandler;
-import panda.ui.UI;
+import panda.ui.Ui;
 
 /**
  * Handles Panda's greeting and task-list initialization at startup.
  */
 public final class StartManager {
+
     private StartManager() {
+        // Utility class: prevent accidental instantiation.
     }
 
     /**
-     * Greets the user and initializes the task list from storage. An empty task
-     * list is used if the file is corrupted or cannot be read. It can be assumed
-     * after running this function that TaskList has been instantiated correctly
-     * for the application.
-     *
+     * Greets the user and initializes the task list from storage.
+     * <p>
+     * An empty task list is used if the file is corrupted or cannot be read. It can be assumed
+     * after running this function that TaskList has been instantiated correctly for the application.
      */
     public static void start() {
         greet();
@@ -32,7 +33,7 @@ public final class StartManager {
         try {
             tasks = Storage.readTasks();
         } catch (IOException exception) {
-            UI.printMessage("Panda could not read the save file: " + exception.getMessage());
+            Ui.printMessage("Panda could not read the save file: " + exception.getMessage());
             tasks = null;
         }
 
@@ -44,10 +45,11 @@ public final class StartManager {
         } catch (TaskListAlreadyInstantiatedException exception) {
             ExceptionHandler.handle(exception);
         }
-
     }
 
-    /** Prints Panda's welcome message. */
+    /**
+     * Prints Panda's welcome message.
+     */
     private static void greet() {
         String banner = """
                                                             _______               \s
@@ -63,6 +65,6 @@ public final class StartManager {
                 '-----------'          \\ \\._,\\ '/|  |   |  |             \\ \\._,\\ '/
                                         `--'  `" '--'   '--'              `--'  `"\s
                 """;
-        UI.printMessage(banner + "\nHello! I'm Panda." + "\nWhat can I do for you?");
+        Ui.printMessage(banner + "\nHello! I'm Panda." + "\nWhat can I do for you?");
     }
 }

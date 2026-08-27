@@ -4,7 +4,9 @@ import panda.command.AddTodoCommand;
 import panda.command.Command;
 import panda.exception.parser.InvalidArgumentException;
 
-/** Parses arguments for a command that adds a to-do task. */
+/**
+ * Parses arguments for a command that adds a to-do task.
+ */
 public class AddTodoCommandParser implements CommandParser {
 
     @Override

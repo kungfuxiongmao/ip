@@ -4,7 +4,9 @@ import panda.command.ByeCommand;
 import panda.command.Command;
 import panda.exception.parser.InvalidArgumentException;
 
-/** Parses arguments for the {@code bye} command. */
+/**
+ * Parses arguments for the {@code bye} command.
+ */
 public class ByeCommandParser implements CommandParser {
 
     @Override

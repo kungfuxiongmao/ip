@@ -1,5 +1,9 @@
 package panda.storage;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.Test;
 
 import panda.exception.storage.FileCorruptedException;
@@ -7,10 +11,6 @@ import panda.task.Deadline;
 import panda.task.Event;
 import panda.task.Task;
 import panda.task.Todo;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Unit tests for {@link TaskCodec} using round-trip serialization and corrupted line handling.

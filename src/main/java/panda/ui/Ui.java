@@ -3,17 +3,17 @@ package panda.ui;
 /**
  * Provides a consistent way for Panda to display messages to the user.
  */
-public final class UI {
+public final class Ui {
     private static final String DIVIDER = "____________________________________________________________";
 
-    private UI() {
+    private Ui() {
         // Utility class: prevent accidental instantiation.
     }
 
     /**
-     * Prints message in a standardised format
+     * Prints the message in a standardized format.
      *
-     * @param message text to display
+     * @param message Text to display.
      */
     public static void printMessage(String message) {
         System.out.println(DIVIDER);

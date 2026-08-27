@@ -4,7 +4,9 @@ import panda.command.Command;
 import panda.command.TodayCommand;
 import panda.exception.parser.InvalidArgumentException;
 
-/** Parses arguments for the {@code TodayCommand}. */
+/**
+ * Parses arguments for the {@code today} command.
+ */
 public class TodayCommandParser implements CommandParser {
 
     @Override

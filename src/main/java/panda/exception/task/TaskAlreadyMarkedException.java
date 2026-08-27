@@ -11,7 +11,7 @@ public class TaskAlreadyMarkedException extends ApplicationException {
     /**
      * Creates an exception that identifies the task that was marked twice.
      *
-     * @param task marked task the user tried to mark again
+     * @param task Marked task the user tried to mark again.
      */
     public TaskAlreadyMarkedException(Task task) {
         super("OOPS! Panda has already marked this task as done:" + System.lineSeparator()

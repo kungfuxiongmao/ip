@@ -11,8 +11,8 @@ public class InvalidDateException extends InvalidArgumentException {
     /**
      * Creates an exception that explains the expected date and date-time format for a command.
      *
-     * @param command command whose date argument is invalid
-     * @param usage expected command format
+     * @param command Command whose date argument is invalid.
+     * @param usage Expected command format.
      */
     public InvalidDateException(String command, String usage) {
         super(String.format(
@@ -25,9 +25,9 @@ public class InvalidDateException extends InvalidArgumentException {
     /**
      * Creates an exception that specifies the invalid date input, expected formats, and command usage.
      *
-     * @param invalidDate the invalid date string supplied by the user
-     * @param command command whose date argument is invalid
-     * @param usage expected command format
+     * @param invalidDate The invalid date string supplied by the user.
+     * @param command Command whose date argument is invalid.
+     * @param usage Expected command format.
      */
     public InvalidDateException(String invalidDate, String command, String usage) {
         super(String.format(

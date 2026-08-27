@@ -4,7 +4,9 @@ import panda.command.Command;
 import panda.command.ListTasksCommand;
 import panda.exception.parser.InvalidArgumentException;
 
-/** Parses arguments for the {@code ListTasksCommand}. */
+/**
+ * Parses arguments for the {@code list} command.
+ */
 public class ListTasksCommandParser implements CommandParser {
 
     @Override

@@ -4,7 +4,9 @@ import panda.command.Command;
 import panda.command.DeleteTaskCommand;
 import panda.exception.parser.InvalidArgumentException;
 
-/** Parses arguments for the {@code DeleteTaskCommand}. */
+/**
+ * Parses arguments for the {@code delete} command.
+ */
 public class DeleteTaskCommandParser implements CommandParser {
 
     @Override
