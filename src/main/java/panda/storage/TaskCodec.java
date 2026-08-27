@@ -17,14 +17,15 @@ public final class TaskCodec {
     private static final String DELIMITER = " | ";
 
     private TaskCodec() {
+        // Utility class: prevent accidental instantiation.
     }
 
     /**
      * Encodes one task as a line suitable for the save file.
      *
-     * @param task task to encode
-     * @return serialized task line
-     * @throws IllegalArgumentException if the task type is unsupported
+     * @param task Task to encode.
+     * @return Serialized task line.
+     * @throws IllegalArgumentException If the task type is unsupported.
      */
     public static String encode(Task task) {
         String state = task.isMarked() ? "1" : "0";
@@ -48,9 +49,9 @@ public final class TaskCodec {
     /**
      * Decodes one save-file line into its corresponding task type.
      *
-     * @param line serialized task line
-     * @return decoded task
-     * @throws FileCorruptedException if the line has an invalid format
+     * @param line Serialized task line.
+     * @return Decoded task.
+     * @throws FileCorruptedException If the line has an invalid format.
      */
     public static Task decode(String line) throws FileCorruptedException {
         if (line == null) {
@@ -77,7 +78,7 @@ public final class TaskCodec {
                     "Expected " + expectedFieldCount + " fields but found " + fields.length);
         }
 
-        boolean marked = decodeState(fields[1]);
+        boolean isMarked = decodeState(fields[1]);
         Task task;
         try {
             task = switch (taskType) {
@@ -86,11 +87,11 @@ public final class TaskCodec {
             case "E" -> new Event(fields[2], DateTimeHelper.loadDate(fields[3]), DateTimeHelper.loadDate(fields[4]));
             default -> throw new AssertionError("Task type was validated before decoding");
             };
-        } catch (DateTimeParseException | IllegalArgumentException e) {
-            throw new FileCorruptedException("Failed to parse date: " + e.getMessage());
+        } catch (DateTimeParseException | IllegalArgumentException exception) {
+            throw new FileCorruptedException("Failed to parse date: " + exception.getMessage());
         }
 
-        if (marked) {
+        if (isMarked) {
             task.mark();
         }
         return task;
@@ -99,9 +100,9 @@ public final class TaskCodec {
     /**
      * Validates the completion-state field and converts it to a boolean.
      *
-     * @param state state flag string ("1" for done, "0" for not done)
-     * @return {@code true} if marked; {@code false} if unmarked
-     * @throws FileCorruptedException if the state value is neither "0" nor "1"
+     * @param state State flag string ("1" for done, "0" for not done).
+     * @return Whether the task is marked.
+     * @throws FileCorruptedException If the state value is neither "0" nor "1".
      */
     private static boolean decodeState(String state) throws FileCorruptedException {
         return switch (state) {

@@ -4,7 +4,9 @@ import panda.command.ByeCommand;
 import panda.command.Command;
 import panda.exception.parser.InvalidArgumentException;
 
-/** Parses arguments for the {@code bye} command. */
+/**
+ * Parses arguments for the {@code bye} command.
+ */
 public class ByeCommandParser implements CommandParser {
 
     /**
@@ -16,9 +18,9 @@ public class ByeCommandParser implements CommandParser {
     /**
      * Validates that no extra arguments are passed to the {@code bye} command.
      *
-     * @param arguments text following the bye command
-     * @return a {@link ByeCommand} instance
-     * @throws InvalidArgumentException if extraneous arguments are supplied
+     * @param arguments Text following the bye command.
+     * @return A {@link ByeCommand} instance.
+     * @throws InvalidArgumentException If extraneous arguments are supplied.
      */
     @Override
     public Command parseArguments(String arguments) throws InvalidArgumentException {

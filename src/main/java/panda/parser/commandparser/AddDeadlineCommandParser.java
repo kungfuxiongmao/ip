@@ -8,7 +8,9 @@ import panda.exception.parser.InvalidArgumentException;
 import panda.exception.parser.InvalidDateException;
 import panda.util.datetime.DateTimeHelper;
 
-/** Parses arguments for a command that adds a deadline task. */
+/**
+ * Parses arguments for a command that adds a deadline task.
+ */
 public class AddDeadlineCommandParser implements CommandParser {
 
     /**
@@ -20,9 +22,9 @@ public class AddDeadlineCommandParser implements CommandParser {
     /**
      * Parses the deadline description and due date from the supplied arguments.
      *
-     * @param arguments text containing description and {@code /by DATE}
-     * @return an {@link AddDeadlineCommand} with the parsed description and due date
-     * @throws InvalidArgumentException if the syntax is malformed or the date format is invalid
+     * @param arguments Text containing description and {@code /by DATE}.
+     * @return An {@link AddDeadlineCommand} with the parsed description and due date.
+     * @throws InvalidArgumentException If the syntax is malformed or the date format is invalid.
      */
     @Override
     public Command parseArguments(String arguments) throws InvalidArgumentException {

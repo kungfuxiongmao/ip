@@ -10,7 +10,7 @@ public abstract class ParseException extends ApplicationException {
     /**
      * Creates a parsing exception with a user-facing message.
      *
-     * @param message explanation of the input problem
+     * @param message Explanation of the input problem.
      */
     public ParseException(String message) {
         super(message);

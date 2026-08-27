@@ -8,7 +8,9 @@ import panda.exception.parser.InvalidArgumentException;
 import panda.exception.parser.InvalidDateException;
 import panda.util.datetime.DateTimeHelper;
 
-/** Parses arguments for a command that adds an event task. */
+/**
+ * Parses arguments for a command that adds an event task.
+ */
 public class AddEventCommandParser implements CommandParser {
 
     /**
@@ -20,9 +22,9 @@ public class AddEventCommandParser implements CommandParser {
     /**
      * Parses the event description, start date/time, and end date/time from the supplied arguments.
      *
-     * @param arguments text containing description, {@code /from START}, and {@code /to END}
-     * @return an {@link AddEventCommand} with the parsed description and date ranges
-     * @throws InvalidArgumentException if the syntax is malformed or date formats are invalid
+     * @param arguments Text containing description, {@code /from START}, and {@code /to END}.
+     * @return An {@link AddEventCommand} with the parsed description and date ranges.
+     * @throws InvalidArgumentException If the syntax is malformed or date formats are invalid.
      */
     @Override
     public Command parseArguments(String arguments) throws InvalidArgumentException {

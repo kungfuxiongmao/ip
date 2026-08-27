@@ -14,8 +14,8 @@ public class Deadline extends Task {
     /**
      * Creates an unmarked deadline task.
      *
-     * @param description description of the task
-     * @param dueDate date by which the task is due
+     * @param description Description of the task.
+     * @param dueDate Date by which the task is due.
      */
     public Deadline(String description, Temporal dueDate) {
         super(description);
@@ -25,7 +25,7 @@ public class Deadline extends Task {
     /**
      * Returns the deadline date.
      *
-     * @return deadline date as a {@link Temporal}
+     * @return Deadline date as a {@link Temporal}.
      */
     public Temporal getDueDate() {
         return dueDate;
@@ -34,8 +34,8 @@ public class Deadline extends Task {
     /**
      * Checks if the deadline falls on the specified date.
      *
-     * @param date the date to check against
-     * @return {@code true} if the due date falls on the specified date; {@code false} otherwise
+     * @param date The date to check against.
+     * @return Whether the due date falls on the specified date.
      */
     @Override
     public boolean checkDate(Temporal date) {
@@ -50,7 +50,7 @@ public class Deadline extends Task {
     /**
      * Returns a string representation of the deadline.
      *
-     * @return formatted deadline string
+     * @return Formatted deadline string.
      */
     @Override
     public String toString() {

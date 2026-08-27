@@ -9,7 +9,7 @@ import java.util.List;
 
 import panda.exception.storage.FileCorruptedException;
 import panda.task.Task;
-import panda.ui.UI;
+import panda.ui.Ui;
 
 /**
  * Reads and writes Panda's task save file.
@@ -18,15 +18,17 @@ public final class Storage {
     private static final Path SAVE_FILE = Path.of("data", "tasks.txt");
 
     private Storage() {
+        // Utility class: prevent accidental instantiation.
     }
 
     /**
      * Reads and decodes every task in the save file.
+     * <p>
      * A missing file represents an empty task list. A corrupted file is left
      * untouched and represented by a {@code null} return value.
      *
-     * @return decoded tasks, or {@code null} if any record is corrupted
-     * @throws IOException if the file cannot be read
+     * @return Decoded tasks, or {@code null} if any record is corrupted.
+     * @throws IOException If the file cannot be read.
      */
     public static List<Task> readTasks() throws IOException {
         if (Files.notExists(SAVE_FILE)) {
@@ -39,7 +41,7 @@ public final class Storage {
                 tasks.add(TaskCodec.decode(line));
             }
         } catch (FileCorruptedException exception) {
-            UI.printMessage("The saved file is broken... I can only restart your task list.\n"
+            Ui.printMessage("The saved file is broken... I can only restart your task list.\n"
                     + exception.getMessage());
             return null;
         }
@@ -49,8 +51,8 @@ public final class Storage {
     /**
      * Overwrites the save file with the supplied tasks.
      *
-     * @param tasks tasks to save
-     * @throws IOException if the file cannot be written
+     * @param tasks Tasks to save.
+     * @throws IOException If the file cannot be written.
      */
     public static void saveTasks(List<Task> tasks) throws IOException {
         Path parentDirectory = SAVE_FILE.getParent();

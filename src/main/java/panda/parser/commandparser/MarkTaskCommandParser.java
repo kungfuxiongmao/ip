@@ -4,7 +4,9 @@ import panda.command.Command;
 import panda.command.MarkTaskCommand;
 import panda.exception.parser.InvalidArgumentException;
 
-/** Parses arguments for the {@code MarkTaskCommand}. */
+/**
+ * Parses arguments for the {@code mark} command.
+ */
 public class MarkTaskCommandParser implements CommandParser {
 
     /**
@@ -16,9 +18,9 @@ public class MarkTaskCommandParser implements CommandParser {
     /**
      * Parses the task number to mark from the supplied arguments.
      *
-     * @param arguments text containing the one-based task number
-     * @return a {@link MarkTaskCommand} with the parsed task index
-     * @throws InvalidArgumentException if the argument is non-numeric or empty
+     * @param arguments Text containing the one-based task number.
+     * @return A {@link MarkTaskCommand} with the parsed task index.
+     * @throws InvalidArgumentException If the argument is non-numeric or empty.
      */
     @Override
     public Command parseArguments(String arguments) throws InvalidArgumentException {

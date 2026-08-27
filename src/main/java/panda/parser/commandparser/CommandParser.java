@@ -11,9 +11,9 @@ public interface CommandParser {
     /**
      * Validates command arguments and creates the corresponding command.
      *
-     * @param arguments text following the command keyword
-     * @return command ready to execute
-     * @throws InvalidArgumentException if the arguments do not match the command's usage
+     * @param arguments Text following the command keyword.
+     * @return Command ready to execute.
+     * @throws InvalidArgumentException If the arguments do not match the command's usage.
      */
     Command parseArguments(String arguments) throws InvalidArgumentException;
 }

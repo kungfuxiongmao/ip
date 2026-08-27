@@ -10,7 +10,7 @@ public class Todo extends Task {
     /**
      * Creates an unmarked to-do task.
      *
-     * @param description description of the task
+     * @param description Description of the task.
      */
     public Todo(String description) {
         super(description);
@@ -20,8 +20,8 @@ public class Todo extends Task {
      * Checks if this to-do task occurs on the specified date.
      * Always returns {@code false} as to-dos do not have date associations.
      *
-     * @param date the date to check against
-     * @return {@code false}
+     * @param date The date to check against.
+     * @return Always {@code false}.
      */
     @Override
     public boolean checkDate(Temporal date) {
@@ -31,7 +31,7 @@ public class Todo extends Task {
     /**
      * Returns a string representation of the to-do task.
      *
-     * @return formatted to-do string
+     * @return Formatted to-do string.
      */
     @Override
     public String toString() {

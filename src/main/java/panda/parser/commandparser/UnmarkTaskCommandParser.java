@@ -4,7 +4,9 @@ import panda.command.Command;
 import panda.command.UnmarkTaskCommand;
 import panda.exception.parser.InvalidArgumentException;
 
-/** Parses arguments for the {@code UnmarkTaskCommand}. */
+/**
+ * Parses arguments for the {@code unmark} command.
+ */
 public class UnmarkTaskCommandParser implements CommandParser {
 
     /**
@@ -16,9 +18,9 @@ public class UnmarkTaskCommandParser implements CommandParser {
     /**
      * Parses the task number to unmark from the supplied arguments.
      *
-     * @param arguments text containing the one-based task number
-     * @return an {@link UnmarkTaskCommand} with the parsed task index
-     * @throws InvalidArgumentException if the argument is non-numeric or empty
+     * @param arguments Text containing the one-based task number.
+     * @return An {@link UnmarkTaskCommand} with the parsed task index.
+     * @throws InvalidArgumentException If the argument is non-numeric or empty.
      */
     @Override
     public Command parseArguments(String arguments) throws InvalidArgumentException {

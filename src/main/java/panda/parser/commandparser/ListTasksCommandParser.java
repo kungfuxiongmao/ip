@@ -4,7 +4,9 @@ import panda.command.Command;
 import panda.command.ListTasksCommand;
 import panda.exception.parser.InvalidArgumentException;
 
-/** Parses arguments for the {@code ListTasksCommand}. */
+/**
+ * Parses arguments for the {@code list} command.
+ */
 public class ListTasksCommandParser implements CommandParser {
 
     /**
@@ -16,9 +18,9 @@ public class ListTasksCommandParser implements CommandParser {
     /**
      * Validates that no extra arguments are passed to the {@code list} command.
      *
-     * @param arguments text following the list command keyword
-     * @return a {@link ListTasksCommand} instance
-     * @throws InvalidArgumentException if extraneous arguments are supplied
+     * @param arguments Text following the list command keyword.
+     * @return A {@link ListTasksCommand} instance.
+     * @throws InvalidArgumentException If extraneous arguments are supplied.
      */
     @Override
     public Command parseArguments(String arguments) throws InvalidArgumentException {

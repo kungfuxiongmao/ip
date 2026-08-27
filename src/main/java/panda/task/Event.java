@@ -15,9 +15,9 @@ public class Event extends Task {
     /**
      * Creates an unmarked event task.
      *
-     * @param description description of the event
-     * @param dateTimeFrom event start date and time
-     * @param dateTimeTo event end date and time
+     * @param description Description of the event.
+     * @param dateTimeFrom Event start date and time.
+     * @param dateTimeTo Event end date and time.
      */
     public Event(String description, Temporal dateTimeFrom, Temporal dateTimeTo) {
         super(description);
@@ -28,7 +28,7 @@ public class Event extends Task {
     /**
      * Returns the event's start date and time.
      *
-     * @return event start as a {@link Temporal}
+     * @return Event start as a {@link Temporal}.
      */
     public Temporal getDateTimeFrom() {
         return dateTimeFrom;
@@ -37,7 +37,7 @@ public class Event extends Task {
     /**
      * Returns the event's end date and time.
      *
-     * @return event end as a {@link Temporal}
+     * @return Event end as a {@link Temporal}.
      */
     public Temporal getDateTimeTo() {
         return dateTimeTo;
@@ -46,8 +46,8 @@ public class Event extends Task {
     /**
      * Checks if the specified date falls within the event's date range (inclusive).
      *
-     * @param date the date to check against
-     * @return {@code true} if the date is between or on the event start and end dates; {@code false} otherwise
+     * @param date The date to check against.
+     * @return Whether the date is between or on the event start and end dates.
      */
     @Override
     public boolean checkDate(Temporal date) {
@@ -63,7 +63,7 @@ public class Event extends Task {
     /**
      * Returns a string representation of the event.
      *
-     * @return formatted event string
+     * @return Formatted event string.
      */
     @Override
     public String toString() {
