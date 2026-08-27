@@ -16,6 +16,11 @@ public class AddTodoCommand extends AddTaskCommand {
         this.description = description;
     }
 
+    /**
+     * Adds the to-do task to the singleton task list.
+     *
+     * @return the newly added {@link panda.task.Todo} task
+     */
     @Override
     protected Task addTask() {
         return TaskList.getInstance().addTodo(description);

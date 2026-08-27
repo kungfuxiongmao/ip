@@ -20,6 +20,11 @@ public class MarkTaskCommand implements Command {
         this.taskNumber = taskNumber;
     }
 
+    /**
+     * Marks the designated task as completed and displays a confirmation message.
+     *
+     * @throws ApplicationException if the task number is out of bounds or already marked
+     */
     @Override
     public void execute() throws ApplicationException {
         Task task = TaskList.getInstance().markEvent(taskNumber);

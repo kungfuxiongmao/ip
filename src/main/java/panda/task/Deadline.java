@@ -31,6 +31,12 @@ public class Deadline extends Task {
         return dueDate;
     }
 
+    /**
+     * Checks if the deadline falls on the specified date.
+     *
+     * @param date the date to check against
+     * @return {@code true} if the due date falls on the specified date; {@code false} otherwise
+     */
     @Override
     public boolean checkDate(Temporal date) {
         if (date == null) {
@@ -41,6 +47,11 @@ public class Deadline extends Task {
         return dueDateLocal.equals(targetDate);
     }
 
+    /**
+     * Returns a string representation of the deadline.
+     *
+     * @return formatted deadline string
+     */
     @Override
     public String toString() {
         return "[D]" + super.toString() + " (by: " + DateTimeHelper.format(dueDate) + ")";

@@ -11,6 +11,19 @@ import panda.util.datetime.DateTimeHelper;
 /** Parses arguments for a command that adds a deadline task. */
 public class AddDeadlineCommandParser implements CommandParser {
 
+    /**
+     * Constructs an {@code AddDeadlineCommandParser}.
+     */
+    public AddDeadlineCommandParser() {
+    }
+
+    /**
+     * Parses the deadline description and due date from the supplied arguments.
+     *
+     * @param arguments text containing description and {@code /by DATE}
+     * @return an {@link AddDeadlineCommand} with the parsed description and due date
+     * @throws InvalidArgumentException if the syntax is malformed or the date format is invalid
+     */
     @Override
     public Command parseArguments(String arguments) throws InvalidArgumentException {
         String[] deadlineParts = arguments.split("\\s+/by\\s+", 2);

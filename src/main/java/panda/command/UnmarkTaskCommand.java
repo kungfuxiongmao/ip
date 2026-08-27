@@ -20,6 +20,11 @@ public class UnmarkTaskCommand implements Command {
         this.taskNumber = taskNumber;
     }
 
+    /**
+     * Unmarks the designated task (marks as not done) and displays a confirmation message.
+     *
+     * @throws ApplicationException if the task number is out of bounds or already unmarked
+     */
     @Override
     public void execute() throws ApplicationException {
         Task task = TaskList.getInstance().unmarkEvent(taskNumber);

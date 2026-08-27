@@ -24,6 +24,11 @@ public class AddEventCommand extends AddTaskCommand {
         this.dateTimeTo = dateTimeTo;
     }
 
+    /**
+     * Adds the event task to the singleton task list.
+     *
+     * @return the newly added {@link panda.task.Event} task
+     */
     @Override
     protected Task addTask() {
         return TaskList.getInstance().addEvent(description, dateTimeFrom, dateTimeTo);

@@ -43,6 +43,12 @@ public class Event extends Task {
         return dateTimeTo;
     }
 
+    /**
+     * Checks if the specified date falls within the event's date range (inclusive).
+     *
+     * @param date the date to check against
+     * @return {@code true} if the date is between or on the event start and end dates; {@code false} otherwise
+     */
     @Override
     public boolean checkDate(Temporal date) {
         if (date == null) {
@@ -54,6 +60,11 @@ public class Event extends Task {
         return !targetDate.isBefore(fromDate) && !targetDate.isAfter(toDate);
     }
 
+    /**
+     * Returns a string representation of the event.
+     *
+     * @return formatted event string
+     */
     @Override
     public String toString() {
         return "[E]" + super.toString() + " (from: " + DateTimeHelper.format(dateTimeFrom)

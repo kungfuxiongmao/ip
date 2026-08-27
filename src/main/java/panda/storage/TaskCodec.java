@@ -96,7 +96,13 @@ public final class TaskCodec {
         return task;
     }
 
-    /** Validates the completion-state field and converts it to a boolean. */
+    /**
+     * Validates the completion-state field and converts it to a boolean.
+     *
+     * @param state state flag string ("1" for done, "0" for not done)
+     * @return {@code true} if marked; {@code false} if unmarked
+     * @throws FileCorruptedException if the state value is neither "0" nor "1"
+     */
     private static boolean decodeState(String state) throws FileCorruptedException {
         return switch (state) {
         case "1" -> true;

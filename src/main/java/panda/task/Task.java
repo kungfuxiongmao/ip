@@ -10,19 +10,35 @@ public abstract class Task {
     private boolean marked;
     private final String description;
 
+    /**
+     * Constructs an unmarked task with the given description.
+     *
+     * @param description description of the task
+     */
     protected Task(String description) {
         this.marked = false;
         this.description = description;
     }
 
+    /**
+     * Marks this task as completed.
+     */
     public void mark() {
         this.marked = true;
     }
 
+    /**
+     * Unmarks this task, setting its completion status to not done.
+     */
     public void unmark() {
         this.marked = false;
     }
 
+    /**
+     * Returns whether this task is marked as completed.
+     *
+     * @return {@code true} if marked done; {@code false} otherwise
+     */
     public boolean isMarked() {
         return this.marked;
     }
@@ -49,6 +65,11 @@ public abstract class Task {
         return false;
     }
 
+    /**
+     * Returns a string representation of the task.
+     *
+     * @return formatted task string
+     */
     @Override
     public String toString() {
         if (marked) {

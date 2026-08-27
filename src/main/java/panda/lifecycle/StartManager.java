@@ -47,7 +47,9 @@ public final class StartManager {
 
     }
 
-    /** Prints Panda's welcome message. */
+    /**
+     * Prints Panda's welcome banner and initial greeting message to the console.
+     */
     private static void greet() {
         String banner = """
                                                             _______               \s

@@ -20,6 +20,9 @@ public class DisplayDateCommand implements Command {
         this.date = date;
     }
 
+    /**
+     * Retrieves and displays all tasks occurring on or spanning across the specified date.
+     */
     @Override
     public void execute() {
         UI.printMessage(TaskList.getInstance().getTasksOnDate(date));
