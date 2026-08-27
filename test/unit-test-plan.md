@@ -38,6 +38,8 @@ This document records the unit test cases for Panda's core business logic compon
 | Valid `display /date` command | `"display /date 15/10/2026"` | Returns [`DisplayDateCommand`](file:///home/zhu_j/ip/src/main/java/panda/command/DisplayDateCommand.java) |
 | `display` missing arguments | `"display"`, `"display /date"` | Throws [`InvalidArgumentException`](file:///home/zhu_j/ip/src/main/java/panda/exception/parser/InvalidArgumentException.java) |
 | `display` invalid date format | `"display /date invalid-date"` | Throws [`InvalidDateException`](file:///home/zhu_j/ip/src/main/java/panda/exception/parser/InvalidDateException.java) |
+| Valid `find` command | `"find book"` | Returns [`FindCommand`](file:///home/zhu_j/ip/src/main/java/panda/command/FindCommand.java) |
+| `find` with missing keyword | `"find"`, `"find   "` | Throws [`InvalidArgumentException`](file:///home/zhu_j/ip/src/main/java/panda/exception/parser/InvalidArgumentException.java) |
 | Empty / whitespace input | `""`, `"   "` | Throws [`NoCommandFoundException`](file:///home/zhu_j/ip/src/main/java/panda/exception/parser/NoCommandFoundException.java) |
 | Unknown command | `"hello world"`, `"foobar"` | Throws [`NoCommandFoundException`](file:///home/zhu_j/ip/src/main/java/panda/exception/parser/NoCommandFoundException.java) |
 | Input with surrounding whitespace | `"   list   "` | Returns [`ListTasksCommand`](file:///home/zhu_j/ip/src/main/java/panda/command/ListTasksCommand.java) |
@@ -114,6 +116,15 @@ This document records the unit test cases for Panda's core business logic compon
 ---
 
 ## 4. `panda.task.Task` (and Subclasses)
+
+### Method: `public boolean hasKeyword(String keyword)`
+
+| Class Being Tested | Test Case | Test Input | Expected Output |
+| :--- | :--- | :--- | :--- |
+| [`Todo`](file:///home/zhu_j/ip/src/main/java/panda/task/Todo.java) | Matching lowercase keyword | Description: `"read a library book"`; keyword: `"library"` or `"book"` | `true` |
+| [`Todo`](file:///home/zhu_j/ip/src/main/java/panda/task/Todo.java) | Matching uppercase keyword | Description: `"read a library book"`; keyword: `"LIBRARY"` | `true` |
+| [`Todo`](file:///home/zhu_j/ip/src/main/java/panda/task/Todo.java) | Partial keyword | Description: `"read a library book"`; keyword: `"lib"` | `false` |
+| [`Todo`](file:///home/zhu_j/ip/src/main/java/panda/task/Todo.java) | Non-matching keyword | Description: `"read a library book"`; keyword: `"write"` | `false` |
 
 ### Method: `public boolean checkDate(Temporal date)`
 

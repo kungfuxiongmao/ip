@@ -10,6 +10,7 @@ import panda.parser.commandparser.ByeCommandParser;
 import panda.parser.commandparser.CommandParser;
 import panda.parser.commandparser.DeleteTaskCommandParser;
 import panda.parser.commandparser.DisplayDateCommandParser;
+import panda.parser.commandparser.FindCommandParser;
 import panda.parser.commandparser.ListTasksCommandParser;
 import panda.parser.commandparser.MarkTaskCommandParser;
 import panda.parser.commandparser.TodayCommandParser;
@@ -34,7 +35,8 @@ public class Parser {
         DEADLINE("deadline", new AddDeadlineCommandParser()),
         EVENT("event", new AddEventCommandParser()),
         TODAY("today", new TodayCommandParser()),
-        DISPLAY("display", new DisplayDateCommandParser());
+        DISPLAY("display", new DisplayDateCommandParser()),
+        FIND("find", new FindCommandParser());
 
         private final String keyword;
         private final CommandParser commandParser;

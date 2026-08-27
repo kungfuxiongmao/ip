@@ -1,6 +1,7 @@
 package panda.task;
 
 import java.time.temporal.Temporal;
+import java.util.regex.Pattern;
 
 /**
  * Represents a task with shared completion state.
@@ -34,6 +35,21 @@ public abstract class Task {
      */
     public String getDescription() {
         return description;
+    }
+
+    /**
+     * Checks whether this task's description contains the specified whole keyword, ignoring letter case.
+     *
+     * @param keyword Keyword to find in the description.
+     * @return {@code true} if the description contains the whole keyword; {@code false} otherwise.
+     */
+    public boolean hasKeyword(String keyword) {
+        String keywordPattern = "(?<![\\p{L}\\p{N}])"
+                + Pattern.quote(keyword)
+                + "(?![\\p{L}\\p{N}])";
+        return Pattern.compile(keywordPattern, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE)
+                .matcher(description)
+                .find();
     }
 
     /**

@@ -7,7 +7,7 @@ import panda.exception.ApplicationException;
  */
 public interface Command {
     /**
-     * Performs this command.
+     * Performs the command.
      *
      */
     void execute() throws ApplicationException;

@@ -43,6 +43,7 @@ Panda is able to:
 - Display the task list
 - Mark and unmark a task
 - Delete a task
+- Find tasks whose descriptions contain a keyword
 - Save task list and read task list from saves
 - Terminate the program on command
 
@@ -94,6 +95,11 @@ If the task number is missing, not an integer, or followed by extra values, Pand
 Remove a task with `delete TASK_NUMBER`, where `TASK_NUMBER` is the one-based number displayed by `list`. 
 Panda confirms the task that was removed, reports the new task count, and renumbers the remaining tasks. 
 Panda rejects missing, non-numeric, or out-of-range task numbers.
+
+### Find tasks
+
+Enter `find KEYWORD` to display tasks whose descriptions contain `KEYWORD` as a whole word or phrase. Matching is
+case-insensitive, and results retain the task numbers shown by `list`.
 
 ### Save System
 Tasks are saved in `/data/tasks.txt`. 
