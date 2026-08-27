@@ -12,6 +12,7 @@ import panda.command.ByeCommand;
 import panda.command.Command;
 import panda.command.DeleteTaskCommand;
 import panda.command.DisplayDateCommand;
+import panda.command.FindCommand;
 import panda.command.ListTasksCommand;
 import panda.command.MarkTaskCommand;
 import panda.command.TodayCommand;
@@ -145,6 +146,18 @@ public class ParserTest {
     @Test
     public void parse_displayInvalidDate_throwsInvalidDateException() {
         assertThrows(InvalidDateException.class, () -> Parser.parse("display /date invalid-date"));
+    }
+
+    @Test
+    public void parse_validFindCommand_returnsFindCommand() throws Exception {
+        Command command = Parser.parse("find book");
+        assertInstanceOf(FindCommand.class, command);
+    }
+
+    @Test
+    public void parse_findMissingKeyword_throwsInvalidArgumentException() {
+        assertThrows(InvalidArgumentException.class, () -> Parser.parse("find"));
+        assertThrows(InvalidArgumentException.class, () -> Parser.parse("find   "));
     }
 
     @Test

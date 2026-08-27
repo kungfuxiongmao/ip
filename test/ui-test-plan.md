@@ -643,3 +643,69 @@ ____________________________________________________________
 Bye. Hope to see you again soon!
 ____________________________________________________________
 ```
+
+## Test case: Find tasks by description
+
+### Aim
+
+Verify that `find` matches whole keywords case-insensitively, does not match partial words, preserves original task
+numbers, reports no matches, and rejects a missing keyword.
+
+### Setup
+
+```sh
+mkdir -p data
+cp test/fixtures/preloaded-tasks.txt data/tasks.txt
+printf 'T | 0 | organize bookshelf\n' >> data/tasks.txt
+```
+
+### Command
+
+```sh
+javac -d out/ui-test $(find src/main/java -name '*.java') && java -cp out/ui-test panda.Panda
+```
+
+### Inputs
+
+```text
+find BOOK
+find homework
+find
+bye
+```
+
+### Expected output
+
+```text
+____________________________________________________________
+                                            _______                
+_________   _...._                  _..._   \  ___ `'.             
+\        |.'      '-.             .'     '.  ' |--.\  \            
+ \        .'```'.    '.          .   .-.   . | |    \  '           
+  \      |       \     \   __    |  '   '  | | |     |  '    __    
+   |     |        |    |.:--.'.  |  |   |  | | |     |  | .:--.'.  
+   |      \      /    ./ |   \ | |  |   |  | | |     ' .'/ |   \ | 
+   |     |\`'-.-'   .' `" __ | | |  |   |  | | |___.' /' `" __ | | 
+   |     | '-....-'`    .'.''| | |  |   |  |/_______.'/   .'.''| | 
+  .'     '.            / /   | |_|  |   |  |\_______|/   / /   | |_
+'-----------'          \ \._,\ '/|  |   |  |             \ \._,\ '/
+                        `--'  `" '--'   '--'              `--'  `" 
+
+Hello! I'm Panda.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Here are the matching tasks in your list:
+1.[T][X] read book
+2.[D][ ] return book (by: 6 Jun 2019 18:00)
+____________________________________________________________
+____________________________________________________________
+~~~ Empty List ~~~
+____________________________________________________________
+____________________________________________________________
+OOPS! Panda needs the find command written like this: "find KEYWORD" 
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```

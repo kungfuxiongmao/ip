@@ -208,6 +208,33 @@ public class TaskList {
     }
 
     /**
+     * Returns a numbered, multi-line string representation of tasks whose descriptions contain the whole keyword,
+     * using each task's original one-based index in the list.
+     *
+     * @param keyword Keyword to find in task descriptions.
+     * @return Formatted list of matching tasks with original list numbers, or an empty list message if none match.
+     */
+    public String getTasksWithKeyword(String keyword) {
+        StringBuilder result = new StringBuilder("Here are the matching tasks in your list:")
+                .append(System.lineSeparator());
+        boolean hasMatches = false;
+        for (int index = 0; index < tasks.size(); index++) {
+            Task task = tasks.get(index);
+            if (task.hasKeyword(keyword)) {
+                hasMatches = true;
+                result.append(index + 1)
+                        .append(".")
+                        .append(task)
+                        .append(System.lineSeparator());
+            }
+        }
+        if (!hasMatches) {
+            return "~~~ Empty List ~~~";
+        }
+        return result.toString().stripTrailing();
+    }
+
+    /**
      * Returns all tasks as a numbered, multi-line string.
      *
      * @return The formatted task list.
