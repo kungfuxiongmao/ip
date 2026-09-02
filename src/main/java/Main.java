@@ -1,4 +1,6 @@
 import java.io.IOException;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 
 import gui.MainWindow;
 import javafx.application.Application;
@@ -12,10 +14,9 @@ import panda.Panda;
  * Starts Panda's JavaFX graphical user interface.
  */
 public class Main extends Application {
-    private final Panda panda = new Panda();
 
     /**
-     * Loads and displays Panda's main window.
+     * Loads Panda's main window and connects it to Panda through pipe streams.
      *
      * @param stage Primary JavaFX stage.
      */
@@ -24,12 +25,34 @@ public class Main extends Application {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/MainWindow.fxml"));
             AnchorPane root = fxmlLoader.load();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            fxmlLoader.<MainWindow>getController().setPanda(panda);
+            connectGraphicalInterfaceToPanda(fxmlLoader.getController());
+
+            stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException exception) {
-            exception.printStackTrace();
+            throw new IllegalStateException("Unable to start Panda's graphical interface.", exception);
         }
+    }
+
+    /**
+     * Creates the pipe streams used to exchange commands and responses with Panda.
+     *
+     * @param mainWindow Graphical interface to connect to Panda.
+     * @throws IOException If the pipe streams cannot be connected.
+     */
+    private void connectGraphicalInterfaceToPanda(MainWindow mainWindow) throws IOException {
+        PipedInputStream pandaCommandInputStream = new PipedInputStream();
+        PipedOutputStream graphicalCommandOutputStream = new PipedOutputStream(pandaCommandInputStream);
+
+        PipedOutputStream pandaResponseOutputStream = new PipedOutputStream();
+        PipedInputStream graphicalResponseInputStream = new PipedInputStream(pandaResponseOutputStream);
+
+        Panda panda = Panda.createForGraphicalInterface(
+                pandaCommandInputStream, pandaResponseOutputStream);
+        mainWindow.connectToPandaStreams(
+                graphicalCommandOutputStream, graphicalResponseInputStream);
+        Thread.ofVirtual()
+                .name("panda-command-processor")
+                .start(panda::processCommandsUntilInputCloses);
     }
 }

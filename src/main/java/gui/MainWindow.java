@@ -1,7 +1,15 @@
 package gui;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -9,7 +17,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import panda.Panda;
+import panda.ui.Ui;
 
 /**
  * Controls Panda's main graphical user interface.
@@ -30,7 +38,7 @@ public class MainWindow extends AnchorPane {
     @FXML
     private Button sendButton;
 
-    private Panda panda;
+    private PrintWriter pandaCommandWriter;
 
     /**
      * Binds the scroll position to the height of the dialog container.
@@ -41,12 +49,18 @@ public class MainWindow extends AnchorPane {
     }
 
     /**
-     * Supplies the Panda instance that handles user input.
+     * Connects this window to Panda's command and response streams.
      *
-     * @param panda Panda instance used by this window.
+     * @param commandOutputStream Stream that sends commands to Panda.
+     * @param responseInputStream Stream that receives responses from Panda.
      */
-    public void setPanda(Panda panda) {
-        this.panda = Objects.requireNonNull(panda);
+    public void connectToPandaStreams(
+            OutputStream commandOutputStream, InputStream responseInputStream) {
+        pandaCommandWriter = new PrintWriter(
+                Objects.requireNonNull(commandOutputStream), true, StandardCharsets.UTF_8);
+        BufferedReader pandaResponseReader = new BufferedReader(new InputStreamReader(
+                Objects.requireNonNull(responseInputStream), StandardCharsets.UTF_8));
+        startListeningForPandaMessages(pandaResponseReader);
     }
 
     /**
@@ -60,15 +74,42 @@ public class MainWindow extends AnchorPane {
     }
 
     /**
-     * Adds the user's message and Panda's response to the dialog container.
+     * Reads Panda's response stream without blocking the JavaFX application thread.
+     *
+     * @param pandaResponseReader Reader connected to Panda's response stream.
+     */
+    private void startListeningForPandaMessages(BufferedReader pandaResponseReader) {
+        Thread.ofVirtual().name("panda-response-listener").start(() -> {
+            try {
+                String message;
+                while ((message = Ui.readNextMessage(pandaResponseReader)) != null) {
+                    String messageToDisplay = message;
+                    Platform.runLater(() -> displayPandaMessage(messageToDisplay));
+                }
+            } catch (IOException exception) {
+                Platform.runLater(() -> displayPandaMessage(
+                        "Panda's response stream closed unexpectedly: " + exception.getMessage()));
+            }
+        });
+    }
+
+    /**
+     * Sends the text field's contents to Panda and displays the user's message.
      */
     @FXML
-    private void handleUserInput() {
-        String input = userInput.getText();
-        String response = panda.getResponse(input);
-        dialogContainer.getChildren().addAll(
-                DialogBox.getUserDialog(input, userImage),
-                DialogBox.getPandaDialog(response, pandaImage));
+    private void sendUserCommand() {
+        String command = userInput.getText();
+        dialogContainer.getChildren().add(DialogBox.getUserDialog(command, userImage));
+        pandaCommandWriter.println(command);
         userInput.clear();
+    }
+
+    /**
+     * Adds one response from Panda to the dialog container.
+     *
+     * @param message Response to display.
+     */
+    private void displayPandaMessage(String message) {
+        dialogContainer.getChildren().add(DialogBox.getPandaDialog(message, pandaImage));
     }
 }

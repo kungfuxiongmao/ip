@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.TextAlignment;
 
 /**
  * Represents a dialog box containing a speaker image and message text.
@@ -46,7 +47,9 @@ public class DialogBox extends HBox {
      * @return Dialog box for the user's message.
      */
     public static DialogBox getUserDialog(String text, Image image) {
-        return new DialogBox(text, image);
+        DialogBox dialogBox = new DialogBox(text, image);
+        dialogBox.alignMessageWithUserImage();
+        return dialogBox;
     }
 
     /**
@@ -59,7 +62,24 @@ public class DialogBox extends HBox {
     public static DialogBox getPandaDialog(String text, Image image) {
         DialogBox dialogBox = new DialogBox(text, image);
         dialogBox.flip();
+        dialogBox.alignMessageWithPandaImage();
         return dialogBox;
+    }
+
+    /**
+     * Right-aligns a user message beside the user image.
+     */
+    private void alignMessageWithUserImage() {
+        dialog.setAlignment(Pos.TOP_RIGHT);
+        dialog.setTextAlignment(TextAlignment.RIGHT);
+    }
+
+    /**
+     * Left-aligns a Panda message beside the Panda image.
+     */
+    private void alignMessageWithPandaImage() {
+        dialog.setAlignment(Pos.TOP_LEFT);
+        dialog.setTextAlignment(TextAlignment.LEFT);
     }
 
     /**
