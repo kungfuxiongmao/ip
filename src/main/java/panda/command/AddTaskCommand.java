@@ -5,12 +5,12 @@ import panda.task.TaskList;
 import panda.ui.Ui;
 
 /**
- * Base command for adding a task and displaying its shared confirmation.
+ * Represents a base command for adding a task and displaying its shared confirmation.
  */
 public abstract class AddTaskCommand implements Command {
 
     /**
-     * Sole constructor for invocations by subclass constructors.
+     * Initializes an {@code AddTaskCommand}.
      */
     protected AddTaskCommand() {
     }

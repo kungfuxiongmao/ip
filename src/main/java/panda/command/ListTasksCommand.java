@@ -8,12 +8,12 @@ import panda.ui.Ui;
  */
 public class ListTasksCommand implements Command {
 
-
     /**
      * Constructs a {@code ListTasksCommand}.
      */
     public ListTasksCommand() {
     }
+
     /**
      * Retrieves and displays the full formatted list of all current tasks.
      */

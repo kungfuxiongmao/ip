@@ -77,7 +77,7 @@ public final class Parser {
     }
 
     /**
-     * Simple input processing - removal of surrounding whitespace.
+     * Processes user input by removing surrounding whitespace.
      *
      * @param input Text entered by the user.
      * @return Input without surrounding whitespace.
@@ -107,5 +107,4 @@ public final class Parser {
         }
         return commandParser.parseArguments(arguments);
     }
-
 }

@@ -22,7 +22,7 @@ import panda.exception.parser.InvalidDateException;
 import panda.exception.parser.NoCommandFoundException;
 
 /**
- * Unit tests for {@link Parser}.
+ * Contains unit tests for {@link Parser}.
  */
 public class ParserTest {
 

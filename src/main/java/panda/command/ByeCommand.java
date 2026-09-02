@@ -8,12 +8,12 @@ import panda.ui.Ui;
  */
 public class ByeCommand implements Command {
 
-
     /**
      * Constructs a {@code ByeCommand}.
      */
     public ByeCommand() {
     }
+
     /**
      * Prints a farewell message to the user and terminates the application session.
      */

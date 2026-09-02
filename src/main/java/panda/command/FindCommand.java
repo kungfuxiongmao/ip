@@ -18,6 +18,9 @@ public class FindCommand implements Command {
         this.keyword = keyword;
     }
 
+    /**
+     * Retrieves and displays tasks whose descriptions contain the keyword.
+     */
     @Override
     public void execute() {
         Ui.printMessage(TaskList.getInstance().getTasksWithKeyword(keyword));

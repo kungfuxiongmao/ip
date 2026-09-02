@@ -10,11 +10,18 @@ import panda.exception.parser.InvalidArgumentException;
 public class FindCommandParser implements CommandParser {
 
     /**
-     * Creates a parser for find-command arguments.
+     * Constructs a {@code FindCommandParser}.
      */
     public FindCommandParser() {
     }
 
+    /**
+     * Parses the keyword to find from the supplied arguments.
+     *
+     * @param arguments Text containing the search keyword.
+     * @return A {@link FindCommand} configured with the search keyword.
+     * @throws InvalidArgumentException If the keyword is empty.
+     */
     @Override
     public Command parseArguments(String arguments) throws InvalidArgumentException {
         String keyword = arguments.strip();
