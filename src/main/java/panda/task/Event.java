@@ -6,7 +6,7 @@ import java.time.temporal.Temporal;
 import panda.util.datetime.DateTimeHelper;
 
 /**
- * A task scheduled between supplied start and end date/time values.
+ * Represents a task scheduled between supplied start and end date/time values.
  */
 public class Event extends Task {
     private final Temporal dateTimeFrom;

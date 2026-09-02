@@ -1,7 +1,7 @@
 package panda.exception;
 
 /**
- * Base class for exceptions Panda can explain to the user and recover from.
+ * Represents the base class for exceptions Panda can explain to the user and recover from.
  */
 public abstract class ApplicationException extends Exception {
 

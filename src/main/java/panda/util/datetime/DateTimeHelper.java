@@ -8,7 +8,7 @@ import java.time.format.ResolverStyle;
 import java.time.temporal.Temporal;
 
 /**
- * Utility class for parsing, validating, and formatting date and date-time values.
+ * Provides utility methods for parsing, validating, and formatting date and date-time values.
  * <p>
  * This class cannot be instantiated. It provides static helper methods to convert between
  * user-facing string inputs, both inputs and outputs, and Java {@link Temporal} representations ({@link LocalDate}

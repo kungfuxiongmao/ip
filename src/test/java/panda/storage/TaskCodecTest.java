@@ -13,7 +13,7 @@ import panda.task.Task;
 import panda.task.Todo;
 
 /**
- * Unit tests for {@link TaskCodec} using round-trip serialization and corrupted line handling.
+ * Contains unit tests for {@link TaskCodec} using round-trip serialization and corrupted line handling.
  */
 public class TaskCodecTest {
 

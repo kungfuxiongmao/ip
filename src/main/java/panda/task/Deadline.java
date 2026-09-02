@@ -6,7 +6,7 @@ import java.time.temporal.Temporal;
 import panda.util.datetime.DateTimeHelper;
 
 /**
- * A task that must be completed by a supplied date.
+ * Represents a task that must be completed by a supplied date.
  */
 public class Deadline extends Task {
     private final Temporal dueDate;

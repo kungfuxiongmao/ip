@@ -3,7 +3,7 @@ package panda.task;
 import java.time.temporal.Temporal;
 
 /**
- * A task without a date or time requirement.
+ * Represents a task without a date or time requirement.
  */
 public class Todo extends Task {
 

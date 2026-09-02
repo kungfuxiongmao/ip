@@ -12,7 +12,7 @@ import java.time.temporal.Temporal;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit tests for {@link DateTimeHelper}.
+ * Contains unit tests for {@link DateTimeHelper}.
  */
 public class DateTimeHelperTest {
 

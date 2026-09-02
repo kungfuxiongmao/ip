@@ -68,10 +68,10 @@ public final class TaskCodec {
 
         String taskType = fields[0];
         int expectedFieldCount = switch (taskType) {
-        case "T" -> 3;
-        case "D" -> 4;
-        case "E" -> 5;
-        default -> throw new FileCorruptedException("Unknown task type: " + taskType);
+            case "T" -> 3;
+            case "D" -> 4;
+            case "E" -> 5;
+            default -> throw new FileCorruptedException("Unknown task type: " + taskType);
         };
         if (fields.length != expectedFieldCount) {
             throw new FileCorruptedException(
@@ -82,10 +82,13 @@ public final class TaskCodec {
         Task task;
         try {
             task = switch (taskType) {
-            case "T" -> new Todo(fields[2]);
-            case "D" -> new Deadline(fields[2], DateTimeHelper.loadDate(fields[3]));
-            case "E" -> new Event(fields[2], DateTimeHelper.loadDate(fields[3]), DateTimeHelper.loadDate(fields[4]));
-            default -> throw new AssertionError("Task type was validated before decoding");
+                case "T" -> new Todo(fields[2]);
+                case "D" -> new Deadline(fields[2], DateTimeHelper.loadDate(fields[3]));
+                case "E" -> new Event(
+                        fields[2],
+                        DateTimeHelper.loadDate(fields[3]),
+                        DateTimeHelper.loadDate(fields[4]));
+                default -> throw new AssertionError("Task type was validated before decoding");
             };
         } catch (DateTimeParseException | IllegalArgumentException exception) {
             throw new FileCorruptedException("Failed to parse date: " + exception.getMessage());
@@ -106,9 +109,9 @@ public final class TaskCodec {
      */
     private static boolean decodeState(String state) throws FileCorruptedException {
         return switch (state) {
-        case "1" -> true;
-        case "0" -> false;
-        default -> throw new FileCorruptedException("Task state must be 0 or 1");
+            case "1" -> true;
+            case "0" -> false;
+            default -> throw new FileCorruptedException("Task state must be 0 or 1");
         };
     }
 }

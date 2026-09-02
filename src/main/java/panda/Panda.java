@@ -15,6 +15,7 @@ public final class Panda {
     private Panda() {
         // Utility / entry point class: prevent instantiation.
     }
+
     /**
      * Runs Panda until a command ends the program.
      *

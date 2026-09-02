@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit tests for task date checking logic across {@link Todo}, {@link Deadline}, and {@link Event}.
+ * Contains unit tests for task date checking logic across {@link Todo}, {@link Deadline}, and {@link Event}.
  */
 public class TaskDateCheckTest {
 
