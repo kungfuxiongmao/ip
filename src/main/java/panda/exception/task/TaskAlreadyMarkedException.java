@@ -14,7 +14,8 @@ public class TaskAlreadyMarkedException extends ApplicationException {
      * @param task Marked task the user tried to mark again.
      */
     public TaskAlreadyMarkedException(Task task) {
-        super("OOPS! Panda has already marked this task as done:" + System.lineSeparator()
-                + "  " + task + System.lineSeparator() + "No extra tick needed. :>");
+        super("Do not strike the same gong twice. This task is already complete:"
+                + System.lineSeparator() + "  " + task + System.lineSeparator()
+                + "One mark is enough.");
     }
 }

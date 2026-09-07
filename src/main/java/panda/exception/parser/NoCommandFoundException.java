@@ -12,7 +12,7 @@ public class NoCommandFoundException extends ParseException {
      */
     public NoCommandFoundException(String input) {
         super(input.isEmpty()
-                ? "OOPS! Panda needs a command before it can help. :>"
-                : "OOPS! Panda does not know the \"" + input + "\" command yet. :<");
+                ? "Even I cannot guide silence. Tell me what must be done."
+                : "Hmm. \"" + input + "\" is a move I have not taught you. Try one you know.");
     }
 }

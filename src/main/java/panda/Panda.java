@@ -18,11 +18,14 @@ import panda.ui.Ui;
  */
 public final class Panda {
     private final Scanner commandScanner;
+    private final boolean isGui;
 
-    private Panda(InputStream commandInputStream, OutputStream responseOutputStream) {
+    private Panda(InputStream commandInputStream, OutputStream responseOutputStream,
+            boolean isGui) {
         commandScanner = new Scanner(
                 Objects.requireNonNull(commandInputStream), StandardCharsets.UTF_8);
         Ui.directOutputTo(Objects.requireNonNull(responseOutputStream));
+        this.isGui = isGui;
     }
 
     /**
@@ -31,7 +34,7 @@ public final class Panda {
      * @param args Command-line arguments (not used).
      */
     public static void main(String[] args) {
-        Panda panda = new Panda(System.in, System.out);
+        Panda panda = new Panda(System.in, System.out, false);
         panda.processCommandsUntilInputCloses();
     }
 
@@ -44,14 +47,14 @@ public final class Panda {
      */
     public static Panda createForGraphicalInterface(
             InputStream commandInputStream, OutputStream responseOutputStream) {
-        return new Panda(commandInputStream, responseOutputStream);
+        return new Panda(commandInputStream, responseOutputStream, true);
     }
 
     /**
      * Processes commands until the input stream closes or a command terminates Panda.
      */
     public void processCommandsUntilInputCloses() {
-        StartManager.start();
+        StartManager.start(isGui);
         while (commandScanner.hasNextLine()) {
             processCommand(commandScanner.nextLine());
         }

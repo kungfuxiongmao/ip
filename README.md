@@ -1,8 +1,6 @@
-# Panda Assistant: A-Enums
+# Panda Assistant
 
 Panda is a command-line personal assistant under development.
-This version incorporates state persistence between rounds of usage, through a serialisation 
-save system. 
 
                                                             _______               
                 _________   _...._                  _..._   \  ___ `'.            
@@ -24,8 +22,7 @@ save system.
 - IntelliJ IDEA (optional)
 
 1. Clone the repository: `git clone https://github.com/kungfuxiongmao/ip.git`
-
-### Run the program
+2. Run the program
 
 Compile and run Panda from the project root:
 

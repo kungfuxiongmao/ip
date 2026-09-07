@@ -28,7 +28,7 @@ public class UnmarkTaskCommand implements Command {
     @Override
     public void execute() throws ApplicationException {
         Task task = TaskList.getInstance().unmarkEvent(taskNumber);
-        Ui.printMessage("OK, I've marked this task as not done yet:"
+        Ui.printMessage("Hmm. This lesson is not finished after all. It awaits you once more:"
                 + System.lineSeparator() + "  " + task);
     }
 }

@@ -14,7 +14,7 @@ public class TaskAlreadyUnmarkedException extends ApplicationException {
      * @param task Unmarked task the user tried to unmark again.
      */
     public TaskAlreadyUnmarkedException(Task task) {
-        super("OOPS! Panda has already marked this task as not done:" + System.lineSeparator()
-                + "  " + task + System.lineSeparator() + "No extra un-tick needed. :>");
+        super("Patience, young warrior. This task still awaits you:" + System.lineSeparator()
+                + "  " + task + System.lineSeparator() + "There is no mark to remove.");
     }
 }

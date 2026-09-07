@@ -19,7 +19,7 @@ public class ByeCommand implements Command {
      */
     @Override
     public void execute() {
-        Ui.printMessage("Bye. Hope to see you again soon!");
+        Ui.printMessage("Enough for today. Go. Rest. Return when you are ready.");
         TerminationManager.terminate();
     }
 }

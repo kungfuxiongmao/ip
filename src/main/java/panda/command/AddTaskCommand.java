@@ -30,8 +30,11 @@ public abstract class AddTaskCommand implements Command {
     public final void execute() {
         TaskList taskList = TaskList.getInstance();
         Task task = addTask();
-        Ui.printMessage("Got it. I've added this task:" + System.lineSeparator()
+        int taskCount = taskList.getSize();
+        String taskNoun = taskCount == 1 ? "task" : "tasks";
+        Ui.printMessage("Good. Every journey moves one step at a time. This belongs on your scroll:"
+                + System.lineSeparator()
                 + "  " + task + System.lineSeparator()
-                + "Now you have " + taskList.getSize() + " tasks in the list.");
+                + "You now carry " + taskCount + " " + taskNoun + " on your path.");
     }
 }

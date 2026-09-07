@@ -11,6 +11,6 @@ public class TaskListAlreadyInstantiatedException extends ApplicationException {
      * Creates an exception explaining that the task list already exists.
      */
     public TaskListAlreadyInstantiatedException() {
-        super("OOPS! There's already a tasklist, don't create one more!");
+        super("One scroll is enough, young warrior. Do not summon another.");
     }
 }
