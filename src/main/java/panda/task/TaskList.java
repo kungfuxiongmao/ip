@@ -185,10 +185,11 @@ public class TaskList {
      */
     public String getTasksOnDate(Temporal date) {
         if (date == null) {
-            return "~~~ Empty List ~~~";
+            return "The scroll is empty, young warrior. Every journey begins with a single step.";
         }
-        StringBuilder result = new StringBuilder("Here are the tasks for:")
+        StringBuilder result = new StringBuilder("On ")
                 .append(DateTimeHelper.format(date))
+                .append(", these tasks await you:")
                 .append(System.lineSeparator());
         boolean hasMatches = false;
         for (int index = 0; index < tasks.size(); index++) {
@@ -202,7 +203,7 @@ public class TaskList {
             }
         }
         if (!hasMatches) {
-            return "~~~ Empty List ~~~";
+            return "The scroll is empty, young warrior. Every journey begins with a single step.";
         }
         return result.toString().stripTrailing();
     }
@@ -215,7 +216,7 @@ public class TaskList {
      * @return Formatted list of matching tasks with original list numbers, or an empty list message if none match.
      */
     public String getTasksWithKeyword(String keyword) {
-        StringBuilder result = new StringBuilder("Here are the matching tasks in your list:")
+        StringBuilder result = new StringBuilder("Look again. These are the tasks you seek:")
                 .append(System.lineSeparator());
         boolean hasMatches = false;
         for (int index = 0; index < tasks.size(); index++) {
@@ -229,7 +230,7 @@ public class TaskList {
             }
         }
         if (!hasMatches) {
-            return "~~~ Empty List ~~~";
+            return "The scroll is empty, young warrior. Every journey begins with a single step.";
         }
         return result.toString().stripTrailing();
     }
@@ -242,9 +243,9 @@ public class TaskList {
     @Override
     public String toString() {
         if (tasks.isEmpty()) {
-            return "~~~ Empty List ~~~";
+            return "The scroll is empty, young warrior. Every journey begins with a single step.";
         }
-        StringBuilder result = new StringBuilder("Here are the tasks in your list:")
+        StringBuilder result = new StringBuilder("Look closely, young warrior. These tasks await you:")
                 .append(System.lineSeparator());
         for (int index = 0; index < tasks.size(); index++) {
             result.append(index + 1)

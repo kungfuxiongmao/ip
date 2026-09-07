@@ -21,7 +21,7 @@ public class InvalidArgumentException extends ParseException {
      * @param usage Expected command format.
      */
     public InvalidArgumentException(String command, String usage) {
-        super(String.format(
-                "OOPS! Panda needs the %s command written like this: \"%s\" ", command, usage));
+        super(String.format("Patience, young warrior. To use %s, follow this form: \"%s\"",
+                command, usage));
     }
 }

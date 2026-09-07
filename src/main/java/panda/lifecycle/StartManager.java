@@ -25,15 +25,18 @@ public final class StartManager {
      * <p>
      * An empty task list is used if the file is corrupted or cannot be read. It can be assumed
      * after running this function that TaskList has been instantiated correctly for the application.
+     *
+     * @param isGui Whether Panda is running through the graphical interface.
      */
-    public static void start() {
-        greet();
+    public static void start(boolean isGui) {
+        greet(isGui);
 
         List<Task> tasks;
         try {
             tasks = Storage.readTasks();
         } catch (IOException exception) {
-            Ui.printMessage("Panda could not read the save file: " + exception.getMessage());
+            Ui.printMessage("Hmm. The scroll will not open. We must begin with an empty one: "
+                    + exception.getMessage());
             tasks = null;
         }
 
@@ -48,9 +51,11 @@ public final class StartManager {
     }
 
     /**
-     * Prints Panda's welcome banner and initial greeting message to the console.
+     * Prints Panda's initial greeting, omitting the ASCII art in the graphical interface.
+     *
+     * @param isGui Whether Panda is running through the graphical interface.
      */
-    private static void greet() {
+    private static void greet(boolean isGui) {
         String banner = """
                                                             _______               \s
                 _________   _...._                  _..._   \\  ___ `'.            \s
@@ -65,6 +70,7 @@ public final class StartManager {
                 '-----------'          \\ \\._,\\ '/|  |   |  |             \\ \\._,\\ '/
                                         `--'  `" '--'   '--'              `--'  `"\s
                 """;
-        Ui.printMessage(banner + "\nHello! I'm Panda." + "\nWhat can I do for you?");
+        String greeting = "Ah, you are here. Breathe, young warrior.\nWhat shall we face today?";
+        Ui.printMessage(isGui ? greeting : banner + "\n" + greeting);
     }
 }

@@ -15,9 +15,9 @@ public class InvalidTaskListIndexException extends ApplicationException {
      */
     public InvalidTaskListIndexException(int taskNumber, int taskCount) {
         super(taskNumber == 0
-                ? String.format("OOPS! I think you made a mistake, task number cannot be %d", taskNumber)
-                : String.format(
-                "OOPS! Panda cannot find task number %d; there are only %d task(s) in the list. ",
-                taskNumber, taskCount));
+                ? String.format("A task number begins at 1, young warrior; %d cannot guide us.",
+                        taskNumber)
+                : String.format("You seek task %d, but only %d %s on the scroll.",
+                        taskNumber, taskCount, taskCount == 1 ? "task rests" : "tasks rest"));
     }
 }

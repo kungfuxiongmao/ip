@@ -29,8 +29,11 @@ public class DeleteTaskCommand implements Command {
     public void execute() throws ApplicationException {
         TaskList taskList = TaskList.getInstance();
         Task task = taskList.delete(taskNumber);
-        Ui.printMessage("Noted. I've removed this task:" + System.lineSeparator()
+        int taskCount = taskList.getSize();
+        String taskNoun = taskCount == 1 ? "task" : "tasks";
+        Ui.printMessage("Sometimes, young warrior, progress means letting go. This leaves your scroll:"
+                + System.lineSeparator()
                 + "  " + task + System.lineSeparator()
-                + "Now you have " + taskList.getSize() + " tasks in the list.");
+                + "You now carry " + taskCount + " " + taskNoun + " on your path.");
     }
 }

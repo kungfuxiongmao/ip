@@ -16,9 +16,9 @@ public class InvalidDateException extends InvalidArgumentException {
      */
     public InvalidDateException(String command, String usage) {
         super(String.format(
-                "OOPS! Panda needs a valid date in \"d/M/yyyy\" (e.g. 2/12/2019) or "
-                        + "\"d/M/yyyy HH:mm\" (e.g. 2/12/2019 18:00) format.%n"
-                        + "Usage: \"%s\" ",
+                "Time follows a precise rhythm: \"d/M/yyyy\" (e.g. 2/12/2019) or "
+                        + "\"d/M/yyyy HH:mm\" (e.g. 2/12/2019 18:00).%n"
+                        + "Follow this form: \"%s\"",
                 usage));
     }
 
@@ -31,9 +31,9 @@ public class InvalidDateException extends InvalidArgumentException {
      */
     public InvalidDateException(String invalidDate, String command, String usage) {
         super(String.format(
-                "OOPS! \"%s\" is not a valid date. Panda accepts \"d/M/yyyy\" (e.g. 2/12/2019) "
-                        + "or \"d/M/yyyy HH:mm\" (e.g. 2/12/2019 18:00).%n"
-                        + "Usage: \"%s\" ",
+                "Even time requires discipline. \"%s\" is not a valid date. Use \"d/M/yyyy\" "
+                        + "(e.g. 2/12/2019) or \"d/M/yyyy HH:mm\" (e.g. 2/12/2019 18:00).%n"
+                        + "Follow this form: \"%s\"",
                 invalidDate, usage));
     }
 }

@@ -9,6 +9,7 @@
 
 <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
             minHeight="600.0" minWidth="600.0" prefHeight="600.0" prefWidth="600.0"
+            stylesheets="@MainWindow.css"
             xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.MainWindow">
     <children>

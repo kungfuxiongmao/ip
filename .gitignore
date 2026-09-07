@@ -26,3 +26,6 @@ text-ui-test/EXPECTED-UNIX.TXT
 !/skills/seedu-git-standard/**
 !/skills/seedu-java-coding-standard/
 !/skills/seedu-java-coding-standard/**
+
+# UML Docs
+/docs/

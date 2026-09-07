@@ -41,7 +41,7 @@ public final class Storage {
                 tasks.add(TaskCodec.decode(line));
             }
         } catch (FileCorruptedException exception) {
-            Ui.printMessage("The saved file is broken... I can only restart your task list.\n"
+            Ui.printMessage("This scroll is damaged, young warrior. We must begin with an empty one.\n"
                     + exception.getMessage());
             return null;
         }

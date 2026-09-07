@@ -11,8 +11,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.TextAlignment;
 
 /**
@@ -23,7 +24,7 @@ public class DialogBox extends HBox {
     private Label dialog;
 
     @FXML
-    private ImageView displayPicture;
+    private Circle displayPicture;
 
     private DialogBox(String text, Image image) {
         try {
@@ -36,7 +37,7 @@ public class DialogBox extends HBox {
         }
 
         dialog.setText(text);
-        displayPicture.setImage(image);
+        displayPicture.setFill(new ImagePattern(image));
     }
 
     /**
@@ -48,6 +49,7 @@ public class DialogBox extends HBox {
      */
     public static DialogBox getUserDialog(String text, Image image) {
         DialogBox dialogBox = new DialogBox(text, image);
+        dialogBox.dialog.getStyleClass().add("user-dialog");
         dialogBox.alignMessageWithUserImage();
         return dialogBox;
     }
@@ -61,6 +63,7 @@ public class DialogBox extends HBox {
      */
     public static DialogBox getPandaDialog(String text, Image image) {
         DialogBox dialogBox = new DialogBox(text, image);
+        dialogBox.dialog.getStyleClass().add("panda-dialog");
         dialogBox.flip();
         dialogBox.alignMessageWithPandaImage();
         return dialogBox;

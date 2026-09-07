@@ -23,7 +23,8 @@ public final class TerminationManager {
         try {
             Storage.saveTasks(TaskList.getInstance().getTasks());
         } catch (IOException exception) {
-            Ui.printMessage("OOPS! Panda could not save tasks: " + exception.getMessage());
+            Ui.printMessage("The ink has failed us. Your tasks could not be saved: "
+                    + exception.getMessage());
         }
         System.exit(0);
     }
