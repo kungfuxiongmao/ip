@@ -3,6 +3,7 @@ package panda.task;
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import panda.exception.task.InvalidTaskListIndexException;
 import panda.exception.task.TaskAlreadyMarkedException;
@@ -35,6 +36,9 @@ public class TaskList {
      * @throws TaskListAlreadyInstantiatedException If the singleton has already been initialized.
      */
     public static TaskList of(List<Task> initialTasks) throws TaskListAlreadyInstantiatedException {
+        assert initialTasks != null : "Stored task list cannot be null";
+        assert initialTasks.stream().allMatch(Objects::nonNull)
+                : "Task in stored task list cannot be null";
         if (instance != null) {
             throw new TaskListAlreadyInstantiatedException();
         }
@@ -113,6 +117,7 @@ public class TaskList {
      * @return The added task.
      */
     private Task add(Task task) {
+        assert task != null : "Task added to TaskList must not be null";
         tasks.add(task);
         return task;
     }
@@ -181,11 +186,11 @@ public class TaskList {
      * are due on, or span across the specified date, using each task's original 1-based index in the list.
      *
      * @param date Date to filter tasks by as a {@link Temporal}.
-     * @return Formatted list of matching tasks with original list numbers, or an empty list message if none match.
+     * @return Formatted list of matching tasks with original list numbers, or an empty string if none match.
      */
     public String getTasksOnDate(Temporal date) {
         if (date == null) {
-            return "The scroll is empty, young warrior. Every journey begins with a single step.";
+            return "";
         }
         StringBuilder result = new StringBuilder("On ")
                 .append(DateTimeHelper.format(date))
@@ -203,7 +208,7 @@ public class TaskList {
             }
         }
         if (!hasMatches) {
-            return "The scroll is empty, young warrior. Every journey begins with a single step.";
+            return "";
         }
         return result.toString().stripTrailing();
     }

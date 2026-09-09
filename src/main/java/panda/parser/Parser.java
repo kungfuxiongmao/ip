@@ -105,6 +105,8 @@ public final class Parser {
         if (commandParser == null) {
             throw new NoCommandFoundException(input);
         }
-        return commandParser.parseArguments(arguments);
+        Command parsedCommand = commandParser.parseArguments(arguments);
+        assert parsedCommand != null : "Command parser must return a command or throw an exception";
+        return parsedCommand;
     }
 }

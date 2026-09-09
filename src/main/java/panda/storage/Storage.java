@@ -55,6 +55,8 @@ public final class Storage {
      * @throws IOException If the file cannot be written.
      */
     public static void saveTasks(List<Task> tasks) throws IOException {
+        assert tasks != null : "Task list passed to storage must not be null";
+
         Path parentDirectory = SAVE_FILE.getParent();
         if (parentDirectory != null) {
             Files.createDirectories(parentDirectory);

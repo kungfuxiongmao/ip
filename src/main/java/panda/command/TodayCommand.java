@@ -22,6 +22,11 @@ public class TodayCommand implements Command {
     @Override
     public void execute() {
         LocalDate today = LocalDate.now();
-        Ui.printMessage(TaskList.getInstance().getTasksOnDate(today));
+        String tasksToday = TaskList.getInstance().getTasksOnDate(today);
+        if (tasksToday.isEmpty()) {
+            Ui.printMessage("The scroll shows no tasks today, young warrior.");
+            return;
+        }
+        Ui.printMessage(tasksToday);
     }
 }
