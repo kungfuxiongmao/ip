@@ -54,9 +54,20 @@ public final class Panda {
      * Processes commands until the input stream closes or a command terminates Panda.
      */
     public void processCommandsUntilInputCloses() {
-        StartManager.start(isGui);
+        start();
         while (commandScanner.hasNextLine()) {
             processCommand(commandScanner.nextLine());
+        }
+    }
+
+    /**
+     * Starts Panda and recovers with an empty task list if startup fails.
+     */
+    private void start() {
+        try {
+            StartManager.start(isGui);
+        } catch (ApplicationException exception) {
+            ExceptionHandler.handle(exception);
         }
     }
 

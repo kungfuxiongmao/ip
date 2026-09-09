@@ -1,5 +1,6 @@
 package panda.parser;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -118,6 +119,26 @@ public class ParserTest {
     public void parse_validDeleteCommand_returnsDeleteTaskCommand() throws Exception {
         Command command = Parser.parse("delete 3");
         assertInstanceOf(DeleteTaskCommand.class, command);
+    }
+
+    @Test
+    public void parse_taskNumberOverflow_throwsInvalidArgumentException() {
+        for (String keyword : new String[] {"mark", "unmark", "delete"}) {
+            InvalidArgumentException exception = assertThrows(InvalidArgumentException.class, () ->
+                    Parser.parse(keyword + " 2147483648"));
+            assertEquals(
+                    new InvalidArgumentException(keyword, keyword + " TASK_NUMBER").getMessage(),
+                    exception.getMessage());
+        }
+    }
+
+    @Test
+    public void parse_invalidTaskNumbers_throwsInvalidArgumentException() {
+        for (String keyword : new String[] {"mark", "unmark", "delete"}) {
+            for (String argument : new String[] {"", "abc", "-1", "+1", "1.5"}) {
+                assertThrows(InvalidArgumentException.class, () -> Parser.parse(keyword + " " + argument));
+            }
+        }
     }
 
     @Test

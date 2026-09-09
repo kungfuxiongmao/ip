@@ -20,13 +20,11 @@ public class MarkTaskCommandParser implements CommandParser {
      *
      * @param arguments Text containing the one-based task number.
      * @return A {@link MarkTaskCommand} with the parsed task index.
-     * @throws InvalidArgumentException If the argument is non-numeric or empty.
+     * @throws InvalidArgumentException If the argument is empty, non-numeric, or exceeds the integer range.
      */
     @Override
     public Command parseArguments(String arguments) throws InvalidArgumentException {
-        if (!arguments.matches("\\d+")) {
-            throw new InvalidArgumentException("mark", "mark TASK_NUMBER");
-        }
-        return new MarkTaskCommand(Integer.parseInt(arguments));
+        int taskNumber = TaskNumberParser.parse(arguments, "mark");
+        return new MarkTaskCommand(taskNumber);
     }
 }

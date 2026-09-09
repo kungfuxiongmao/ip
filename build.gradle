@@ -53,7 +53,7 @@ test {
 }
 
 application {
-    mainClass = 'Launcher'
+    mainClass = 'panda.Launcher'
 }
 
 jar {

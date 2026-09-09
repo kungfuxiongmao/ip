@@ -1,4 +1,4 @@
-package gui;
+package panda.gui;
 
 import java.io.IOException;
 import java.util.Collections;

@@ -118,6 +118,21 @@ public class TaskList {
     }
 
     /**
+     * Converts a displayed task number to a valid zero-based index.
+     *
+     * @param taskNumber One-based task number entered by the user.
+     * @return Zero-based index of the identified task.
+     * @throws InvalidTaskListIndexException If the number does not identify a task in this list.
+     */
+    private int getValidatedIndex(int taskNumber) throws InvalidTaskListIndexException {
+        int arrayIndex = taskNumber - 1;
+        if (arrayIndex < 0 || arrayIndex >= tasks.size()) {
+            throw new InvalidTaskListIndexException(taskNumber, tasks.size());
+        }
+        return arrayIndex;
+    }
+
+    /**
      * Marks the task with the supplied one-based task number.
      *
      * @param taskNumber Number displayed beside the task.
@@ -125,11 +140,8 @@ public class TaskList {
      * @throws InvalidTaskListIndexException If the number does not identify a task in this list.
      * @throws TaskAlreadyMarkedException If the task is already marked.
      */
-    public Task markEvent(int taskNumber) throws TaskAlreadyMarkedException, InvalidTaskListIndexException {
-        int arrayIndex = taskNumber - 1;
-        if (arrayIndex < 0 || arrayIndex >= tasks.size()) {
-            throw new InvalidTaskListIndexException(taskNumber, tasks.size());
-        }
+    public Task markTask(int taskNumber) throws TaskAlreadyMarkedException, InvalidTaskListIndexException {
+        int arrayIndex = getValidatedIndex(taskNumber);
 
         Task task = tasks.get(arrayIndex);
         if (task.isMarked()) {
@@ -147,11 +159,8 @@ public class TaskList {
      * @throws InvalidTaskListIndexException If the number does not identify a task in this list.
      * @throws TaskAlreadyUnmarkedException If the task is already unmarked.
      */
-    public Task unmarkEvent(int taskNumber) throws TaskAlreadyUnmarkedException, InvalidTaskListIndexException {
-        int arrayIndex = taskNumber - 1;
-        if (arrayIndex < 0 || arrayIndex >= tasks.size()) {
-            throw new InvalidTaskListIndexException(taskNumber, tasks.size());
-        }
+    public Task unmarkTask(int taskNumber) throws TaskAlreadyUnmarkedException, InvalidTaskListIndexException {
+        int arrayIndex = getValidatedIndex(taskNumber);
 
         Task task = tasks.get(arrayIndex);
         if (!task.isMarked()) {
@@ -169,10 +178,7 @@ public class TaskList {
      * @throws InvalidTaskListIndexException If the number does not identify a task in this list.
      */
     public Task delete(int taskNumber) throws InvalidTaskListIndexException {
-        int arrayIndex = taskNumber - 1;
-        if (arrayIndex < 0 || arrayIndex >= tasks.size()) {
-            throw new InvalidTaskListIndexException(taskNumber, tasks.size());
-        }
+        int arrayIndex = getValidatedIndex(taskNumber);
         return tasks.remove(arrayIndex);
     }
 
@@ -185,7 +191,7 @@ public class TaskList {
      */
     public String getTasksOnDate(Temporal date) {
         if (date == null) {
-            return "The scroll is empty, young warrior. Every journey begins with a single step.";
+            return "";
         }
         StringBuilder result = new StringBuilder("On ")
                 .append(DateTimeHelper.format(date))
@@ -203,7 +209,7 @@ public class TaskList {
             }
         }
         if (!hasMatches) {
-            return "The scroll is empty, young warrior. Every journey begins with a single step.";
+            return "";
         }
         return result.toString().stripTrailing();
     }

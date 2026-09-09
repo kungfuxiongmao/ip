@@ -20,13 +20,11 @@ public class DeleteTaskCommandParser implements CommandParser {
      *
      * @param arguments Text containing the one-based task number.
      * @return A {@link DeleteTaskCommand} with the parsed task index.
-     * @throws InvalidArgumentException If the argument is non-numeric or empty.
+     * @throws InvalidArgumentException If the argument is empty, non-numeric, or exceeds the integer range.
      */
     @Override
     public Command parseArguments(String arguments) throws InvalidArgumentException {
-        if (!arguments.matches("\\d+")) {
-            throw new InvalidArgumentException("delete", "delete TASK_NUMBER");
-        }
-        return new DeleteTaskCommand(Integer.parseInt(arguments));
+        int taskNumber = TaskNumberParser.parse(arguments, "delete");
+        return new DeleteTaskCommand(taskNumber);
     }
 }

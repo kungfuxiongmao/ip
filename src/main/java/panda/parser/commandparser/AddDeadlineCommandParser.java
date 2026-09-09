@@ -1,5 +1,6 @@
 package panda.parser.commandparser;
 
+import java.time.format.DateTimeParseException;
 import java.time.temporal.Temporal;
 
 import panda.command.AddDeadlineCommand;
@@ -32,11 +33,13 @@ public class AddDeadlineCommandParser implements CommandParser {
         if (deadlineParts.length != 2 || deadlineParts[0].isBlank() || deadlineParts[1].isBlank()) {
             throw new InvalidArgumentException("deadline", "deadline DESCRIPTION /by DATE");
         }
-        String dateStr = deadlineParts[1].strip();
-        if (!DateTimeHelper.isValidDateTime(dateStr)) {
-            throw new InvalidDateException(dateStr, "deadline", "deadline DESCRIPTION /by DATE");
+        String dateString = deadlineParts[1].strip();
+        Temporal dueDate;
+        try {
+            dueDate = DateTimeHelper.parse(dateString);
+        } catch (DateTimeParseException exception) {
+            throw new InvalidDateException(dateString, "deadline", "deadline DESCRIPTION /by DATE");
         }
-        Temporal dueDate = DateTimeHelper.parse(dateStr);
         return new AddDeadlineCommand(deadlineParts[0].strip(), dueDate);
     }
 }

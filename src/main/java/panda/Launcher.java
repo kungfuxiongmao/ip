@@ -1,4 +1,7 @@
+package panda;
+
 import javafx.application.Application;
+import panda.gui.Main;
 
 /**
  * Launches Panda without directly extending the JavaFX application class.

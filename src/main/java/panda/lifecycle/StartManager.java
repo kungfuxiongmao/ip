@@ -4,11 +4,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import panda.exception.task.TaskListAlreadyInstantiatedException;
+import panda.exception.ApplicationException;
+import panda.exception.storage.FileCorruptedException;
+import panda.exception.storage.TaskLoadingException;
 import panda.storage.Storage;
 import panda.task.Task;
 import panda.task.TaskList;
-import panda.ui.ExceptionHandler;
 import panda.ui.Ui;
 
 /**
@@ -22,31 +23,41 @@ public final class StartManager {
 
     /**
      * Greets the user and initializes the task list from storage.
-     * <p>
-     * An empty task list is used if the file is corrupted or cannot be read. It can be assumed
-     * after running this function that TaskList has been instantiated correctly for the application.
      *
      * @param isGui Whether Panda is running through the graphical interface.
+     * @throws ApplicationException If saved tasks cannot be loaded or the task list already exists.
      */
-    public static void start(boolean isGui) {
+    public static void start(boolean isGui) throws ApplicationException {
         greet(isGui);
-
-        List<Task> tasks;
         try {
-            tasks = Storage.readTasks();
+            TaskList.of(loadTasks());
+        } catch (TaskLoadingException exception) {
+            TaskList.of(new ArrayList<>());
+            throw exception;
+        }
+
+    }
+
+    /**
+     * Loads saved tasks and translates storage failures into a recoverable application error.
+     *
+     * @return Tasks loaded from storage.
+     * @throws TaskLoadingException If the save file cannot be read or contains invalid data.
+     */
+    private static List<Task> loadTasks() throws TaskLoadingException {
+        try {
+            return Storage.readTasks();
+        } catch (FileCorruptedException exception) {
+            throw new TaskLoadingException(
+                    "This scroll is damaged, young warrior. We must begin with an empty one."
+                            + System.lineSeparator()
+                            + exception.getMessage(),
+                    exception);
         } catch (IOException exception) {
-            Ui.printMessage("Hmm. The scroll will not open. We must begin with an empty one: "
-                    + exception.getMessage());
-            tasks = null;
-        }
-
-        if (tasks == null) {
-            tasks = new ArrayList<>();
-        }
-        try {
-            TaskList.of(tasks);
-        } catch (TaskListAlreadyInstantiatedException exception) {
-            ExceptionHandler.handle(exception);
+            throw new TaskLoadingException(
+                    "Hmm. The scroll will not open. We must begin with an empty one: "
+                            + exception.getMessage(),
+                    exception);
         }
     }
 
