@@ -24,7 +24,7 @@ import panda.ui.Ui;
  */
 public class MainWindow extends AnchorPane {
     private final Image userImage = loadImage("/images/DaUser.png");
-    private final Image pandaImage = loadImage("/images/DaPanda.png");
+    private final Image botImage = loadImage("/images/DaMaster.png");
 
     @FXML
     private ScrollPane scrollPane;
@@ -88,7 +88,7 @@ public class MainWindow extends AnchorPane {
                 }
             } catch (IOException exception) {
                 Platform.runLater(() -> displayPandaMessage(
-                        "Panda's response stream closed unexpectedly: " + exception.getMessage()));
+                        "Master Shifu is offline: " + exception.getMessage()));
             }
         });
     }
@@ -110,6 +110,6 @@ public class MainWindow extends AnchorPane {
      * @param message Response to display.
      */
     private void displayPandaMessage(String message) {
-        dialogContainer.getChildren().add(DialogBox.getPandaDialog(message, pandaImage));
+        dialogContainer.getChildren().add(DialogBox.getPandaDialog(message, botImage));
     }
 }
