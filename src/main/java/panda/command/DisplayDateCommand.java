@@ -25,6 +25,11 @@ public class DisplayDateCommand implements Command {
      */
     @Override
     public void execute() {
-        Ui.printMessage(TaskList.getInstance().getTasksOnDate(date));
+        String tasksOnDate = TaskList.getInstance().getTasksOnDate(date);
+        if (tasksOnDate.isEmpty()) {
+            Ui.printMessage("The scroll shows no tasks on that date, young warrior.");
+            return;
+        }
+        Ui.printMessage(tasksOnDate);
     }
 }
