@@ -73,17 +73,7 @@ public final class Parser {
      * @throws ParseException If the command is unrecognized or has invalid arguments.
      */
     public static Command parse(String input) throws ParseException {
-        return matchCommand(processInput(input));
-    }
-
-    /**
-     * Processes user input by removing surrounding whitespace.
-     *
-     * @param input Text entered by the user.
-     * @return Input without surrounding whitespace.
-     */
-    private static String processInput(String input) {
-        return input.strip();
+        return matchCommand(input.strip());
     }
 
     /**

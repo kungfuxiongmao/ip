@@ -10,12 +10,6 @@ import panda.exception.parser.InvalidArgumentException;
 public class ListTasksCommandParser implements CommandParser {
 
     /**
-     * Constructs a {@code ListTasksCommandParser}.
-     */
-    public ListTasksCommandParser() {
-    }
-
-    /**
      * Validates that no extra arguments are passed to the {@code list} command.
      *
      * @param arguments Text following the list command keyword.

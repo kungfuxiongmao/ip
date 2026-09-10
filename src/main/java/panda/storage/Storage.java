@@ -9,7 +9,6 @@ import java.util.List;
 
 import panda.exception.storage.FileCorruptedException;
 import panda.task.Task;
-import panda.ui.Ui;
 
 /**
  * Reads and writes Panda's task save file.
@@ -24,26 +23,20 @@ public final class Storage {
     /**
      * Reads and decodes every task in the save file.
      * <p>
-     * A missing file represents an empty task list. A corrupted file is left
-     * untouched and represented by a {@code null} return value.
+     * A missing file represents an empty task list.
      *
-     * @return Decoded tasks, or {@code null} if any record is corrupted.
+     * @return Decoded tasks, or an empty list if the save file does not exist.
+     * @throws FileCorruptedException If any saved task record is malformed.
      * @throws IOException If the file cannot be read.
      */
-    public static List<Task> readTasks() throws IOException {
+    public static List<Task> readTasks() throws FileCorruptedException, IOException {
         if (Files.notExists(SAVE_FILE)) {
-            return new ArrayList<>();
+            return List.of();
         }
 
         List<Task> tasks = new ArrayList<>();
-        try {
-            for (String line : Files.readAllLines(SAVE_FILE, StandardCharsets.UTF_8)) {
-                tasks.add(TaskCodec.decode(line));
-            }
-        } catch (FileCorruptedException exception) {
-            Ui.printMessage("This scroll is damaged, young warrior. We must begin with an empty one.\n"
-                    + exception.getMessage());
-            return null;
+        for (String line : Files.readAllLines(SAVE_FILE, StandardCharsets.UTF_8)) {
+            tasks.add(TaskCodec.decode(line));
         }
         return tasks;
     }

@@ -16,24 +16,24 @@ public class TaskDateCheckTest {
     @Test
     public void todoCheckDate_alwaysReturnsFalse() {
         Todo todo = new Todo("read book");
-        assertFalse(todo.checkDate(LocalDate.of(2026, 10, 15)));
-        assertFalse(todo.checkDate(LocalDateTime.of(2026, 10, 15, 12, 0)));
-        assertFalse(todo.checkDate(null));
+        assertFalse(todo.occursOn(LocalDate.of(2026, 10, 15)));
+        assertFalse(todo.occursOn(LocalDateTime.of(2026, 10, 15, 12, 0)));
+        assertFalse(todo.occursOn(null));
     }
 
     @Test
     public void deadlineCheckDate_sameDate_returnsTrue() {
         Deadline deadline = new Deadline("submit assignment", LocalDateTime.of(2026, 10, 15, 18, 0));
-        assertTrue(deadline.checkDate(LocalDate.of(2026, 10, 15)));
-        assertTrue(deadline.checkDate(LocalDateTime.of(2026, 10, 15, 9, 0)));
+        assertTrue(deadline.occursOn(LocalDate.of(2026, 10, 15)));
+        assertTrue(deadline.occursOn(LocalDateTime.of(2026, 10, 15, 9, 0)));
     }
 
     @Test
     public void deadlineCheckDate_differentDate_returnsFalse() {
         Deadline deadline = new Deadline("submit assignment", LocalDate.of(2026, 10, 15));
-        assertFalse(deadline.checkDate(LocalDate.of(2026, 10, 16)));
-        assertFalse(deadline.checkDate(LocalDate.of(2026, 10, 14)));
-        assertFalse(deadline.checkDate(null));
+        assertFalse(deadline.occursOn(LocalDate.of(2026, 10, 16)));
+        assertFalse(deadline.occursOn(LocalDate.of(2026, 10, 14)));
+        assertFalse(deadline.occursOn(null));
     }
 
     @Test
@@ -43,11 +43,11 @@ public class TaskDateCheckTest {
                 LocalDate.of(2026, 10, 17));
 
         // Start date
-        assertTrue(event.checkDate(LocalDate.of(2026, 10, 15)));
+        assertTrue(event.occursOn(LocalDate.of(2026, 10, 15)));
         // Middle date
-        assertTrue(event.checkDate(LocalDate.of(2026, 10, 16)));
+        assertTrue(event.occursOn(LocalDate.of(2026, 10, 16)));
         // End date
-        assertTrue(event.checkDate(LocalDate.of(2026, 10, 17)));
+        assertTrue(event.occursOn(LocalDate.of(2026, 10, 17)));
     }
 
     @Test
@@ -56,8 +56,8 @@ public class TaskDateCheckTest {
                 LocalDate.of(2026, 10, 15),
                 LocalDate.of(2026, 10, 17));
 
-        assertFalse(event.checkDate(LocalDate.of(2026, 10, 14)));
-        assertFalse(event.checkDate(LocalDate.of(2026, 10, 18)));
-        assertFalse(event.checkDate(null));
+        assertFalse(event.occursOn(LocalDate.of(2026, 10, 14)));
+        assertFalse(event.occursOn(LocalDate.of(2026, 10, 18)));
+        assertFalse(event.occursOn(null));
     }
 }

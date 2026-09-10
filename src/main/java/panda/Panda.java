@@ -35,6 +35,7 @@ public final class Panda {
      */
     public static void main(String[] args) {
         Panda panda = new Panda(System.in, System.out, false);
+        panda.start();
         panda.processCommandsUntilInputCloses();
     }
 
@@ -47,16 +48,28 @@ public final class Panda {
      */
     public static Panda createForGraphicalInterface(
             InputStream commandInputStream, OutputStream responseOutputStream) {
-        return new Panda(commandInputStream, responseOutputStream, true);
+        Panda panda = new Panda(commandInputStream, responseOutputStream, true);
+        panda.start();
+        return panda;
     }
 
     /**
      * Processes commands until the input stream closes or a command terminates Panda.
      */
     public void processCommandsUntilInputCloses() {
-        StartManager.start(isGui);
         while (commandScanner.hasNextLine()) {
             processCommand(commandScanner.nextLine());
+        }
+    }
+
+    /**
+     * Starts Panda and recovers with an empty task list if startup fails.
+     */
+    private void start() {
+        try {
+            StartManager.start(isGui);
+        } catch (ApplicationException exception) {
+            ExceptionHandler.handle(exception);
         }
     }
 

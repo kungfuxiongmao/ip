@@ -4,7 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.stream.Stream;
+
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import panda.exception.storage.FileCorruptedException;
 import panda.task.Deadline;
@@ -17,62 +22,34 @@ import panda.task.Todo;
  */
 public class TaskCodecTest {
 
-    @Test
-    public void roundTrip_unmarkedTodoTask_encodesBackToSameString() throws Exception {
-        String originalRecord = "T | 0 | read book";
-        Task decodedTask = TaskCodec.decode(originalRecord);
-        assertInstanceOf(Todo.class, decodedTask);
-        String reEncodedRecord = TaskCodec.encode(decodedTask);
-        assertEquals(originalRecord, reEncodedRecord);
-    }
+    @ParameterizedTest
+    @MethodSource("validTaskRecords")
+    public void roundTrip_validRecord_preservesRecord(
+            String record, Class<? extends Task> expectedType) throws Exception {
+        Task task = TaskCodec.decode(record);
 
-    @Test
-    public void roundTrip_markedTodoTask_encodesBackToSameString() throws Exception {
-        String originalRecord = "T | 1 | read book";
-        Task decodedTask = TaskCodec.decode(originalRecord);
-        assertInstanceOf(Todo.class, decodedTask);
-        String reEncodedRecord = TaskCodec.encode(decodedTask);
-        assertEquals(originalRecord, reEncodedRecord);
-    }
-
-    @Test
-    public void roundTrip_unmarkedDeadlineTask_encodesBackToSameString() throws Exception {
-        String originalRecord = "D | 0 | return book | 2019-06-06 18:00";
-        Task decodedTask = TaskCodec.decode(originalRecord);
-        assertInstanceOf(Deadline.class, decodedTask);
-        String reEncodedRecord = TaskCodec.encode(decodedTask);
-        assertEquals(originalRecord, reEncodedRecord);
-    }
-
-    @Test
-    public void roundTrip_markedDeadlineTask_encodesBackToSameString() throws Exception {
-        String originalRecord = "D | 1 | return book | 2019-06-06";
-        Task decodedTask = TaskCodec.decode(originalRecord);
-        assertInstanceOf(Deadline.class, decodedTask);
-        String reEncodedRecord = TaskCodec.encode(decodedTask);
-        assertEquals(originalRecord, reEncodedRecord);
-    }
-
-    @Test
-    public void roundTrip_markedEventTask_encodesBackToSameString() throws Exception {
-        String originalRecord = "E | 1 | project meeting | 2019-08-06 14:00 | 2019-08-06 16:00";
-        Task decodedTask = TaskCodec.decode(originalRecord);
-        assertInstanceOf(Event.class, decodedTask);
-        String reEncodedRecord = TaskCodec.encode(decodedTask);
-        assertEquals(originalRecord, reEncodedRecord);
-    }
-
-    @Test
-    public void roundTrip_unmarkedEventTask_encodesBackToSameString() throws Exception {
-        String originalRecord = "E | 0 | orientation camp | 2019-08-06 | 2019-08-08";
-        Task decodedTask = TaskCodec.decode(originalRecord);
-        assertInstanceOf(Event.class, decodedTask);
-        String reEncodedRecord = TaskCodec.encode(decodedTask);
-        assertEquals(originalRecord, reEncodedRecord);
+        assertInstanceOf(expectedType, task);
+        assertEquals(record, TaskCodec.encode(task));
     }
 
     @Test
     public void decode_corruptedRecord_throwsFileCorruptedException() {
         assertThrows(FileCorruptedException.class, () -> TaskCodec.decode("corrupted task record"));
+    }
+
+    @Test
+    public void decode_illegalStoredDate_throwsFileCorruptedException() {
+        assertThrows(FileCorruptedException.class, () ->
+                TaskCodec.decode("D | 0 | return book | invalid-date"));
+    }
+
+    private static Stream<Arguments> validTaskRecords() {
+        return Stream.of(
+                Arguments.of("T | 0 | read book", Todo.class),
+                Arguments.of("T | 1 | read book", Todo.class),
+                Arguments.of("D | 0 | return book | 2019-06-06 18:00", Deadline.class),
+                Arguments.of("D | 1 | return book | 2019-06-06", Deadline.class),
+                Arguments.of("E | 1 | project meeting | 2019-08-06 14:00 | 2019-08-06 16:00", Event.class),
+                Arguments.of("E | 0 | orientation camp | 2019-08-06 | 2019-08-08", Event.class));
     }
 }

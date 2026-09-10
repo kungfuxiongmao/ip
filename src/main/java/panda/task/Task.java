@@ -75,7 +75,7 @@ public abstract class Task {
      * @param date Date to check against as a {@link Temporal}.
      * @return {@code true} if this task matches the specified date, {@code false} otherwise.
      */
-    public abstract boolean checkDate(Temporal date);
+    public abstract boolean occursOn(Temporal date);
 
     /**
      * Returns a string representation of the task.

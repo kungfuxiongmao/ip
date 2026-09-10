@@ -27,7 +27,7 @@ public class MarkTaskCommand implements Command {
      */
     @Override
     public void execute() throws ApplicationException {
-        Task task = TaskList.getInstance().markEvent(taskNumber);
+        Task task = TaskList.getInstance().markTask(taskNumber);
         Ui.printMessage("Well done. Discipline bears fruit. You have completed this:"
                 + System.lineSeparator() + "  " + task);
     }

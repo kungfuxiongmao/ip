@@ -10,23 +10,15 @@ import panda.exception.parser.InvalidArgumentException;
 public class UnmarkTaskCommandParser implements CommandParser {
 
     /**
-     * Constructs an {@code UnmarkTaskCommandParser}.
-     */
-    public UnmarkTaskCommandParser() {
-    }
-
-    /**
      * Parses the task number to unmark from the supplied arguments.
      *
      * @param arguments Text containing the one-based task number.
      * @return An {@link UnmarkTaskCommand} with the parsed task index.
-     * @throws InvalidArgumentException If the argument is non-numeric or empty.
+     * @throws InvalidArgumentException If the argument is empty, non-numeric, or exceeds the integer range.
      */
     @Override
     public Command parseArguments(String arguments) throws InvalidArgumentException {
-        if (!arguments.matches("\\d+")) {
-            throw new InvalidArgumentException("unmark", "unmark TASK_NUMBER");
-        }
-        return new UnmarkTaskCommand(Integer.parseInt(arguments));
+        int taskNumber = TaskNumberParser.parse(arguments, "unmark");
+        return new UnmarkTaskCommand(taskNumber);
     }
 }

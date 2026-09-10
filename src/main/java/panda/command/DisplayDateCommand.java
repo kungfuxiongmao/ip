@@ -9,6 +9,9 @@ import panda.ui.Ui;
  * Displays tasks occurring on, due on, or spanning across a specified date.
  */
 public class DisplayDateCommand implements Command {
+    private static final String MESSAGE_NO_MATCHING_TASKS =
+            "The scroll is empty, young warrior. Every journey begins with a single step.";
+
     private final Temporal date;
 
     /**
@@ -25,11 +28,17 @@ public class DisplayDateCommand implements Command {
      */
     @Override
     public void execute() {
+        displayTasksOnDate(date);
+    }
+
+    /**
+     * Displays tasks matching the specified date, or an empty-list message if none match.
+     *
+     * @param date Date to filter tasks by.
+     */
+    static void displayTasksOnDate(Temporal date) {
         String tasksOnDate = TaskList.getInstance().getTasksOnDate(date);
-        if (tasksOnDate.isEmpty()) {
-            Ui.printMessage("The scroll shows no tasks on that date, young warrior.");
-            return;
-        }
-        Ui.printMessage(tasksOnDate);
+        String message = tasksOnDate.isEmpty() ? MESSAGE_NO_MATCHING_TASKS : tasksOnDate;
+        Ui.printMessage(message);
     }
 }

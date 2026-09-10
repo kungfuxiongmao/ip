@@ -4,20 +4,20 @@ import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 import panda.exception.task.InvalidTaskListIndexException;
 import panda.exception.task.TaskAlreadyMarkedException;
 import panda.exception.task.TaskAlreadyUnmarkedException;
-import panda.exception.task.TaskListAlreadyInstantiatedException;
 import panda.util.datetime.DateTimeHelper;
 
 /**
- * Stores the tasks entered during the current Panda session.
- * Tasks are kept only in memory and are discarded when Panda closes.
+ * Stores tasks loaded for the current Panda session and provides operations for managing them.
+ * Tasks are saved when Panda terminates normally.
  */
-public class TaskList {
+public final class TaskList {
     private static TaskList instance;
-    private final ArrayList<Task> tasks;
+    private final List<Task> tasks;
 
     /**
      * Creates an empty task list.
@@ -33,15 +33,13 @@ public class TaskList {
      *
      * @param initialTasks Tasks to include when creating the singleton.
      * @return The initialized singleton instance.
-     * @throws TaskListAlreadyInstantiatedException If the singleton has already been initialized.
      */
-    public static TaskList of(List<Task> initialTasks) throws TaskListAlreadyInstantiatedException {
+    public static TaskList of(List<Task> initialTasks) {
         assert initialTasks != null : "Stored task list cannot be null";
         assert initialTasks.stream().allMatch(Objects::nonNull)
                 : "Task in stored task list cannot be null";
-        if (instance != null) {
-            throw new TaskListAlreadyInstantiatedException();
-        }
+        assert instance == null : "TaskList has already been initialized";
+
         instance = new TaskList();
         instance.tasks.addAll(initialTasks);
         return instance;
@@ -84,12 +82,12 @@ public class TaskList {
      * Creates and adds an event task.
      *
      * @param description Description of the event.
-     * @param dateTimeFrom Event start date and time as a {@link Temporal}.
-     * @param dateTimeTo Event end date and time as a {@link Temporal}.
+     * @param startDateTime Event start date and time as a {@link Temporal}.
+     * @param endDateTime Event end date and time as a {@link Temporal}.
      * @return The newly added task.
      */
-    public Task addEvent(String description, Temporal dateTimeFrom, Temporal dateTimeTo) {
-        return add(new Event(description, dateTimeFrom, dateTimeTo));
+    public Task addEvent(String description, Temporal startDateTime, Temporal endDateTime) {
+        return add(new Event(description, startDateTime, endDateTime));
     }
 
     /**
@@ -123,6 +121,21 @@ public class TaskList {
     }
 
     /**
+     * Converts a displayed task number to a valid zero-based index.
+     *
+     * @param taskNumber One-based task number entered by the user.
+     * @return Zero-based index of the identified task.
+     * @throws InvalidTaskListIndexException If the number does not identify a task in this list.
+     */
+    private int getValidatedIndex(int taskNumber) throws InvalidTaskListIndexException {
+        int arrayIndex = taskNumber - 1;
+        if (arrayIndex < 0 || arrayIndex >= tasks.size()) {
+            throw new InvalidTaskListIndexException(taskNumber, tasks.size());
+        }
+        return arrayIndex;
+    }
+
+    /**
      * Marks the task with the supplied one-based task number.
      *
      * @param taskNumber Number displayed beside the task.
@@ -130,11 +143,8 @@ public class TaskList {
      * @throws InvalidTaskListIndexException If the number does not identify a task in this list.
      * @throws TaskAlreadyMarkedException If the task is already marked.
      */
-    public Task markEvent(int taskNumber) throws TaskAlreadyMarkedException, InvalidTaskListIndexException {
-        int arrayIndex = taskNumber - 1;
-        if (arrayIndex < 0 || arrayIndex >= tasks.size()) {
-            throw new InvalidTaskListIndexException(taskNumber, tasks.size());
-        }
+    public Task markTask(int taskNumber) throws TaskAlreadyMarkedException, InvalidTaskListIndexException {
+        int arrayIndex = getValidatedIndex(taskNumber);
 
         Task task = tasks.get(arrayIndex);
         if (task.isMarked()) {
@@ -152,11 +162,8 @@ public class TaskList {
      * @throws InvalidTaskListIndexException If the number does not identify a task in this list.
      * @throws TaskAlreadyUnmarkedException If the task is already unmarked.
      */
-    public Task unmarkEvent(int taskNumber) throws TaskAlreadyUnmarkedException, InvalidTaskListIndexException {
-        int arrayIndex = taskNumber - 1;
-        if (arrayIndex < 0 || arrayIndex >= tasks.size()) {
-            throw new InvalidTaskListIndexException(taskNumber, tasks.size());
-        }
+    public Task unmarkTask(int taskNumber) throws TaskAlreadyUnmarkedException, InvalidTaskListIndexException {
+        int arrayIndex = getValidatedIndex(taskNumber);
 
         Task task = tasks.get(arrayIndex);
         if (!task.isMarked()) {
@@ -174,10 +181,7 @@ public class TaskList {
      * @throws InvalidTaskListIndexException If the number does not identify a task in this list.
      */
     public Task delete(int taskNumber) throws InvalidTaskListIndexException {
-        int arrayIndex = taskNumber - 1;
-        if (arrayIndex < 0 || arrayIndex >= tasks.size()) {
-            throw new InvalidTaskListIndexException(taskNumber, tasks.size());
-        }
+        int arrayIndex = getValidatedIndex(taskNumber);
         return tasks.remove(arrayIndex);
     }
 
@@ -192,25 +196,8 @@ public class TaskList {
         if (date == null) {
             return "";
         }
-        StringBuilder result = new StringBuilder("On ")
-                .append(DateTimeHelper.format(date))
-                .append(", these tasks await you:")
-                .append(System.lineSeparator());
-        boolean hasMatches = false;
-        for (int index = 0; index < tasks.size(); index++) {
-            Task task = tasks.get(index);
-            if (task.checkDate(date)) {
-                hasMatches = true;
-                result.append(index + 1)
-                        .append(".")
-                        .append(task)
-                        .append(System.lineSeparator());
-            }
-        }
-        if (!hasMatches) {
-            return "";
-        }
-        return result.toString().stripTrailing();
+        String heading = "On " + DateTimeHelper.formatForDisplay(date) + ", these tasks await you:";
+        return formatMatchingTasks(task -> task.occursOn(date), heading, "");
     }
 
     /**
@@ -221,23 +208,9 @@ public class TaskList {
      * @return Formatted list of matching tasks with original list numbers, or an empty list message if none match.
      */
     public String getTasksWithKeyword(String keyword) {
-        StringBuilder result = new StringBuilder("Look again. These are the tasks you seek:")
-                .append(System.lineSeparator());
-        boolean hasMatches = false;
-        for (int index = 0; index < tasks.size(); index++) {
-            Task task = tasks.get(index);
-            if (task.hasKeyword(keyword)) {
-                hasMatches = true;
-                result.append(index + 1)
-                        .append(".")
-                        .append(task)
-                        .append(System.lineSeparator());
-            }
-        }
-        if (!hasMatches) {
-            return "The scroll is empty, young warrior. Every journey begins with a single step.";
-        }
-        return result.toString().stripTrailing();
+        return formatMatchingTasks(task -> task.hasKeyword(keyword),
+                "Look again. These are the tasks you seek:",
+                "The scroll is empty, young warrior. Every journey begins with a single step.");
     }
 
     /**
@@ -247,16 +220,34 @@ public class TaskList {
      */
     @Override
     public String toString() {
-        if (tasks.isEmpty()) {
-            return "The scroll is empty, young warrior. Every journey begins with a single step.";
-        }
-        StringBuilder result = new StringBuilder("Look closely, young warrior. These tasks await you:")
-                .append(System.lineSeparator());
+        return formatMatchingTasks(task -> true,
+                "Look closely, young warrior. These tasks await you:",
+                "The scroll is empty, young warrior. Every journey begins with a single step.");
+    }
+
+    /**
+     * Formats tasks that satisfy the supplied condition, retaining their original task numbers.
+     *
+     * @param taskCondition Condition used to select tasks for display.
+     * @param heading Heading displayed before matching tasks.
+     * @param noMatchesMessage Message returned when no tasks match.
+     * @return Formatted matching tasks, or the supplied no-match message when none match.
+     */
+    private String formatMatchingTasks(Predicate<Task> taskCondition, String heading, String noMatchesMessage) {
+        StringBuilder result = new StringBuilder(heading).append(System.lineSeparator());
+        boolean hasMatches = false;
         for (int index = 0; index < tasks.size(); index++) {
-            result.append(index + 1)
-                    .append(".")
-                    .append(tasks.get(index))
-                    .append(System.lineSeparator());
+            Task task = tasks.get(index);
+            if (taskCondition.test(task)) {
+                hasMatches = true;
+                result.append(index + 1)
+                        .append(".")
+                        .append(task)
+                        .append(System.lineSeparator());
+            }
+        }
+        if (!hasMatches) {
+            return noMatchesMessage;
         }
         return result.toString().stripTrailing();
     }
