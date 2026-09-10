@@ -21,6 +21,8 @@ public class Event extends Task {
      */
     public Event(String description, Temporal startDateTime, Temporal endDateTime) {
         super(description);
+        assert startDateTime != null : "Event start date and time must not be null";
+        assert endDateTime != null : "Event end date and time must not be null";
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
     }

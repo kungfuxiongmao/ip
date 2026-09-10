@@ -29,7 +29,13 @@ public abstract class AddTaskCommand implements Command {
     @Override
     public final void execute() {
         TaskList taskList = TaskList.getInstance();
+        int previousTaskCount = taskList.getSize();
         Task task = addTask();
+        assert task != null : "addTask() must return the newly added task, but returned null";
+        assert taskList.getSize() == previousTaskCount + 1
+                : "addTask() must increase TaskList size by exactly one: expected "
+                        + (previousTaskCount + 1) + " but was " + taskList.getSize();
+
         int taskCount = taskList.getSize();
         String taskNoun = taskCount == 1 ? "task" : "tasks";
         Ui.printMessage("Good. Every journey moves one step at a time. This belongs on your scroll:"

@@ -3,6 +3,7 @@ package panda.task;
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 import panda.exception.task.InvalidTaskListIndexException;
@@ -34,6 +35,9 @@ public final class TaskList {
      * @return The initialized singleton instance.
      */
     public static TaskList of(List<Task> initialTasks) {
+        assert initialTasks != null : "Stored task list cannot be null";
+        assert initialTasks.stream().allMatch(Objects::nonNull)
+                : "Task in stored task list cannot be null";
         assert instance == null : "TaskList has already been initialized";
 
         instance = new TaskList();
@@ -111,6 +115,7 @@ public final class TaskList {
      * @return The added task.
      */
     private Task add(Task task) {
+        assert task != null : "Task added to TaskList must not be null";
         tasks.add(task);
         return task;
     }
@@ -185,7 +190,7 @@ public final class TaskList {
      * are due on, or span across the specified date, using each task's original 1-based index in the list.
      *
      * @param date Date to filter tasks by as a {@link Temporal}.
-     * @return Formatted list of matching tasks with original list numbers, or an empty list message if none match.
+     * @return Formatted list of matching tasks with original list numbers, or an empty string if none match.
      */
     public String getTasksOnDate(Temporal date) {
         if (date == null) {
