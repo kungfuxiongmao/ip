@@ -18,8 +18,8 @@ import panda.command.ListTasksCommand;
 import panda.command.MarkTaskCommand;
 import panda.command.TodayCommand;
 import panda.command.UnmarkTaskCommand;
+import panda.exception.parser.IllegalDateTimeException;
 import panda.exception.parser.InvalidArgumentException;
-import panda.exception.parser.InvalidDateException;
 import panda.exception.parser.NoCommandFoundException;
 
 /**
@@ -74,8 +74,8 @@ public class ParserTest {
     }
 
     @Test
-    public void parse_deadlineInvalidDate_throwsInvalidDateException() {
-        assertThrows(InvalidDateException.class, () -> Parser.parse("deadline return book /by not-a-date"));
+    public void parse_deadlineInvalidDate_throwsIllegalDateTimeException() {
+        assertThrows(IllegalDateTimeException.class, () -> Parser.parse("deadline return book /by not-a-date"));
     }
 
     @Test
@@ -92,8 +92,8 @@ public class ParserTest {
     }
 
     @Test
-    public void parse_eventInvalidDate_throwsInvalidDateException() {
-        assertThrows(InvalidDateException.class, () ->
+    public void parse_eventInvalidDate_throwsIllegalDateTimeException() {
+        assertThrows(IllegalDateTimeException.class, () ->
                 Parser.parse("event meeting /from invalid-date /to 15/10/2026 16:00"));
     }
 
@@ -165,8 +165,8 @@ public class ParserTest {
     }
 
     @Test
-    public void parse_displayInvalidDate_throwsInvalidDateException() {
-        assertThrows(InvalidDateException.class, () -> Parser.parse("display /date invalid-date"));
+    public void parse_displayInvalidDate_throwsIllegalDateTimeException() {
+        assertThrows(IllegalDateTimeException.class, () -> Parser.parse("display /date invalid-date"));
     }
 
     @Test

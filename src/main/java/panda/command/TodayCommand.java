@@ -8,12 +8,6 @@ import java.time.LocalDate;
 public class TodayCommand implements Command {
 
     /**
-     * Constructs a {@code TodayCommand}.
-     */
-    public TodayCommand() {
-    }
-
-    /**
      * Retrieves and displays tasks that fall on or span across the current system date.
      */
     @Override

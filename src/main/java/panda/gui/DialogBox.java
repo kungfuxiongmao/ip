@@ -47,7 +47,7 @@ public class DialogBox extends HBox {
      * @param image User image to display.
      * @return Dialog box for the user's message.
      */
-    public static DialogBox getUserDialog(String text, Image image) {
+    public static DialogBox createUserDialog(String text, Image image) {
         DialogBox dialogBox = new DialogBox(text, image);
         dialogBox.dialog.getStyleClass().add("user-dialog");
         dialogBox.alignMessageWithUserImage();
@@ -61,7 +61,7 @@ public class DialogBox extends HBox {
      * @param image Panda image to display.
      * @return Dialog box for Panda's response.
      */
-    public static DialogBox getPandaDialog(String text, Image image) {
+    public static DialogBox createPandaDialog(String text, Image image) {
         DialogBox dialogBox = new DialogBox(text, image);
         dialogBox.dialog.getStyleClass().add("panda-dialog");
         dialogBox.flip();

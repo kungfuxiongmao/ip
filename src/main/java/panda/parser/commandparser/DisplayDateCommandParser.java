@@ -1,24 +1,17 @@
 package panda.parser.commandparser;
 
-import java.time.format.DateTimeParseException;
 import java.time.temporal.Temporal;
 
 import panda.command.Command;
 import panda.command.DisplayDateCommand;
 import panda.exception.parser.InvalidArgumentException;
-import panda.exception.parser.InvalidDateException;
 import panda.util.datetime.DateTimeHelper;
 
 /**
  * Parses arguments for a command that displays tasks matching a specific date.
  */
 public class DisplayDateCommandParser implements CommandParser {
-
-    /**
-     * Constructs a {@code DisplayDateCommandParser}.
-     */
-    public DisplayDateCommandParser() {
-    }
+    private static final String DATE_PREFIX = "/date";
 
     /**
      * Parses the date filter argument for the {@code display} command.
@@ -30,19 +23,16 @@ public class DisplayDateCommandParser implements CommandParser {
     @Override
     public Command parseArguments(String arguments) throws InvalidArgumentException {
         String trimmed = arguments.strip();
-        if (!trimmed.equals("/date") && !trimmed.startsWith("/date ") && !trimmed.startsWith("/date\t")) {
+        if (!trimmed.equals(DATE_PREFIX)
+                && !trimmed.startsWith(DATE_PREFIX + " ")
+                && !trimmed.startsWith(DATE_PREFIX + "\t")) {
             throw new InvalidArgumentException("display", "display /date DATE");
         }
-        String dateString = trimmed.substring(5).strip();
+        String dateString = trimmed.substring(DATE_PREFIX.length()).strip();
         if (dateString.isEmpty()) {
             throw new InvalidArgumentException("display", "display /date DATE");
         }
-        Temporal date;
-        try {
-            date = DateTimeHelper.parse(dateString);
-        } catch (DateTimeParseException exception) {
-            throw new InvalidDateException(dateString, "display", "display /date DATE");
-        }
+        Temporal date = DateTimeHelper.parseInput(dateString);
         return new DisplayDateCommand(date);
     }
 }

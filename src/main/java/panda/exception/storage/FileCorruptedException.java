@@ -13,4 +13,14 @@ public class FileCorruptedException extends Exception {
     public FileCorruptedException(String message) {
         super(message);
     }
+
+    /**
+     * Creates an exception describing the invalid record and its cause.
+     *
+     * @param message Description of the format problem.
+     * @param cause Error that revealed the corrupted record.
+     */
+    public FileCorruptedException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

@@ -1,7 +1,6 @@
 package panda.storage;
 
-import java.time.format.DateTimeParseException;
-
+import panda.exception.parser.IllegalDateTimeException;
 import panda.exception.storage.FileCorruptedException;
 import panda.task.Deadline;
 import panda.task.Event;
@@ -97,7 +96,7 @@ public final class TaskCodec {
      */
     private static String encodeDeadline(Deadline deadline, String state) {
         return String.join(FIELD_DELIMITER, TASK_TYPE_DEADLINE, state, deadline.getDescription(),
-                DateTimeHelper.saveDate(deadline.getDueDate()));
+                DateTimeHelper.formatForStorage(deadline.getDueDate()));
     }
 
     /**
@@ -109,8 +108,8 @@ public final class TaskCodec {
      */
     private static String encodeEvent(Event event, String state) {
         return String.join(FIELD_DELIMITER, TASK_TYPE_EVENT, state, event.getDescription(),
-                DateTimeHelper.saveDate(event.getDateTimeFrom()),
-                DateTimeHelper.saveDate(event.getDateTimeTo()));
+                DateTimeHelper.formatForStorage(event.getStartDateTime()),
+                DateTimeHelper.formatForStorage(event.getEndDateTime()));
     }
 
     /**
@@ -186,15 +185,15 @@ public final class TaskCodec {
                 case TASK_TYPE_TODO -> new Todo(fields[FIELD_INDEX_DESCRIPTION]);
                 case TASK_TYPE_DEADLINE -> new Deadline(
                         fields[FIELD_INDEX_DESCRIPTION],
-                        DateTimeHelper.loadDate(fields[FIELD_INDEX_PRIMARY_DATE]));
+                        DateTimeHelper.parseStorage(fields[FIELD_INDEX_PRIMARY_DATE]));
                 case TASK_TYPE_EVENT -> new Event(
                         fields[FIELD_INDEX_DESCRIPTION],
-                        DateTimeHelper.loadDate(fields[FIELD_INDEX_PRIMARY_DATE]),
-                        DateTimeHelper.loadDate(fields[FIELD_INDEX_EVENT_END_DATE]));
+                        DateTimeHelper.parseStorage(fields[FIELD_INDEX_PRIMARY_DATE]),
+                        DateTimeHelper.parseStorage(fields[FIELD_INDEX_EVENT_END_DATE]));
                 default -> throw new AssertionError("Task type was validated before decoding");
             };
-        } catch (DateTimeParseException | IllegalArgumentException exception) {
-            throw new FileCorruptedException("Failed to parse date: " + exception.getMessage());
+        } catch (IllegalDateTimeException exception) {
+            throw new FileCorruptedException("Stored task contains an illegal date or time", exception);
         }
     }
 

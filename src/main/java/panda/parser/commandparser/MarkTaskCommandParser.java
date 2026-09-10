@@ -10,12 +10,6 @@ import panda.exception.parser.InvalidArgumentException;
 public class MarkTaskCommandParser implements CommandParser {
 
     /**
-     * Constructs a {@code MarkTaskCommandParser}.
-     */
-    public MarkTaskCommandParser() {
-    }
-
-    /**
      * Parses the task number to mark from the supplied arguments.
      *
      * @param arguments Text containing the one-based task number.

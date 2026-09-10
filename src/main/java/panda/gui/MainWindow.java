@@ -95,7 +95,7 @@ public class MainWindow extends AnchorPane {
     @FXML
     private void sendUserCommand() {
         String command = userInput.getText();
-        dialogContainer.getChildren().add(DialogBox.getUserDialog(command, userImage));
+        dialogContainer.getChildren().add(DialogBox.createUserDialog(command, userImage));
         pandaCommandWriter.println(command);
         userInput.clear();
     }
@@ -106,6 +106,6 @@ public class MainWindow extends AnchorPane {
      * @param message Response to display.
      */
     private void displayPandaMessage(String message) {
-        dialogContainer.getChildren().add(DialogBox.getPandaDialog(message, botImage));
+        dialogContainer.getChildren().add(DialogBox.createPandaDialog(message, botImage));
     }
 }

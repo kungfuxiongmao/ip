@@ -38,7 +38,7 @@ public class Deadline extends Task {
      * @return Whether the due date falls on the specified date.
      */
     @Override
-    public boolean checkDate(Temporal date) {
+    public boolean occursOn(Temporal date) {
         if (date == null) {
             return false;
         }
@@ -54,6 +54,6 @@ public class Deadline extends Task {
      */
     @Override
     public String toString() {
-        return "[D]" + super.toString() + " (by: " + DateTimeHelper.format(dueDate) + ")";
+        return "[D]" + super.toString() + " (by: " + DateTimeHelper.formatForDisplay(dueDate) + ")";
     }
 }

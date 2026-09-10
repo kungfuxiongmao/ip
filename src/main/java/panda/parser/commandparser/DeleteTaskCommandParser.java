@@ -10,12 +10,6 @@ import panda.exception.parser.InvalidArgumentException;
 public class DeleteTaskCommandParser implements CommandParser {
 
     /**
-     * Constructs a {@code DeleteTaskCommandParser}.
-     */
-    public DeleteTaskCommandParser() {
-    }
-
-    /**
      * Parses the task number to delete from the supplied arguments.
      *
      * @param arguments Text containing the one-based task number.

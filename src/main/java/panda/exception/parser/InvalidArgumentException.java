@@ -15,6 +15,16 @@ public class InvalidArgumentException extends ParseException {
     }
 
     /**
+     * Creates an exception with a custom error message and underlying cause.
+     *
+     * @param message Explanation of the argument problem.
+     * @param cause Error that caused this exception.
+     */
+    protected InvalidArgumentException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    /**
      * Creates an exception that explains the expected command usage.
      *
      * @param command Command whose arguments are invalid.

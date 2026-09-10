@@ -7,153 +7,93 @@ import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 import java.time.temporal.Temporal;
 
+import panda.exception.parser.IllegalDateTimeException;
+
 /**
- * Provides utility methods for parsing, validating, and formatting date and date-time values.
- * <p>
- * This class cannot be instantiated. It provides static helper methods to convert between
- * user-facing string inputs, both inputs and outputs, and Java {@link Temporal} representations ({@link LocalDate}
- * and {@link LocalDateTime}), supporting inputs both with and without a time component.
+ * Converts date and date-time values between input, display, and storage formats.
  */
 public final class DateTimeHelper {
 
-    private static final DateTimeFormatter DATE_INPUT = DateTimeFormatter.ofPattern("d/M/uuuu")
+    private static final DateTimeFormatter FORMATTER_INPUT = DateTimeFormatter.ofPattern("d/M/uuuu[ H:mm]")
             .withResolverStyle(ResolverStyle.STRICT);
-    private static final DateTimeFormatter DATETIME_INPUT = DateTimeFormatter.ofPattern("d/M/uuuu H:mm")
-            .withResolverStyle(ResolverStyle.STRICT);
-
-    private static final DateTimeFormatter DATE_OUTPUT = DateTimeFormatter.ofPattern("d MMM yyyy");
-    private static final DateTimeFormatter DATETIME_OUTPUT = DateTimeFormatter.ofPattern("d MMM yyyy H:mm");
-
-    private static final DateTimeFormatter DATE_STORAGE = DateTimeFormatter.ofPattern("uuuu-MM-dd")
-            .withResolverStyle(ResolverStyle.STRICT);
-    private static final DateTimeFormatter DATETIME_STORAGE = DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm")
+    private static final DateTimeFormatter FORMATTER_OUTPUT = DateTimeFormatter.ofPattern("d MMM yyyy[ H:mm]");
+    private static final DateTimeFormatter FORMATTER_STORAGE = DateTimeFormatter.ofPattern("uuuu-MM-dd[ HH:mm]")
             .withResolverStyle(ResolverStyle.STRICT);
 
     private DateTimeHelper() {
-        // Prevent instantiation of utility class
+        // Prevents instantiation of utility class.
     }
 
     /**
-     * Checks whether the given string is a valid date or date-time in the supported format.
+     * Parses a user-entered date or date-time.
      *
-     * @param dateTime The date or date-time string to validate.
-     * @return {@code true} if the input is a valid date or date-time, {@code false} otherwise.
+     * @param dateTime Date or date-time in {@code d/M/uuuu[ H:mm]} format.
+     * @return Parsed {@link LocalDate} or {@link LocalDateTime}.
+     * @throws IllegalDateTimeException If the value is null, blank, or has an invalid format or value.
      */
-    public static boolean isValidDateTime(String dateTime) {
+    public static Temporal parseInput(String dateTime) throws IllegalDateTimeException {
+        return parseUsingFormatter(dateTime, FORMATTER_INPUT);
+    }
+
+    /**
+     * Parses a stored date or date-time, including the legacy input format.
+     *
+     * @param dateTime Date or date-time in storage or legacy input format.
+     * @return Parsed {@link LocalDate} or {@link LocalDateTime}.
+     * @throws IllegalDateTimeException If the value is null, blank, or has an invalid format or value.
+     */
+    public static Temporal parseStorage(String dateTime) throws IllegalDateTimeException {
+        try {
+            return parseUsingFormatter(dateTime, FORMATTER_STORAGE);
+        } catch (IllegalDateTimeException storageFormatException) {
+            return parseInput(dateTime);
+        }
+    }
+
+    /**
+     * Formats a date or date-time for display to the user.
+     *
+     * @param temporal {@link LocalDate} or {@link LocalDateTime} to format.
+     * @return Date or date-time in {@code d MMM yyyy[ H:mm]} format.
+     * @throws IllegalArgumentException If the value is null or has an unsupported type.
+     */
+    public static String formatForDisplay(Temporal temporal) {
+        return formatUsingFormatter(temporal, FORMATTER_OUTPUT);
+    }
+
+    /**
+     * Formats a date or date-time for storage.
+     *
+     * @param temporal {@link LocalDate} or {@link LocalDateTime} to format.
+     * @return Date or date-time in {@code uuuu-MM-dd[ HH:mm]} format.
+     * @throws IllegalArgumentException If the value is null or has an unsupported type.
+     */
+    public static String formatForStorage(Temporal temporal) {
+        return formatUsingFormatter(temporal, FORMATTER_STORAGE);
+    }
+
+    private static Temporal parseUsingFormatter(String dateTime, DateTimeFormatter formatter)
+            throws IllegalDateTimeException {
         if (dateTime == null || dateTime.isBlank()) {
-            return false;
+            throw new IllegalDateTimeException(dateTime);
         }
-        String trimmed = dateTime.strip();
+
         try {
-            LocalDateTime.parse(trimmed, DATETIME_INPUT);
-            return true;
+            return (Temporal) formatter.parseBest(dateTime.strip(), LocalDateTime::from, LocalDate::from);
         } catch (DateTimeParseException exception) {
-            // Not a date-time; try validating as a date-only string
-        }
-        try {
-            LocalDate.parse(trimmed, DATE_INPUT);
-            return true;
-        } catch (DateTimeParseException exception) {
-            return false;
+            throw new IllegalDateTimeException(dateTime, exception);
         }
     }
 
-    /**
-     * Parses a string representation into a {@link Temporal} instance.
-     * <p>
-     * Returns a {@link LocalDateTime} if the input contains both date and time (e.g. {@code "2/12/2019 18:00"}),
-     * or a {@link LocalDate} if the input contains only a date (e.g. {@code "2/12/2019"}).
-     *
-     * @param dateTime The date or date-time string to parse.
-     * @return A {@link Temporal} representing the parsed date or date-time.
-     * @throws DateTimeParseException If the input cannot be parsed into a valid date or date-time.
-     * @throws IllegalArgumentException If the input is null or blank.
-     */
-    public static Temporal parse(String dateTime) throws DateTimeParseException {
-        if (dateTime == null || dateTime.isBlank()) {
-            throw new IllegalArgumentException("Date/time string cannot be null or blank");
-        }
-        String trimmed = dateTime.strip();
-        try {
-            return LocalDateTime.parse(trimmed, DATETIME_INPUT);
-        } catch (DateTimeParseException exception) {
-            // Not a date-time; try parsing as a date-only string
-        }
-        return LocalDate.parse(trimmed, DATE_INPUT);
-    }
-
-    /**
-     * Formats a {@link Temporal} instance into its user-facing display string representation.
-     * <p>
-     * If the temporal is an instance of {@link LocalDateTime}, it is formatted as {@code "d MMM yyyy H:mm"}.
-     * If the temporal is an instance of {@link LocalDate}, it is formatted as {@code "d MMM yyyy"}.
-     *
-     * @param temporal The {@link Temporal} to format (must be {@link LocalDate} or {@link LocalDateTime}).
-     * @return The formatted date or date-time string.
-     * @throws IllegalArgumentException If the temporal parameter is null or an unsupported type.
-     */
-    public static String format(Temporal temporal) {
+    private static String formatUsingFormatter(Temporal temporal, DateTimeFormatter formatter) {
         if (temporal == null) {
             throw new IllegalArgumentException("Temporal object cannot be null");
         }
-        if (temporal instanceof LocalDateTime) {
-            return DATETIME_OUTPUT.format(temporal);
+        boolean isSupportedType = temporal instanceof LocalDate || temporal instanceof LocalDateTime;
+        if (!isSupportedType) {
+            throw new IllegalArgumentException("Unsupported Temporal type: " + temporal.getClass().getName());
         }
-        if (temporal instanceof LocalDate) {
-            return DATE_OUTPUT.format(temporal);
-        }
-        throw new IllegalArgumentException("Unsupported Temporal type: " + temporal.getClass().getName());
-    }
 
-    /**
-     * Converts a {@link Temporal} instance to a serialized string for storage.
-     * <p>
-     * If the temporal is an instance of {@link LocalDateTime}, it is formatted using {@code "uuuu-MM-dd HH:mm"}.
-     * If the temporal is an instance of {@link LocalDate}, it is formatted using {@code "uuuu-MM-dd"}.
-     *
-     * @param temporal The {@link Temporal} to format for saving (must be {@link LocalDate} or {@link LocalDateTime}).
-     * @return The serialized date or date-time string for storage.
-     * @throws IllegalArgumentException If the temporal parameter is null or an unsupported type.
-     */
-    public static String saveDate(Temporal temporal) {
-        if (temporal == null) {
-            throw new IllegalArgumentException("Temporal object cannot be null");
-        }
-        if (temporal instanceof LocalDateTime) {
-            return DATETIME_STORAGE.format(temporal);
-        }
-        if (temporal instanceof LocalDate) {
-            return DATE_STORAGE.format(temporal);
-        }
-        throw new IllegalArgumentException("Unsupported Temporal type: " + temporal.getClass().getName());
-    }
-
-    /**
-     * Parses a serialized date or date-time string from file storage into a {@link Temporal} instance.
-     * <p>
-     * Supports stored date-time ({@code "uuuu-MM-dd HH:mm"}) and date-only ({@code "uuuu-MM-dd"}) formats,
-     * falling back to user-input formats for backward compatibility.
-     *
-     * @param dateStr The saved date or date-time string to parse.
-     * @return A {@link Temporal} representing the parsed date or date-time.
-     * @throws DateTimeParseException If the input cannot be parsed using the storage format.
-     * @throws IllegalArgumentException If the input is null or blank.
-     */
-    public static Temporal loadDate(String dateStr) throws DateTimeParseException {
-        if (dateStr == null || dateStr.isBlank()) {
-            throw new IllegalArgumentException("Saved date/time string cannot be null or blank");
-        }
-        String trimmed = dateStr.strip();
-        try {
-            return LocalDateTime.parse(trimmed, DATETIME_STORAGE);
-        } catch (DateTimeParseException exception) {
-            // Not a storage date-time; try parsing as storage date-only
-        }
-        try {
-            return LocalDate.parse(trimmed, DATE_STORAGE);
-        } catch (DateTimeParseException exception) {
-            // Fall back to input format for backward compatibility
-            return parse(trimmed);
-        }
+        return formatter.format(temporal);
     }
 }

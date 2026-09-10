@@ -6,9 +6,9 @@ package panda.exception.parser;
 public class NoCommandFoundException extends ParseException {
 
     /**
-     * Creates an exception for an unrecognised command.
+     * Creates an exception for an unrecognized command.
      *
-     * @param input Unrecognised input, or an empty string for blank input.
+     * @param input Unrecognized input, or an empty string for blank input.
      */
     public NoCommandFoundException(String input) {
         super(input.isEmpty()

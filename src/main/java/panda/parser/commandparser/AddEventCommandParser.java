@@ -1,24 +1,16 @@
 package panda.parser.commandparser;
 
-import java.time.format.DateTimeParseException;
 import java.time.temporal.Temporal;
 
 import panda.command.AddEventCommand;
 import panda.command.Command;
 import panda.exception.parser.InvalidArgumentException;
-import panda.exception.parser.InvalidDateException;
 import panda.util.datetime.DateTimeHelper;
 
 /**
  * Parses arguments for a command that adds an event task.
  */
 public class AddEventCommandParser implements CommandParser {
-
-    /**
-     * Constructs an {@code AddEventCommandParser}.
-     */
-    public AddEventCommandParser() {
-    }
 
     /**
      * Parses the event description, start date/time, and end date/time from the supplied arguments.
@@ -40,20 +32,8 @@ public class AddEventCommandParser implements CommandParser {
         }
         String startDateTimeString = timeParts[0].strip();
         String endDateTimeString = timeParts[1].strip();
-        Temporal dateTimeFrom;
-        try {
-            dateTimeFrom = DateTimeHelper.parse(startDateTimeString);
-        } catch (DateTimeParseException exception) {
-            throw new InvalidDateException(
-                    startDateTimeString, "event", "event DESCRIPTION /from START /to END");
-        }
-        Temporal dateTimeTo;
-        try {
-            dateTimeTo = DateTimeHelper.parse(endDateTimeString);
-        } catch (DateTimeParseException exception) {
-            throw new InvalidDateException(
-                    endDateTimeString, "event", "event DESCRIPTION /from START /to END");
-        }
-        return new AddEventCommand(description, dateTimeFrom, dateTimeTo);
+        Temporal startDateTime = DateTimeHelper.parseInput(startDateTimeString);
+        Temporal endDateTime = DateTimeHelper.parseInput(endDateTimeString);
+        return new AddEventCommand(description, startDateTime, endDateTime);
     }
 }

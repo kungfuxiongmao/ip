@@ -24,11 +24,11 @@ This document records the unit test cases for Panda's core business logic compon
 | Valid `deadline` command | `"deadline return book /by 15/10/2026 18:00"` | Returns [`AddDeadlineCommand`](file:///home/zhu_j/ip/src/main/java/panda/command/AddDeadlineCommand.java) |
 | `deadline` missing `/by` delimiter | `"deadline return book"` | Throws [`InvalidArgumentException`](file:///home/zhu_j/ip/src/main/java/panda/exception/parser/InvalidArgumentException.java) |
 | `deadline` missing description | `"deadline /by 15/10/2026"` | Throws [`InvalidArgumentException`](file:///home/zhu_j/ip/src/main/java/panda/exception/parser/InvalidArgumentException.java) |
-| `deadline` invalid date format | `"deadline return book /by not-a-date"` | Throws [`InvalidDateException`](file:///home/zhu_j/ip/src/main/java/panda/exception/parser/InvalidDateException.java) |
+| `deadline` invalid date format | `"deadline return book /by not-a-date"` | Throws `IllegalDateTimeException` |
 | Valid `event` command | `"event meeting /from 15/10/2026 14:00 /to 15/10/2026 16:00"` | Returns [`AddEventCommand`](file:///home/zhu_j/ip/src/main/java/panda/command/AddEventCommand.java) |
 | `event` missing `/to` delimiter | `"event meeting /from 15/10/2026 14:00"` | Throws [`InvalidArgumentException`](file:///home/zhu_j/ip/src/main/java/panda/exception/parser/InvalidArgumentException.java) |
 | `event` missing description | `"event /from 15/10/2026 14:00 /to 15/10/2026 16:00"` | Throws [`InvalidArgumentException`](file:///home/zhu_j/ip/src/main/java/panda/exception/parser/InvalidArgumentException.java) |
-| `event` invalid date format | `"event meeting /from invalid-date /to 15/10/2026 16:00"` | Throws [`InvalidDateException`](file:///home/zhu_j/ip/src/main/java/panda/exception/parser/InvalidDateException.java) |
+| `event` invalid date format | `"event meeting /from invalid-date /to 15/10/2026 16:00"` | Throws `IllegalDateTimeException` |
 | Valid `mark` command | `"mark 2"` | Returns [`MarkTaskCommand`](file:///home/zhu_j/ip/src/main/java/panda/command/MarkTaskCommand.java) |
 | `mark` missing/non-numeric index | `"mark"`, `"mark abc"` | Throws [`InvalidArgumentException`](file:///home/zhu_j/ip/src/main/java/panda/exception/parser/InvalidArgumentException.java) |
 | Valid `unmark` command | `"unmark 2"` | Returns [`UnmarkTaskCommand`](file:///home/zhu_j/ip/src/main/java/panda/command/UnmarkTaskCommand.java) |
@@ -37,7 +37,7 @@ This document records the unit test cases for Panda's core business logic compon
 | `today` with extraneous argument | `"today tomorrow"` | Throws [`InvalidArgumentException`](file:///home/zhu_j/ip/src/main/java/panda/exception/parser/InvalidArgumentException.java) |
 | Valid `display /date` command | `"display /date 15/10/2026"` | Returns [`DisplayDateCommand`](file:///home/zhu_j/ip/src/main/java/panda/command/DisplayDateCommand.java) |
 | `display` missing arguments | `"display"`, `"display /date"` | Throws [`InvalidArgumentException`](file:///home/zhu_j/ip/src/main/java/panda/exception/parser/InvalidArgumentException.java) |
-| `display` invalid date format | `"display /date invalid-date"` | Throws [`InvalidDateException`](file:///home/zhu_j/ip/src/main/java/panda/exception/parser/InvalidDateException.java) |
+| `display` invalid date format | `"display /date invalid-date"` | Throws `IllegalDateTimeException` |
 | Valid `find` command | `"find book"` | Returns [`FindCommand`](file:///home/zhu_j/ip/src/main/java/panda/command/FindCommand.java) |
 | `find` with missing keyword | `"find"`, `"find   "` | Throws [`InvalidArgumentException`](file:///home/zhu_j/ip/src/main/java/panda/exception/parser/InvalidArgumentException.java) |
 | Empty / whitespace input | `""`, `"   "` | Throws [`NoCommandFoundException`](file:///home/zhu_j/ip/src/main/java/panda/exception/parser/NoCommandFoundException.java) |
@@ -48,27 +48,15 @@ This document records the unit test cases for Panda's core business logic compon
 
 ## 2. `panda.util.datetime.DateTimeHelper`
 
-### Method: `public static boolean isValidDateTime(String dateTime)`
-
-| Test Case | Test Input | Expected Output |
-| :--- | :--- | :--- |
-| Valid date-time string | `"15/10/2026 18:00"` | `true` |
-| Valid date-only string | `"2/12/2019"` | `true` |
-| Input with surrounding whitespace | `" 15/10/2026 18:00 "` | `true` |
-| Invalid format string | `"invalid-date"` | `false` |
-| Out of range date values | `"32/1/2026"` | `false` |
-| Empty or blank string | `""`, `"   "` | `false` |
-| `null` reference | `null` | `false` |
-
-### Method: `public static Temporal parse(String dateTime)`
+### Method: `public static Temporal parseInput(String dateTime)`
 
 | Test Case | Test Input | Expected Output |
 | :--- | :--- | :--- |
 | Valid date-time string | `"15/10/2026 18:00"` | `LocalDateTime.of(2026, 10, 15, 18, 0)` |
 | Valid date-only string | `"15/10/2026"` | `LocalDate.of(2026, 10, 15)` |
-| Null or blank string | `null`, `"   "` | Throws `IllegalArgumentException` |
+| Invalid, null, or blank string | `"invalid-date"`, `null`, `"   "` | Throws `IllegalDateTimeException` |
 
-### Method: `public static String format(Temporal temporal)`
+### Method: `public static String formatForDisplay(Temporal temporal)`
 
 | Test Case | Test Input | Expected Output |
 | :--- | :--- | :--- |
@@ -76,21 +64,21 @@ This document records the unit test cases for Panda's core business logic compon
 | Format `LocalDate` | `LocalDate.of(2019, 12, 2)` | `"2 Dec 2019"` |
 | Null temporal | `null` | Throws `IllegalArgumentException` |
 
-### Method: `public static String saveDate(Temporal temporal)`
+### Method: `public static String formatForStorage(Temporal temporal)`
 
 | Test Case | Test Input | Expected Output |
 | :--- | :--- | :--- |
 | Save `LocalDateTime` | `LocalDateTime.of(2019, 12, 2, 18, 0)` | `"2019-12-02 18:00"` |
 | Save `LocalDate` | `LocalDate.of(2019, 12, 2)` | `"2019-12-02"` |
 
-### Method: `public static Temporal loadDate(String dateStr)`
+### Method: `public static Temporal parseStorage(String dateTime)`
 
 | Test Case | Test Input | Expected Output |
 | :--- | :--- | :--- |
 | Load saved date-time | `"2019-12-02 18:00"` | `LocalDateTime.of(2019, 12, 2, 18, 0)` |
 | Load saved date-only | `"2019-12-02"` | `LocalDate.of(2019, 12, 2)` |
 | Fallback to user input format | `"2/12/2019"` | `LocalDate.of(2019, 12, 2)` |
-| Null or blank string | `null`, `"   "` | Throws `IllegalArgumentException` |
+| Invalid, null, or blank string | `"invalid-date"`, `null`, `"   "` | Throws `IllegalDateTimeException` |
 
 ---
 

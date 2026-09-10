@@ -25,17 +25,25 @@ public final class StartManager {
      * Greets the user and initializes the task list from storage.
      *
      * @param isGui Whether Panda is running through the graphical interface.
-     * @throws ApplicationException If saved tasks cannot be loaded or the task list already exists.
+     * @throws ApplicationException If saved tasks cannot be loaded.
      */
     public static void start(boolean isGui) throws ApplicationException {
         greet(isGui);
+        loadTaskList();
+    }
+
+    /**
+     * Instantiates TaskList for the application.
+     *
+     * @throws TaskLoadingException If saved tasks cannot be loaded.
+     */
+    private static void loadTaskList() throws TaskLoadingException {
         try {
             TaskList.of(loadTasks());
         } catch (TaskLoadingException exception) {
             TaskList.of(new ArrayList<>());
             throw exception;
         }
-
     }
 
     /**

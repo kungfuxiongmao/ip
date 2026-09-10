@@ -10,12 +10,6 @@ import panda.exception.parser.InvalidArgumentException;
 public class AddTodoCommandParser implements CommandParser {
 
     /**
-     * Constructs an {@code AddTodoCommandParser}.
-     */
-    public AddTodoCommandParser() {
-    }
-
-    /**
      * Parses the to-do description from the supplied arguments.
      *
      * @param arguments Description of the task.

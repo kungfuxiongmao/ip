@@ -1,24 +1,16 @@
 package panda.parser.commandparser;
 
-import java.time.format.DateTimeParseException;
 import java.time.temporal.Temporal;
 
 import panda.command.AddDeadlineCommand;
 import panda.command.Command;
 import panda.exception.parser.InvalidArgumentException;
-import panda.exception.parser.InvalidDateException;
 import panda.util.datetime.DateTimeHelper;
 
 /**
  * Parses arguments for a command that adds a deadline task.
  */
 public class AddDeadlineCommandParser implements CommandParser {
-
-    /**
-     * Constructs an {@code AddDeadlineCommandParser}.
-     */
-    public AddDeadlineCommandParser() {
-    }
 
     /**
      * Parses the deadline description and due date from the supplied arguments.
@@ -34,12 +26,7 @@ public class AddDeadlineCommandParser implements CommandParser {
             throw new InvalidArgumentException("deadline", "deadline DESCRIPTION /by DATE");
         }
         String dateString = deadlineParts[1].strip();
-        Temporal dueDate;
-        try {
-            dueDate = DateTimeHelper.parse(dateString);
-        } catch (DateTimeParseException exception) {
-            throw new InvalidDateException(dateString, "deadline", "deadline DESCRIPTION /by DATE");
-        }
+        Temporal dueDate = DateTimeHelper.parseInput(dateString);
         return new AddDeadlineCommand(deadlineParts[0].strip(), dueDate);
     }
 }

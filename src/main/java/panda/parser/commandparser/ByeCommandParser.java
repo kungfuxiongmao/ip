@@ -10,12 +10,6 @@ import panda.exception.parser.InvalidArgumentException;
 public class ByeCommandParser implements CommandParser {
 
     /**
-     * Constructs a {@code ByeCommandParser}.
-     */
-    public ByeCommandParser() {
-    }
-
-    /**
      * Validates that no extra arguments are passed to the {@code bye} command.
      *
      * @param arguments Text following the bye command.

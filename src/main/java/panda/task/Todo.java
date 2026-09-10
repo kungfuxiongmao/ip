@@ -24,7 +24,7 @@ public class Todo extends Task {
      * @return Always {@code false}.
      */
     @Override
-    public boolean checkDate(Temporal date) {
+    public boolean occursOn(Temporal date) {
         return false;
     }
 

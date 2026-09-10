@@ -10,12 +10,6 @@ import panda.exception.parser.InvalidArgumentException;
 public class TodayCommandParser implements CommandParser {
 
     /**
-     * Constructs a {@code TodayCommandParser}.
-     */
-    public TodayCommandParser() {
-    }
-
-    /**
      * Validates that no extra arguments are passed to the {@code today} command.
      *
      * @param arguments Text following the today command keyword.
