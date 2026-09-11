@@ -23,11 +23,12 @@ public class UnmarkTaskCommand implements Command {
     /**
      * Unmarks the designated task (marks as not done) and displays a confirmation message.
      *
+     * @param taskList Active task list.
      * @throws ApplicationException If the task number is out of bounds or already unmarked.
      */
     @Override
-    public void execute() throws ApplicationException {
-        Task task = TaskList.getInstance().unmarkTask(taskNumber);
+    public void execute(TaskList taskList) throws ApplicationException {
+        Task task = taskList.unmarkTask(taskNumber);
         Ui.printMessage("Hmm. This lesson is not finished after all. It awaits you once more:"
                 + System.lineSeparator() + "  " + task);
     }

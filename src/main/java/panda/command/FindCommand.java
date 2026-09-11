@@ -20,9 +20,11 @@ public class FindCommand implements Command {
 
     /**
      * Retrieves and displays tasks whose descriptions contain the keyword.
+     *
+     * @param taskList Active task list.
      */
     @Override
-    public void execute() {
-        Ui.printMessage(TaskList.getInstance().getTasksWithKeyword(keyword));
+    public void execute(TaskList taskList) {
+        Ui.printMessage(taskList.getTasksWithKeyword(keyword));
     }
 }

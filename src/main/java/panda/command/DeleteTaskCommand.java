@@ -23,11 +23,11 @@ public class DeleteTaskCommand implements Command {
     /**
      * Executes the task deletion from the task list and displays a confirmation message.
      *
+     * @param taskList Active task list.
      * @throws ApplicationException If the task number is out of bounds.
      */
     @Override
-    public void execute() throws ApplicationException {
-        TaskList taskList = TaskList.getInstance();
+    public void execute(TaskList taskList) throws ApplicationException {
         Task task = taskList.delete(taskNumber);
         int taskCount = taskList.getSize();
         String taskNoun = taskCount == 1 ? "task" : "tasks";

@@ -1,12 +1,12 @@
 package panda.lifecycle;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import panda.exception.ApplicationException;
 import panda.exception.storage.FileCorruptedException;
 import panda.exception.storage.TaskLoadingException;
+import panda.exception.task.EventClashException;
 import panda.storage.Storage;
 import panda.task.Task;
 import panda.task.TaskList;
@@ -25,25 +25,43 @@ public final class StartManager {
      * Greets the user and initializes the task list from storage.
      *
      * @param isGui Whether Panda is running through the graphical interface.
+     * @return Initialized task list.
      * @throws ApplicationException If saved tasks cannot be loaded.
      */
-    public static void start(boolean isGui) throws ApplicationException {
+    public static TaskList start(boolean isGui) throws ApplicationException {
         greet(isGui);
-        loadTaskList();
+        return loadTaskList();
     }
 
     /**
      * Instantiates TaskList for the application.
      *
+     * @return Initialized task list.
      * @throws TaskLoadingException If saved tasks cannot be loaded.
      */
-    private static void loadTaskList() throws TaskLoadingException {
+    private static TaskList loadTaskList() throws TaskLoadingException {
+        return createTaskList(loadTasks());
+    }
+
+    /**
+     * Creates a task list and adds decoded tasks to it one at a time.
+     *
+     * @param tasks Decoded tasks to load.
+     * @return Fully initialized task list.
+     * @throws TaskLoadingException If stored events overlap.
+     */
+    static TaskList createTaskList(List<Task> tasks) throws TaskLoadingException {
+        TaskList taskList = new TaskList();
         try {
-            TaskList.of(loadTasks());
-        } catch (TaskLoadingException exception) {
-            TaskList.of(new ArrayList<>());
-            throw exception;
+            for (Task task : tasks) {
+                taskList.addTask(task);
+            }
+        } catch (EventClashException exception) {
+            FileCorruptedException corruption = new FileCorruptedException(
+                    "Stored events overlap.", exception);
+            throw createTaskLoadingException(corruption);
         }
+        return taskList;
     }
 
     /**
@@ -56,17 +74,21 @@ public final class StartManager {
         try {
             return Storage.readTasks();
         } catch (FileCorruptedException exception) {
-            throw new TaskLoadingException(
-                    "This scroll is damaged, young warrior. We must begin with an empty one."
-                            + System.lineSeparator()
-                            + exception.getMessage(),
-                    exception);
+            throw createTaskLoadingException(exception);
         } catch (IOException exception) {
             throw new TaskLoadingException(
                     "Hmm. The scroll will not open. We must begin with an empty one: "
                             + exception.getMessage(),
                     exception);
         }
+    }
+
+    private static TaskLoadingException createTaskLoadingException(FileCorruptedException exception) {
+        return new TaskLoadingException(
+                "This scroll is damaged, young warrior. We must begin with an empty one."
+                        + System.lineSeparator()
+                        + exception.getMessage(),
+                exception);
     }
 
     /**

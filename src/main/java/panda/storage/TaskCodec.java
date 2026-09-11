@@ -2,6 +2,7 @@ package panda.storage;
 
 import panda.exception.parser.IllegalDateTimeException;
 import panda.exception.storage.FileCorruptedException;
+import panda.exception.task.InvalidEventParametersException;
 import panda.task.Deadline;
 import panda.task.Event;
 import panda.task.Task;
@@ -194,6 +195,8 @@ public final class TaskCodec {
             };
         } catch (IllegalDateTimeException exception) {
             throw new FileCorruptedException("Stored task contains an illegal date or time", exception);
+        } catch (InvalidEventParametersException exception) {
+            throw new FileCorruptedException("Stored event contains an invalid time range", exception);
         }
     }
 

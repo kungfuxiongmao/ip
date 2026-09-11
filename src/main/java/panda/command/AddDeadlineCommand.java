@@ -24,12 +24,13 @@ public class AddDeadlineCommand extends AddTaskCommand {
     }
 
     /**
-     * Adds the deadline task to the singleton task list.
+     * Adds the deadline task to the supplied task list.
      *
+     * @param taskList Active task list.
      * @return The newly added {@link panda.task.Deadline} task.
      */
     @Override
-    protected Task addTask() {
-        return TaskList.getInstance().addDeadline(description, dueDate);
+    protected Task addTask(TaskList taskList) {
+        return taskList.addDeadline(description, dueDate);
     }
 }

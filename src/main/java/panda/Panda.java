@@ -10,6 +10,7 @@ import panda.command.Command;
 import panda.exception.ApplicationException;
 import panda.lifecycle.StartManager;
 import panda.parser.Parser;
+import panda.task.TaskList;
 import panda.ui.ExceptionHandler;
 import panda.ui.Ui;
 
@@ -19,6 +20,7 @@ import panda.ui.Ui;
 public final class Panda {
     private final Scanner commandScanner;
     private final boolean isGui;
+    private final TaskList taskList;
 
     private Panda(InputStream commandInputStream, OutputStream responseOutputStream,
             boolean isGui) {
@@ -26,6 +28,7 @@ public final class Panda {
                 Objects.requireNonNull(commandInputStream), StandardCharsets.UTF_8);
         Ui.directOutputTo(Objects.requireNonNull(responseOutputStream));
         this.isGui = isGui;
+        this.taskList = start();
     }
 
     /**
@@ -35,7 +38,6 @@ public final class Panda {
      */
     public static void main(String[] args) {
         Panda panda = new Panda(System.in, System.out, false);
-        panda.start();
         panda.processCommandsUntilInputCloses();
     }
 
@@ -49,7 +51,6 @@ public final class Panda {
     public static Panda createForGraphicalInterface(
             InputStream commandInputStream, OutputStream responseOutputStream) {
         Panda panda = new Panda(commandInputStream, responseOutputStream, true);
-        panda.start();
         return panda;
     }
 
@@ -65,11 +66,12 @@ public final class Panda {
     /**
      * Starts Panda and recovers with an empty task list if startup fails.
      */
-    private void start() {
+    private TaskList start() {
         try {
-            StartManager.start(isGui);
+            return StartManager.start(isGui);
         } catch (ApplicationException exception) {
             ExceptionHandler.handle(exception);
+            return new TaskList();
         }
     }
 
@@ -81,7 +83,7 @@ public final class Panda {
     private void processCommand(String input) {
         try {
             Command command = Parser.parse(input);
-            command.execute();
+            command.execute(taskList);
         } catch (ApplicationException exception) {
             ExceptionHandler.handle(exception);
         }

@@ -80,6 +80,8 @@ Exception in thread "main" java.util.NoSuchElementException: No line found
 
 ## Event parser accepts malformed or reversed markers
 
+**Resolution:** Covered by parser validation and event-range validation. Retain the commands below as regression cases.
+
 **Severity:** Medium — malformed input creates an event with misleading start
 and end values.
 
