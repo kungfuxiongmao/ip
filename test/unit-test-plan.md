@@ -127,3 +127,39 @@ This document records the unit test cases for Panda's core business logic compon
 | [`Event`](file:///home/zhu_j/ip/src/main/java/panda/task/Event.java) | Target on end date | `LocalDate.of(2026, 10, 17)` (from `15/10` to `17/10`) | `true` |
 | [`Event`](file:///home/zhu_j/ip/src/main/java/panda/task/Event.java) | Target outside date range | `LocalDate.of(2026, 10, 14)`, `LocalDate.of(2026, 10, 18)` | `false` |
 | [`Event`](file:///home/zhu_j/ip/src/main/java/panda/task/Event.java) | Null target date | `null` | `false` |
+
+### Event interval validation and date-only boundaries
+
+| Test Case | Expected Output |
+| :--- | :--- |
+| Date-only event end | Includes the whole end date and excludes the following date |
+| Date-time end at midnight | Does not occur on the date beginning at that midnight |
+| End equals start | Throws `InvalidArgumentException` |
+| End precedes start | Throws `InvalidArgumentException` |
+
+---
+
+## 5. `panda.task.EventScheduleIndex`
+
+### Method: `List<Event> findOverlappingEvents(Event event)`
+
+| Test Case | Expected Output |
+| :--- | :--- |
+| Event starts when indexed event ends | Empty list |
+| Event overlaps multiple indexed events | Every conflict in chronological order |
+| Event overlaps date-only event on its end date | Date-only event returned |
+| Indexed event is removed before query | Empty list |
+| Overlapping event is added directly to the index | Throws `IllegalArgumentException` |
+
+---
+
+## 6. Event-clash integration
+
+| Test Case | Expected Output |
+| :--- | :--- |
+| Proposed event overlaps marked and unmarked events | Addition rejected and all conflicts listed chronologically |
+| Event is rejected | Task-list size remains unchanged |
+| Existing event is deleted | Its interval becomes available |
+| Stored events overlap | `FileCorruptedException` |
+| Stored events are adjacent | Both records load successfully |
+| Stored event has an invalid range | `FileCorruptedException` |

@@ -41,6 +41,7 @@ Panda is able to:
 - Mark and unmark a task
 - Delete a task
 - Find tasks whose descriptions contain a keyword
+- Reject events that clash with existing events
 - Save task list and read task list from saves
 - Terminate the program on command
 
@@ -73,6 +74,27 @@ Panda supports three types of tasks: Todo, Deadline, and Event.
     event task-description /from start-datetime /to end-datetime
 ```
 
+Dates use `d/M/yyyy`, and date-times use `d/M/yyyy HH:mm`. An event's start is inclusive and its end is exclusive,
+so an event ending at `11:00` does not clash with one starting at `11:00`. A date-only event covers whole days,
+including the date supplied after `/to`.
+
+Panda rejects an event that overlaps any existing event, including an event marked as done. The response lists every
+conflicting event in chronological order with its task number and timings. Delete an event to free its scheduled time.
+
+For example, after adding an event from `10:00` to `11:00`, this adjacent event is accepted:
+
+```text
+event lunch /from 10/9/2026 11:00 /to 10/9/2026 12:00
+```
+
+This event is rejected because it overlaps the existing event:
+
+```text
+event consultation /from 10/9/2026 10:30 /to 10/9/2026 11:30
+```
+
+An event whose end is not after its start is rejected with an invalid-range error.
+
 
 ### Mark tasks as done
 
@@ -104,6 +126,9 @@ A saved file is automatically read and loaded into the task list on start up.
 On termination, the state of the task list is also overwritten into the save file.
 Note that in the case that the file is corrupted, Panda will inform you and continue with
 an empty task list.
+
+The save-file format is unchanged by schedule-clash detection. If stored events overlap or contain an invalid range,
+Panda treats the file as corrupted and starts with an empty task list.
 
 
 ### Input Validation with the Parser

@@ -1,5 +1,36 @@
 # UI Test Session
 
+## PASS: Reject clashing and invalid event ranges
+
+Aim: Verify half-open event boundaries, chronological reporting of every conflict, marked-event blocking, and invalid
+range handling.
+
+Java version: 25.0.4
+
+Console input:
+
+```text
+event laboratory /from 10/9/2026 11:00 /to 10/9/2026 12:00
+mark 1
+todo buy lunch
+event lecture /from 10/9/2026 09:00 /to 10/9/2026 10:00
+event adjacent /from 10/9/2026 10:00 /to 10/9/2026 11:00
+event workshop /from 10/9/2026 09:30 /to 10/9/2026 11:30
+event reversed /from 10/9/2026 15:00 /to 10/9/2026 14:00
+list
+bye
+```
+
+Observed results:
+
+- The adjacent event was added.
+- The workshop was rejected with tasks 3, 4, and 1 listed in chronological order.
+- The marked laboratory remained a conflict.
+- The reversed event was rejected with the expected invalid-range message.
+- The final list contained only the four successfully added tasks.
+
+Exit code: 0
+
 ## PASS: Termination function
 
 Aim: Verify that Panda starts, accepts `bye`, displays a farewell, and exits normally.

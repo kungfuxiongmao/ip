@@ -23,11 +23,12 @@ public class MarkTaskCommand implements Command {
     /**
      * Marks the designated task as completed and displays a confirmation message.
      *
+     * @param taskList Active task list.
      * @throws ApplicationException If the task number is out of bounds or already marked.
      */
     @Override
-    public void execute() throws ApplicationException {
-        Task task = TaskList.getInstance().markTask(taskNumber);
+    public void execute(TaskList taskList) throws ApplicationException {
+        Task task = taskList.markTask(taskNumber);
         Ui.printMessage("Well done. Discipline bears fruit. You have completed this:"
                 + System.lineSeparator() + "  " + task);
     }

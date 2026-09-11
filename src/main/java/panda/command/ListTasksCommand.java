@@ -10,9 +10,11 @@ public class ListTasksCommand implements Command {
 
     /**
      * Retrieves and displays the full formatted list of all current tasks.
+     *
+     * @param taskList Active task list.
      */
     @Override
-    public void execute() {
-        Ui.printMessage(TaskList.getInstance().toString());
+    public void execute(TaskList taskList) {
+        Ui.printMessage(taskList.toString());
     }
 }

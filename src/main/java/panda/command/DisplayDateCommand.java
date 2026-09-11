@@ -10,7 +10,7 @@ import panda.ui.Ui;
  */
 public class DisplayDateCommand implements Command {
     private static final String MESSAGE_NO_MATCHING_TASKS =
-            "The scroll is empty, young warrior. Every journey begins with a single step.";
+            "The scroll is empty for the day, young warrior.";
 
     private final Temporal date;
 
@@ -25,19 +25,22 @@ public class DisplayDateCommand implements Command {
 
     /**
      * Retrieves and displays all tasks occurring on or spanning across the specified date.
+     *
+     * @param taskList Active task list.
      */
     @Override
-    public void execute() {
-        displayTasksOnDate(date);
+    public void execute(TaskList taskList) {
+        displayTasksOnDate(taskList, date);
     }
 
     /**
      * Displays tasks matching the specified date, or an empty-list message if none match.
      *
+     * @param taskList Active task list.
      * @param date Date to filter tasks by.
      */
-    static void displayTasksOnDate(Temporal date) {
-        String tasksOnDate = TaskList.getInstance().getTasksOnDate(date);
+    static void displayTasksOnDate(TaskList taskList, Temporal date) {
+        String tasksOnDate = taskList.getTasksOnDate(date);
         String message = tasksOnDate.isEmpty() ? MESSAGE_NO_MATCHING_TASKS : tasksOnDate;
         Ui.printMessage(message);
     }

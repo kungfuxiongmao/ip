@@ -43,6 +43,12 @@ public class TaskCodecTest {
                 TaskCodec.decode("D | 0 | return book | invalid-date"));
     }
 
+    @Test
+    public void decode_eventEndNotAfterStart_throwsFileCorruptedException() {
+        assertThrows(FileCorruptedException.class, () ->
+                TaskCodec.decode("E | 0 | meeting | 2026-09-10 15:00 | 2026-09-10 14:00"));
+    }
+
     private static Stream<Arguments> validTaskRecords() {
         return Stream.of(
                 Arguments.of("T | 0 | read book", Todo.class),

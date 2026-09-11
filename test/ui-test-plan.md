@@ -117,6 +117,57 @@ Bye. Hope to see you again soon!
 ____________________________________________________________
 ```
 
+## Test case: Reject clashing and invalid event ranges
+
+### Aim
+
+Verify that event intervals are start-inclusive and end-exclusive, marked events continue to block time, every clash is
+reported chronologically, and invalid ranges are rejected.
+
+### Inputs
+
+```text
+event laboratory /from 10/9/2026 11:00 /to 10/9/2026 12:00
+mark 1
+todo buy lunch
+event lecture /from 10/9/2026 09:00 /to 10/9/2026 10:00
+event adjacent /from 10/9/2026 10:00 /to 10/9/2026 11:00
+event workshop /from 10/9/2026 09:30 /to 10/9/2026 11:30
+event reversed /from 10/9/2026 15:00 /to 10/9/2026 14:00
+list
+bye
+```
+
+### Expected behavior
+
+- The adjacent event is added.
+- The workshop is rejected and the response lists task 3, task 4, and task 1 in chronological order.
+- The marked laboratory remains a conflict.
+- The reversed event is rejected with
+  `Time must move forward, young warrior. An event must end after it starts.`
+- Neither rejected event appears in the final task list.
+
+## Test case: Treat date-only event endpoints as whole days
+
+### Aim
+
+Verify that a date-only end includes the entire specified day.
+
+### Inputs
+
+```text
+event conference /from 10/9/2026 /to 10/9/2026
+event dinner /from 10/9/2026 18:00 /to 10/9/2026 19:00
+event breakfast /from 11/9/2026 08:00 /to 11/9/2026 09:00
+list
+bye
+```
+
+### Expected behavior
+
+- Dinner is rejected because the conference occupies all of 10 September.
+- Breakfast is accepted because the conference ends at midnight starting 11 September.
+
 ## Test case: Mark and unmark an event
 
 ### Aim

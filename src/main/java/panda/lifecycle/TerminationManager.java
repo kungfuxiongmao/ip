@@ -18,16 +18,17 @@ public final class TerminationManager {
     /**
      * Saves the current task list and terminates Panda.
      *
+     * @param taskList Active task list to save.
      * @throws TaskSavingException If the task list cannot be saved; Panda remains running.
      */
-    public static void terminate() throws TaskSavingException {
-        saveState();
+    public static void terminate(TaskList taskList) throws TaskSavingException {
+        saveState(taskList);
         System.exit(0);
     }
 
-    private static void saveState() throws TaskSavingException {
+    private static void saveState(TaskList taskList) throws TaskSavingException {
         try {
-            Storage.saveTasks(TaskList.getInstance().getTasks());
+            Storage.saveTasks(taskList.getTasks());
         } catch (IOException exception) {
             throw new TaskSavingException(
                     "The ink has failed us. Your tasks could not be saved, so Panda will remain open: "

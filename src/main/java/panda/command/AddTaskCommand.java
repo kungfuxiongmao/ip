@@ -1,5 +1,6 @@
 package panda.command;
 
+import panda.exception.ApplicationException;
 import panda.task.Task;
 import panda.task.TaskList;
 import panda.ui.Ui;
@@ -16,21 +17,25 @@ public abstract class AddTaskCommand implements Command {
     }
 
     /**
-     * Adds this command's specific task type to the singleton task list.
+     * Adds this command's specific task type to the supplied task list.
      *
+     * @param taskList Active task list.
      * @return The newly added task.
+     * @throws ApplicationException If the task cannot be added.
      */
-    protected abstract Task addTask();
+    protected abstract Task addTask(TaskList taskList) throws ApplicationException;
 
     /**
      * Executes the task addition by invoking {@link #addTask()}, then prints a standardized
      * confirmation message displaying the added task and the updated task list size.
+     *
+     * @param taskList Active task list.
+     * @throws ApplicationException If the task cannot be added.
      */
     @Override
-    public final void execute() {
-        TaskList taskList = TaskList.getInstance();
+    public final void execute(TaskList taskList) throws ApplicationException {
         int previousTaskCount = taskList.getSize();
-        Task task = addTask();
+        Task task = addTask(taskList);
         assert task != null : "addTask() must return the newly added task, but returned null";
         assert taskList.getSize() == previousTaskCount + 1
                 : "addTask() must increase TaskList size by exactly one: expected "

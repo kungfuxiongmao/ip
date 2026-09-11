@@ -3,9 +3,10 @@ package panda.task;
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Predicate;
 
+import panda.exception.task.EventClashException;
+import panda.exception.task.InvalidEventParametersException;
 import panda.exception.task.InvalidTaskListIndexException;
 import panda.exception.task.TaskAlreadyMarkedException;
 import panda.exception.task.TaskAlreadyUnmarkedException;
@@ -16,45 +17,15 @@ import panda.util.datetime.DateTimeHelper;
  * Tasks are saved when Panda terminates normally.
  */
 public final class TaskList {
-    private static TaskList instance;
+    private final EventScheduleIndex eventScheduleIndex;
     private final List<Task> tasks;
 
     /**
      * Creates an empty task list.
      */
-    private TaskList() {
+    public TaskList() {
+        this.eventScheduleIndex = new EventScheduleIndex();
         this.tasks = new ArrayList<>();
-    }
-
-    /**
-     * Initializes the singleton task list with the supplied tasks.
-     * The tasks are copied into the internal list so that later changes to the
-     * supplied list cannot change this task list.
-     *
-     * @param initialTasks Tasks to include when creating the singleton.
-     * @return The initialized singleton instance.
-     */
-    public static TaskList of(List<Task> initialTasks) {
-        assert initialTasks != null : "Stored task list cannot be null";
-        assert initialTasks.stream().allMatch(Objects::nonNull)
-                : "Task in stored task list cannot be null";
-        assert instance == null : "TaskList has already been initialized";
-
-        instance = new TaskList();
-        instance.tasks.addAll(initialTasks);
-        return instance;
-    }
-
-    /**
-     * Returns the singleton task list, initializing an empty one if necessary.
-     *
-     * @return The singleton instance.
-     */
-    public static TaskList getInstance() {
-        if (instance == null) {
-            instance = new TaskList();
-        }
-        return instance;
     }
 
     /**
@@ -64,7 +35,7 @@ public final class TaskList {
      * @return The newly added task.
      */
     public Task addTodo(String description) {
-        return add(new Todo(description));
+        return appendToList(new Todo(description));
     }
 
     /**
@@ -75,7 +46,7 @@ public final class TaskList {
      * @return The newly added task.
      */
     public Task addDeadline(String description, Temporal dueDate) {
-        return add(new Deadline(description, dueDate));
+        return appendToList(new Deadline(description, dueDate));
     }
 
     /**
@@ -85,9 +56,12 @@ public final class TaskList {
      * @param startDateTime Event start date and time as a {@link Temporal}.
      * @param endDateTime Event end date and time as a {@link Temporal}.
      * @return The newly added task.
+     * @throws EventClashException If the event overlaps an existing event.
+     * @throws InvalidEventParametersException If the event does not end after it starts.
      */
-    public Task addEvent(String description, Temporal startDateTime, Temporal endDateTime) {
-        return add(new Event(description, startDateTime, endDateTime));
+    public Task addEvent(String description, Temporal startDateTime, Temporal endDateTime)
+            throws EventClashException, InvalidEventParametersException {
+        return addTask(new Event(description, startDateTime, endDateTime));
     }
 
     /**
@@ -109,13 +83,26 @@ public final class TaskList {
     }
 
     /**
-     * Adds an already-created task to this list.
+     * Adds an already-created task, checking its schedule when it is an event.
      *
-     * @param task The task to append to the list.
-     * @return The added task.
+     * @param task Task to add.
+     * @return Added task.
+     * @throws EventClashException If the task is an event that overlaps an existing event.
      */
-    private Task add(Task task) {
+    public Task addTask(Task task) throws EventClashException {
         assert task != null : "Task added to TaskList must not be null";
+
+        if (task instanceof Event event) {
+            try {
+                eventScheduleIndex.add(event);
+            } catch (EventClashException exception) {
+                throw new EventClashException(tasks, exception.getConflictingEvents());
+            }
+        }
+        return appendToList(task);
+    }
+
+    private Task appendToList(Task task) {
         tasks.add(task);
         return task;
     }
@@ -182,7 +169,11 @@ public final class TaskList {
      */
     public Task delete(int taskNumber) throws InvalidTaskListIndexException {
         int arrayIndex = getValidatedIndex(taskNumber);
-        return tasks.remove(arrayIndex);
+        Task deletedTask = tasks.remove(arrayIndex);
+        if (deletedTask instanceof Event event) {
+            eventScheduleIndex.remove(event);
+        }
+        return deletedTask;
     }
 
     /**

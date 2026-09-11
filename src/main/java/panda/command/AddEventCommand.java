@@ -2,6 +2,7 @@ package panda.command;
 
 import java.time.temporal.Temporal;
 
+import panda.exception.ApplicationException;
 import panda.task.Task;
 import panda.task.TaskList;
 
@@ -27,12 +28,14 @@ public class AddEventCommand extends AddTaskCommand {
     }
 
     /**
-     * Adds the event task to the singleton task list.
+     * Adds the event task to the supplied task list.
      *
+     * @param taskList Active task list.
      * @return The newly added {@link panda.task.Event} task.
+     * @throws ApplicationException If the event range is invalid or clashes with another event.
      */
     @Override
-    protected Task addTask() {
-        return TaskList.getInstance().addEvent(description, startDateTime, endDateTime);
+    protected Task addTask(TaskList taskList) throws ApplicationException {
+        return taskList.addEvent(description, startDateTime, endDateTime);
     }
 }

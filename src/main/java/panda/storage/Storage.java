@@ -21,21 +21,31 @@ public final class Storage {
     }
 
     /**
-     * Reads and decodes every task in the save file.
-     * <p>
-     * A missing file represents an empty task list.
+     * Reads and validates tasks from a specified save file.
      *
      * @return Decoded tasks, or an empty list if the save file does not exist.
      * @throws FileCorruptedException If any saved task record is malformed.
      * @throws IOException If the file cannot be read.
      */
     public static List<Task> readTasks() throws FileCorruptedException, IOException {
-        if (Files.notExists(SAVE_FILE)) {
+        return readTasks(SAVE_FILE);
+    }
+
+    /**
+     * Reads and decodes tasks from a specified save file.
+     *
+     * @param saveFile Save file to read.
+     * @return Decoded tasks, or an empty list if the save file does not exist.
+     * @throws FileCorruptedException If any saved task record is malformed.
+     * @throws IOException If the file cannot be read.
+     */
+    static List<Task> readTasks(Path saveFile) throws FileCorruptedException, IOException {
+        if (Files.notExists(saveFile)) {
             return List.of();
         }
 
         List<Task> tasks = new ArrayList<>();
-        for (String line : Files.readAllLines(SAVE_FILE, StandardCharsets.UTF_8)) {
+        for (String line : Files.readAllLines(saveFile, StandardCharsets.UTF_8)) {
             tasks.add(TaskCodec.decode(line));
         }
         return tasks;
