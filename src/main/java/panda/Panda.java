@@ -26,8 +26,12 @@ public final class Panda {
             boolean isGui) {
         commandScanner = new Scanner(
                 Objects.requireNonNull(commandInputStream), StandardCharsets.UTF_8);
-        Ui.directOutputTo(Objects.requireNonNull(responseOutputStream));
         this.isGui = isGui;
+        if (isGui) {
+            Ui.directTypedOutputTo(Objects.requireNonNull(responseOutputStream));
+        } else {
+            Ui.directOutputTo(Objects.requireNonNull(responseOutputStream));
+        }
         this.taskList = start();
     }
 
@@ -50,8 +54,7 @@ public final class Panda {
      */
     public static Panda createForGraphicalInterface(
             InputStream commandInputStream, OutputStream responseOutputStream) {
-        Panda panda = new Panda(commandInputStream, responseOutputStream, true);
-        return panda;
+        return new Panda(commandInputStream, responseOutputStream, true);
     }
 
     /**

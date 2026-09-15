@@ -12,7 +12,30 @@ import java.util.Objects;
  */
 public final class Ui {
     private static final String MESSAGE_DIVIDER = "____________________________________________________________";
+    private static final String MESSAGE_TYPE_APPLICATION_ERROR = "PANDA_MESSAGE_TYPE:APPLICATION_ERROR";
+    private static final String MESSAGE_TYPE_NORMAL = "PANDA_MESSAGE_TYPE:NORMAL";
+    private static final String MESSAGE_TYPE_PARSING_ERROR = "PANDA_MESSAGE_TYPE:PARSING_ERROR";
+
+    private static boolean isWritingMessageTypes;
     private static PrintWriter outputWriter = createOutputWriter(System.out);
+
+    /**
+     * Represents the visual category of a message.
+     */
+    public enum MessageType {
+        NORMAL,
+        PARSING_ERROR,
+        APPLICATION_ERROR
+    }
+
+    /**
+     * Represents message text together with its visual category.
+     *
+     * @param type Visual category of the message.
+     * @param text Text displayed to the user.
+     */
+    public record UiMessage(MessageType type, String text) {
+    }
 
     private Ui() {
         // Utility class: prevent accidental instantiation.
@@ -25,6 +48,17 @@ public final class Ui {
      */
     public static synchronized void directOutputTo(OutputStream outputStream) {
         outputWriter = createOutputWriter(Objects.requireNonNull(outputStream));
+        isWritingMessageTypes = false;
+    }
+
+    /**
+     * Directs typed messages to the supplied output stream.
+     *
+     * @param outputStream Stream that receives Panda's typed messages.
+     */
+    public static synchronized void directTypedOutputTo(OutputStream outputStream) {
+        outputWriter = createOutputWriter(Objects.requireNonNull(outputStream));
+        isWritingMessageTypes = true;
     }
 
     /**
@@ -33,36 +67,92 @@ public final class Ui {
      * @param message Text to display.
      */
     public static synchronized void printMessage(String message) {
+        writeMessage(message, MessageType.NORMAL);
+    }
+
+    /**
+     * Prints a parsing error in a standardized format and flushes it to the configured stream.
+     *
+     * @param message Parsing error text to display.
+     */
+    public static synchronized void printParsingError(String message) {
+        writeMessage(message, MessageType.PARSING_ERROR);
+    }
+
+    /**
+     * Prints an application error in a standardized format and flushes it to the configured stream.
+     *
+     * @param message Application error text to display.
+     */
+    public static synchronized void printApplicationError(String message) {
+        writeMessage(message, MessageType.APPLICATION_ERROR);
+    }
+
+    /**
+     * Prints a message and its type when typed output is enabled.
+     *
+     * @param message Text to display.
+     * @param messageType Visual category of the message.
+     */
+    private static void writeMessage(String message, MessageType messageType) {
         outputWriter.println(MESSAGE_DIVIDER);
+        if (isWritingMessageTypes) {
+            outputWriter.println(getMessageTypeMarker(messageType));
+        }
         outputWriter.println(message);
         outputWriter.println(MESSAGE_DIVIDER);
         outputWriter.flush();
     }
 
     /**
-     * Reads the next complete Panda message from a buffered character stream.
+     * Returns the stream marker for a message type.
+     *
+     * @param messageType Visual category of the message.
+     * @return Stream marker representing the message type.
+     */
+    private static String getMessageTypeMarker(MessageType messageType) {
+        return switch (messageType) {
+            case NORMAL -> MESSAGE_TYPE_NORMAL;
+            case PARSING_ERROR -> MESSAGE_TYPE_PARSING_ERROR;
+            case APPLICATION_ERROR -> MESSAGE_TYPE_APPLICATION_ERROR;
+        };
+    }
+
+    /**
+     * Reads the next complete typed Panda message from a buffered character stream.
+     * Untyped messages are treated as normal messages for backward compatibility.
      *
      * @param inputReader Reader connected to Panda's response stream.
-     * @return Next message, or {@code null} after the stream closes.
+     * @return Next typed message, or {@code null} after the stream closes.
      * @throws IOException If the response stream cannot be read.
      */
-    public static String readNextMessage(BufferedReader inputReader) throws IOException {
+    public static UiMessage readNextUiMessage(BufferedReader inputReader) throws IOException {
         Objects.requireNonNull(inputReader);
         StringBuilder message = new StringBuilder();
+        MessageType messageType = MessageType.NORMAL;
+        boolean isReadingFirstLine = false;
         boolean isReadingMessage = false;
 
         String line;
         while ((line = inputReader.readLine()) != null) {
             if (line.equals(MESSAGE_DIVIDER)) {
                 if (isReadingMessage) {
-                    return message.toString();
+                    return new UiMessage(messageType, message.toString());
                 }
                 isReadingMessage = true;
+                isReadingFirstLine = true;
             } else if (isReadingMessage) {
-                if (!message.isEmpty()) {
-                    message.append(System.lineSeparator());
+                if (isReadingFirstLine && line.equals(MESSAGE_TYPE_PARSING_ERROR)) {
+                    messageType = MessageType.PARSING_ERROR;
+                } else if (isReadingFirstLine && line.equals(MESSAGE_TYPE_APPLICATION_ERROR)) {
+                    messageType = MessageType.APPLICATION_ERROR;
+                } else if (!(isReadingFirstLine && line.equals(MESSAGE_TYPE_NORMAL))) {
+                    if (!message.isEmpty()) {
+                        message.append(System.lineSeparator());
+                    }
+                    message.append(line);
                 }
-                message.append(line);
+                isReadingFirstLine = false;
             }
         }
         return null;

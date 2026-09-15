@@ -11,11 +11,11 @@ import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import panda.ui.Ui;
@@ -26,6 +26,7 @@ import panda.ui.Ui;
 public class MainWindow extends AnchorPane {
     private static final String BACKGROUND_STYLE_BAMBOO = "background-bamboo";
     private static final String BACKGROUND_STYLE_MOUNTAIN = "background-mountain";
+    private static final double SCROLL_SPEED_FACTOR = 1.4;
 
     private final Image userImage = loadImage("/images/DaUser.png");
     private final Image botImage = loadImage("/images/DaMaster.png");
@@ -49,11 +50,9 @@ public class MainWindow extends AnchorPane {
         assert scrollPane != null : "FXML must inject scrollPane";
         assert dialogContainer != null : "FXML must inject dialogContainer";
         assert userInput != null : "FXML must inject userInput";
-        dialogContainer.minHeightProperty().bind(Bindings.createDoubleBinding(() ->
-                scrollPane.getViewportBounds().getHeight(),
-                scrollPane.viewportBoundsProperty()));
-        dialogContainer.heightProperty().addListener((observable, oldHeight, newHeight) ->
+        dialogContainer.heightProperty().addListener((_, _, _) ->
                 Platform.runLater(() -> scrollPane.setVvalue(scrollPane.getVmax())));
+        scrollPane.addEventFilter(ScrollEvent.SCROLL, this::scrollConversation);
         selectRandomBackground();
     }
 
@@ -93,6 +92,29 @@ public class MainWindow extends AnchorPane {
     }
 
     /**
+     * Scrolls the conversation using a slightly amplified mouse-wheel or trackpad delta.
+     *
+     * @param event Scroll input received over the conversation.
+     */
+    private void scrollConversation(ScrollEvent event) {
+        double scrollableHeight = dialogContainer.getHeight()
+                - scrollPane.getViewportBounds().getHeight();
+        if (scrollableHeight <= 0 || event.getDeltaY() == 0) {
+            return;
+        }
+
+        double valueRange = scrollPane.getVmax() - scrollPane.getVmin();
+        double valueDelta = event.getDeltaY() * SCROLL_SPEED_FACTOR * valueRange
+                / scrollableHeight;
+        double newValue = Math.clamp(
+                scrollPane.getVvalue() - valueDelta,
+                scrollPane.getVmin(),
+                scrollPane.getVmax());
+        scrollPane.setVvalue(newValue);
+        event.consume();
+    }
+
+    /**
      * Reads Panda's response stream without blocking the JavaFX application thread.
      *
      * @param pandaResponseReader Reader connected to Panda's response stream.
@@ -100,14 +122,16 @@ public class MainWindow extends AnchorPane {
     private void startListeningForPandaMessages(BufferedReader pandaResponseReader) {
         Thread.ofVirtual().name("panda-response-listener").start(() -> {
             try {
-                String message;
-                while ((message = Ui.readNextMessage(pandaResponseReader)) != null) {
-                    String messageToDisplay = message;
+                Ui.UiMessage message;
+                while ((message = Ui.readNextUiMessage(pandaResponseReader)) != null) {
+                    Ui.UiMessage messageToDisplay = message;
                     Platform.runLater(() -> displayPandaMessage(messageToDisplay));
                 }
             } catch (IOException exception) {
-                Platform.runLater(() -> displayPandaMessage(
-                        "Master Shifu is offline: " + exception.getMessage()));
+                Ui.UiMessage errorMessage = new Ui.UiMessage(
+                        Ui.MessageType.APPLICATION_ERROR,
+                        "Master Shifu is offline: " + exception.getMessage());
+                Platform.runLater(() -> displayPandaMessage(errorMessage));
             }
         });
     }
@@ -126,9 +150,10 @@ public class MainWindow extends AnchorPane {
     /**
      * Adds one response from Panda to the dialog container.
      *
-     * @param message Response to display.
+     * @param message Typed response to display.
      */
-    private void displayPandaMessage(String message) {
-        dialogContainer.getChildren().add(DialogBox.createPandaDialog(message, botImage));
+    private void displayPandaMessage(Ui.UiMessage message) {
+        DialogBox dialogBox = DialogBox.createPandaDialog(message, botImage);
+        dialogContainer.getChildren().add(dialogBox);
     }
 }
