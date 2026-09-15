@@ -1,6 +1,6 @@
 # Panda Assistant
 
-Panda is a command-line personal assistant under development.
+Panda is a graphical personal assistant under development.
 
                                                             _______               
                 _________   _...._                  _..._   \  ___ `'.            
@@ -24,10 +24,10 @@ Panda is a command-line personal assistant under development.
 1. Clone the repository: `git clone https://github.com/kungfuxiongmao/ip.git`
 2. Run the program
 
-Compile and run Panda from the project root:
+Run Panda's graphical interface from the project root:
 
 ```sh
-javac -d out $(find src/main/java -name '*.java') && java -cp out panda.Panda
+./gradlew run
 ```
 
 

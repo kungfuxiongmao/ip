@@ -13,11 +13,11 @@ import java.util.Objects;
 public final class Ui {
     private static final String MESSAGE_DIVIDER = "____________________________________________________________";
     private static final String MESSAGE_TYPE_APPLICATION_ERROR = "PANDA_MESSAGE_TYPE:APPLICATION_ERROR";
+    private static final String MESSAGE_TYPE_EXIT_CONFIRMATION = "PANDA_MESSAGE_TYPE:EXIT_CONFIRMATION";
     private static final String MESSAGE_TYPE_NORMAL = "PANDA_MESSAGE_TYPE:NORMAL";
     private static final String MESSAGE_TYPE_PARSING_ERROR = "PANDA_MESSAGE_TYPE:PARSING_ERROR";
 
-    private static boolean isWritingMessageTypes;
-    private static PrintWriter outputWriter = createOutputWriter(System.out);
+    private static PrintWriter outputWriter = createOutputWriter(OutputStream.nullOutputStream());
 
     /**
      * Represents the visual category of a message.
@@ -25,7 +25,8 @@ public final class Ui {
     public enum MessageType {
         NORMAL,
         PARSING_ERROR,
-        APPLICATION_ERROR
+        APPLICATION_ERROR,
+        EXIT_CONFIRMATION
     }
 
     /**
@@ -42,23 +43,12 @@ public final class Ui {
     }
 
     /**
-     * Directs subsequently displayed messages to the supplied output stream.
+     * Directs typed messages to the supplied graphical-interface output stream.
      *
      * @param outputStream Stream that receives Panda's messages.
      */
     public static synchronized void directOutputTo(OutputStream outputStream) {
         outputWriter = createOutputWriter(Objects.requireNonNull(outputStream));
-        isWritingMessageTypes = false;
-    }
-
-    /**
-     * Directs typed messages to the supplied output stream.
-     *
-     * @param outputStream Stream that receives Panda's typed messages.
-     */
-    public static synchronized void directTypedOutputTo(OutputStream outputStream) {
-        outputWriter = createOutputWriter(Objects.requireNonNull(outputStream));
-        isWritingMessageTypes = true;
     }
 
     /**
@@ -89,16 +79,23 @@ public final class Ui {
     }
 
     /**
-     * Prints a message and its type when typed output is enabled.
+     * Prints a request for the frontend to confirm termination.
+     *
+     * @param message Save result and exit-confirmation text to display.
+     */
+    public static synchronized void printExitConfirmation(String message) {
+        writeMessage(message, MessageType.EXIT_CONFIRMATION);
+    }
+
+    /**
+     * Prints a message and its type for the graphical interface.
      *
      * @param message Text to display.
      * @param messageType Visual category of the message.
      */
     private static void writeMessage(String message, MessageType messageType) {
         outputWriter.println(MESSAGE_DIVIDER);
-        if (isWritingMessageTypes) {
-            outputWriter.println(getMessageTypeMarker(messageType));
-        }
+        outputWriter.println(getMessageTypeMarker(messageType));
         outputWriter.println(message);
         outputWriter.println(MESSAGE_DIVIDER);
         outputWriter.flush();
@@ -115,12 +112,12 @@ public final class Ui {
             case NORMAL -> MESSAGE_TYPE_NORMAL;
             case PARSING_ERROR -> MESSAGE_TYPE_PARSING_ERROR;
             case APPLICATION_ERROR -> MESSAGE_TYPE_APPLICATION_ERROR;
+            case EXIT_CONFIRMATION -> MESSAGE_TYPE_EXIT_CONFIRMATION;
         };
     }
 
     /**
      * Reads the next complete typed Panda message from a buffered character stream.
-     * Untyped messages are treated as normal messages for backward compatibility.
      *
      * @param inputReader Reader connected to Panda's response stream.
      * @return Next typed message, or {@code null} after the stream closes.
@@ -146,6 +143,8 @@ public final class Ui {
                     messageType = MessageType.PARSING_ERROR;
                 } else if (isReadingFirstLine && line.equals(MESSAGE_TYPE_APPLICATION_ERROR)) {
                     messageType = MessageType.APPLICATION_ERROR;
+                } else if (isReadingFirstLine && line.equals(MESSAGE_TYPE_EXIT_CONFIRMATION)) {
+                    messageType = MessageType.EXIT_CONFIRMATION;
                 } else if (!(isReadingFirstLine && line.equals(MESSAGE_TYPE_NORMAL))) {
                     if (!message.isEmpty()) {
                         message.append(System.lineSeparator());

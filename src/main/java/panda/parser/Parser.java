@@ -13,6 +13,7 @@ import panda.parser.commandparser.DisplayDateCommandParser;
 import panda.parser.commandparser.FindCommandParser;
 import panda.parser.commandparser.ListTasksCommandParser;
 import panda.parser.commandparser.MarkTaskCommandParser;
+import panda.parser.commandparser.SaveCommandParser;
 import panda.parser.commandparser.TodayCommandParser;
 import panda.parser.commandparser.UnmarkTaskCommandParser;
 
@@ -30,6 +31,7 @@ public final class Parser {
      */
     private enum CommandType {
         BYE("bye", new ByeCommandParser()),
+        SAVE("save", new SaveCommandParser()),
         LIST("list", new ListTasksCommandParser()),
         MARK("mark", new MarkTaskCommandParser()),
         UNMARK("unmark", new UnmarkTaskCommandParser()),

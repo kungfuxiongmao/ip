@@ -19,30 +19,13 @@ import panda.ui.Ui;
  */
 public final class Panda {
     private final Scanner commandScanner;
-    private final boolean isGui;
     private final TaskList taskList;
 
-    private Panda(InputStream commandInputStream, OutputStream responseOutputStream,
-            boolean isGui) {
+    private Panda(InputStream commandInputStream, OutputStream responseOutputStream) {
         commandScanner = new Scanner(
                 Objects.requireNonNull(commandInputStream), StandardCharsets.UTF_8);
-        this.isGui = isGui;
-        if (isGui) {
-            Ui.directTypedOutputTo(Objects.requireNonNull(responseOutputStream));
-        } else {
-            Ui.directOutputTo(Objects.requireNonNull(responseOutputStream));
-        }
+        Ui.directOutputTo(Objects.requireNonNull(responseOutputStream));
         this.taskList = start();
-    }
-
-    /**
-     * Starts Panda's command-line interface using the standard input and output streams.
-     *
-     * @param args Command-line arguments (not used).
-     */
-    public static void main(String[] args) {
-        Panda panda = new Panda(System.in, System.out, false);
-        panda.processCommandsUntilInputCloses();
     }
 
     /**
@@ -54,7 +37,7 @@ public final class Panda {
      */
     public static Panda createForGraphicalInterface(
             InputStream commandInputStream, OutputStream responseOutputStream) {
-        return new Panda(commandInputStream, responseOutputStream, true);
+        return new Panda(commandInputStream, responseOutputStream);
     }
 
     /**
@@ -71,7 +54,7 @@ public final class Panda {
      */
     private TaskList start() {
         try {
-            return StartManager.start(isGui);
+            return StartManager.start();
         } catch (ApplicationException exception) {
             ExceptionHandler.handle(exception);
             return new TaskList();

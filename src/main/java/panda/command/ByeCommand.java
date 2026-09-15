@@ -1,22 +1,22 @@
 package panda.command;
 
-import panda.exception.storage.TaskSavingException;
 import panda.lifecycle.TerminationManager;
 import panda.task.TaskList;
+import panda.ui.Ui;
 
 /**
- * Prints Panda's farewell and ends the program.
+ * Terminates Panda after confirmation from the graphical interface.
  */
 public class ByeCommand implements Command {
 
     /**
-     * Saves the current task list and terminates the application session.
+     * Displays Panda's farewell and terminates the program.
      *
      * @param taskList Active task list.
-     * @throws TaskSavingException If the current task list cannot be saved.
      */
     @Override
-    public void execute(TaskList taskList) throws TaskSavingException {
-        TerminationManager.terminate(taskList);
+    public void execute(TaskList taskList) {
+        Ui.printMessage("Bye. Hope to see you again soon!");
+        TerminationManager.terminate();
     }
 }

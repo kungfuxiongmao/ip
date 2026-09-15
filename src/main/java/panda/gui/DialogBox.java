@@ -70,7 +70,7 @@ public class DialogBox extends HBox {
      */
     public static DialogBox createPandaDialog(Ui.UiMessage message, Image image) {
         String styleClass = switch (message.type()) {
-            case NORMAL -> STYLE_PANDA_DIALOG;
+            case NORMAL, EXIT_CONFIRMATION -> STYLE_PANDA_DIALOG;
             case PARSING_ERROR -> STYLE_PARSING_ERROR_DIALOG;
             case APPLICATION_ERROR -> STYLE_APPLICATION_ERROR_DIALOG;
         };

@@ -12,12 +12,14 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Window;
 import panda.ui.Ui;
 
 /**
@@ -26,6 +28,8 @@ import panda.ui.Ui;
 public class MainWindow extends AnchorPane {
     private static final String BACKGROUND_STYLE_BAMBOO = "background-bamboo";
     private static final String BACKGROUND_STYLE_MOUNTAIN = "background-mountain";
+    private static final String COMMAND_BYE = "bye";
+    private static final String COMMAND_SAVE = "save";
     private static final double SCROLL_SPEED_FACTOR = 1.4;
 
     private final Image userImage = loadImage("/images/DaUser.png");
@@ -41,6 +45,7 @@ public class MainWindow extends AnchorPane {
     private TextField userInput;
 
     private PrintWriter pandaCommandWriter;
+    private boolean isExitPending;
 
     /**
      * Enables manual scrolling and scrolls to the latest message when the dialog grows.
@@ -125,7 +130,7 @@ public class MainWindow extends AnchorPane {
                 Ui.UiMessage message;
                 while ((message = Ui.readNextUiMessage(pandaResponseReader)) != null) {
                     Ui.UiMessage messageToDisplay = message;
-                    Platform.runLater(() -> displayPandaMessage(messageToDisplay));
+                    Platform.runLater(() -> handlePandaMessage(messageToDisplay));
                 }
             } catch (IOException exception) {
                 Ui.UiMessage errorMessage = new Ui.UiMessage(
@@ -141,10 +146,71 @@ public class MainWindow extends AnchorPane {
      */
     @FXML
     private void sendUserCommand() {
+        if (isExitPending) {
+            return;
+        }
+
         String command = userInput.getText();
         dialogContainer.getChildren().add(DialogBox.createUserDialog(command, userImage));
-        pandaCommandWriter.println(command);
+        if (command.strip().equals(COMMAND_BYE)) {
+            beginExitRequest();
+            pandaCommandWriter.println(COMMAND_SAVE);
+        } else {
+            pandaCommandWriter.println(command);
+        }
         userInput.clear();
+    }
+
+    /**
+     * Sends {@code save} through the command stream when the user closes the main window.
+     */
+    public void requestExit() {
+        if (isExitPending) {
+            return;
+        }
+        beginExitRequest();
+        pandaCommandWriter.println(COMMAND_SAVE);
+    }
+
+    /**
+     * Handles a response from Panda according to its stream message type.
+     *
+     * @param message Typed response received from Panda.
+     */
+    private void handlePandaMessage(Ui.UiMessage message) {
+        if (message.type() == Ui.MessageType.EXIT_CONFIRMATION) {
+            showExitConfirmation(message.text());
+        } else {
+            displayPandaMessage(message);
+        }
+    }
+
+    /**
+     * Marks an exit request as pending and prevents additional typed commands.
+     */
+    private void beginExitRequest() {
+        isExitPending = true;
+        userInput.setDisable(true);
+    }
+
+    /**
+     * Shows the frontend confirmation and sends a command only when exit is confirmed.
+     *
+     * @param message Save result and confirmation text received from Panda.
+     */
+    private void showExitConfirmation(String message) {
+        Scene scene = getScene();
+        Window owner = scene == null ? null : scene.getWindow();
+        ExitConfirmationDialog confirmation = new ExitConfirmationDialog(owner, message);
+
+        if (confirmation.showAndWaitForConfirmation()) {
+            pandaCommandWriter.println(COMMAND_BYE);
+            return;
+        }
+
+        isExitPending = false;
+        userInput.setDisable(false);
+        userInput.requestFocus();
     }
 
     /**
