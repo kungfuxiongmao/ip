@@ -14,3 +14,21 @@
     -fx-background-color: #f7f7f7;
     -fx-border-color: #b8b8b8;
 }
+
+#dialogContainer {
+    -fx-background-color: rgba(235, 235, 235, 0.70);
+}
+
+.background-bamboo > .viewport {
+    -fx-background-image: url("../images/backgrounds/bamboo-mist.png");
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+}
+
+.background-mountain > .viewport {
+    -fx-background-image: url("../images/backgrounds/mountain-lake.png");
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+}

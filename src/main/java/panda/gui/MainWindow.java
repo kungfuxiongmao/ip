@@ -8,8 +8,10 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
 
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -22,6 +24,9 @@ import panda.ui.Ui;
  * Controls Panda's main graphical user interface.
  */
 public class MainWindow extends AnchorPane {
+    private static final String BACKGROUND_STYLE_BAMBOO = "background-bamboo";
+    private static final String BACKGROUND_STYLE_MOUNTAIN = "background-mountain";
+
     private final Image userImage = loadImage("/images/DaUser.png");
     private final Image botImage = loadImage("/images/DaMaster.png");
 
@@ -37,14 +42,19 @@ public class MainWindow extends AnchorPane {
     private PrintWriter pandaCommandWriter;
 
     /**
-     * Binds the scroll position to the height of the dialog container.
+     * Enables manual scrolling and scrolls to the latest message when the dialog grows.
      */
     @FXML
     public void initialize() {
         assert scrollPane != null : "FXML must inject scrollPane";
         assert dialogContainer != null : "FXML must inject dialogContainer";
         assert userInput != null : "FXML must inject userInput";
-        scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
+        dialogContainer.minHeightProperty().bind(Bindings.createDoubleBinding(() ->
+                scrollPane.getViewportBounds().getHeight(),
+                scrollPane.viewportBoundsProperty()));
+        dialogContainer.heightProperty().addListener((observable, oldHeight, newHeight) ->
+                Platform.runLater(() -> scrollPane.setVvalue(scrollPane.getVmax())));
+        selectRandomBackground();
     }
 
     /**
@@ -70,6 +80,16 @@ public class MainWindow extends AnchorPane {
      */
     private static Image loadImage(String resourcePath) {
         return new Image(Objects.requireNonNull(MainWindow.class.getResourceAsStream(resourcePath)));
+    }
+
+    /**
+     * Selects either available background with equal probability.
+     */
+    private void selectRandomBackground() {
+        String backgroundStyle = ThreadLocalRandom.current().nextBoolean()
+                ? BACKGROUND_STYLE_BAMBOO
+                : BACKGROUND_STYLE_MOUNTAIN;
+        scrollPane.getStyleClass().add(backgroundStyle);
     }
 
     /**

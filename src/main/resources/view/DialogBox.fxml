@@ -15,13 +15,13 @@
          xmlns="http://javafx.com/javafx/17"
          xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <Label fx:id="dialog" maxWidth="430.0" minHeight="-Infinity"
+        <Label fx:id="dialog" minHeight="-Infinity"
                styleClass="dialog-label" text="Label" wrapText="true">
             <font>
                 <Font name="Monospaced" size="12.0" />
             </font>
         </Label>
-        <Circle fx:id="displayPicture" radius="49.5" />
+        <Circle fx:id="displayPicture" radius="28.0" />
     </children>
     <padding>
         <Insets bottom="15.0" left="5.0" right="5.0" top="15.0" />

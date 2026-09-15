@@ -3,6 +3,7 @@ package panda.gui;
 import java.io.IOException;
 import java.util.Collections;
 
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -38,6 +39,7 @@ public class DialogBox extends HBox {
 
         dialog.setText(text);
         displayPicture.setFill(new ImagePattern(image));
+        constrainDialogWidth();
     }
 
     /**
@@ -67,6 +69,18 @@ public class DialogBox extends HBox {
         dialogBox.flip();
         dialogBox.alignMessageWithPandaImage();
         return dialogBox;
+    }
+
+    /**
+     * Expands the message within the space left after reserving the avatar and row spacing.
+     */
+    private void constrainDialogWidth() {
+        double reservedWidth = displayPicture.getRadius() * 2
+                + getSpacing()
+                + getPadding().getLeft()
+                + getPadding().getRight();
+        dialog.maxWidthProperty().bind(Bindings.max(0,
+                widthProperty().subtract(reservedWidth)));
     }
 
     /**

@@ -29,6 +29,7 @@ public class Main extends Application {
             connectGraphicalInterfaceToPanda(fxmlLoader.getController());
 
             stage.setScene(new Scene(root));
+            stage.setTitle("Panda");
             stage.show();
         } catch (IOException exception) {
             throw new IllegalStateException("Unable to start Panda's graphical interface.", exception);
