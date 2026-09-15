@@ -3,6 +3,7 @@ package panda.gui;
 import java.io.IOException;
 import java.util.Collections;
 
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -15,11 +16,16 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.TextAlignment;
+import panda.ui.Ui;
 
 /**
  * Represents a dialog box containing a speaker image and message text.
  */
 public class DialogBox extends HBox {
+    private static final String STYLE_APPLICATION_ERROR_DIALOG = "application-error-dialog";
+    private static final String STYLE_PANDA_DIALOG = "panda-dialog";
+    private static final String STYLE_PARSING_ERROR_DIALOG = "parsing-error-dialog";
+
     @FXML
     private Label dialog;
 
@@ -38,6 +44,7 @@ public class DialogBox extends HBox {
 
         dialog.setText(text);
         displayPicture.setFill(new ImagePattern(image));
+        constrainDialogWidth();
     }
 
     /**
@@ -55,18 +62,47 @@ public class DialogBox extends HBox {
     }
 
     /**
-     * Creates a dialog box for a response from Panda.
+     * Creates a correctly styled dialog box for a typed response from Panda.
      *
-     * @param text Message to display.
+     * @param message Typed message to display.
      * @param image Panda image to display.
      * @return Dialog box for Panda's response.
      */
-    public static DialogBox createPandaDialog(String text, Image image) {
+    public static DialogBox createPandaDialog(Ui.UiMessage message, Image image) {
+        String styleClass = switch (message.type()) {
+            case NORMAL, EXIT_CONFIRMATION -> STYLE_PANDA_DIALOG;
+            case PARSING_ERROR -> STYLE_PARSING_ERROR_DIALOG;
+            case APPLICATION_ERROR -> STYLE_APPLICATION_ERROR_DIALOG;
+        };
+        return createStyledPandaDialog(message.text(), image, styleClass);
+    }
+
+    /**
+     * Creates a left-aligned Panda dialog with the requested visual style.
+     *
+     * @param text Message to display.
+     * @param image Panda image to display.
+     * @param styleClass CSS class applied to the message label.
+     * @return Styled dialog box for Panda's message.
+     */
+    private static DialogBox createStyledPandaDialog(String text, Image image, String styleClass) {
         DialogBox dialogBox = new DialogBox(text, image);
-        dialogBox.dialog.getStyleClass().add("panda-dialog");
+        dialogBox.dialog.getStyleClass().add(styleClass);
         dialogBox.flip();
         dialogBox.alignMessageWithPandaImage();
         return dialogBox;
+    }
+
+    /**
+     * Expands the message within the space left after reserving the avatar and row spacing.
+     */
+    private void constrainDialogWidth() {
+        double reservedWidth = displayPicture.getRadius() * 2
+                + getSpacing()
+                + getPadding().getLeft()
+                + getPadding().getRight();
+        dialog.maxWidthProperty().bind(Bindings.max(0,
+                widthProperty().subtract(reservedWidth)));
     }
 
     /**

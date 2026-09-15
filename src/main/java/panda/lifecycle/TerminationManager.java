@@ -7,7 +7,7 @@ import panda.storage.Storage;
 import panda.task.TaskList;
 
 /**
- * Saves Panda's current task list when the application terminates normally.
+ * Provides operations used while Panda exits normally.
  */
 public final class TerminationManager {
 
@@ -16,22 +16,24 @@ public final class TerminationManager {
     }
 
     /**
-     * Saves the current task list and terminates Panda.
-     *
-     * @param taskList Active task list to save.
-     * @throws TaskSavingException If the task list cannot be saved; Panda remains running.
+     * Terminates Panda normally.
      */
-    public static void terminate(TaskList taskList) throws TaskSavingException {
-        saveState(taskList);
+    public static void terminate() {
         System.exit(0);
     }
 
-    private static void saveState(TaskList taskList) throws TaskSavingException {
+    /**
+     * Saves the current task list without terminating Panda.
+     *
+     * @param taskList Active task list to save.
+     * @throws TaskSavingException If the task list cannot be saved.
+     */
+    public static void saveState(TaskList taskList) throws TaskSavingException {
         try {
             Storage.saveTasks(taskList.getTasks());
         } catch (IOException exception) {
             throw new TaskSavingException(
-                    "The ink has failed us. Your tasks could not be saved, so Panda will remain open: "
+                    "The ink has failed us. Your tasks could not be saved: "
                             + exception.getMessage(),
                     exception);
         }

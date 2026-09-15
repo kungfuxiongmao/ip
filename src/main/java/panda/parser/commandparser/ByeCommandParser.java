@@ -5,12 +5,12 @@ import panda.command.Command;
 import panda.exception.parser.InvalidArgumentException;
 
 /**
- * Parses arguments for the {@code bye} command.
+ * Parses the graphical interface's command for terminating Panda after confirmation.
  */
 public class ByeCommandParser implements CommandParser {
 
     /**
-     * Validates that no extra arguments are passed to the {@code bye} command.
+     * Validates that the bye command has no arguments.
      *
      * @param arguments Text following the bye command.
      * @return A {@link ByeCommand} instance.

@@ -24,12 +24,11 @@ public final class StartManager {
     /**
      * Greets the user and initializes the task list from storage.
      *
-     * @param isGui Whether Panda is running through the graphical interface.
      * @return Initialized task list.
      * @throws ApplicationException If saved tasks cannot be loaded.
      */
-    public static TaskList start(boolean isGui) throws ApplicationException {
-        greet(isGui);
+    public static TaskList start() throws ApplicationException {
+        greet();
         return loadTaskList();
     }
 
@@ -92,26 +91,9 @@ public final class StartManager {
     }
 
     /**
-     * Prints Panda's initial greeting, omitting the ASCII art in the graphical interface.
-     *
-     * @param isGui Whether Panda is running through the graphical interface.
+     * Prints Panda's initial graphical-interface greeting.
      */
-    private static void greet(boolean isGui) {
-        String banner = """
-                                                            _______               \s
-                _________   _...._                  _..._   \\  ___ `'.            \s
-                \\        |.'      '-.             .'     '.  ' |--.\\  \\           \s
-                 \\        .'```'.    '.          .   .-.   . | |    \\  '          \s
-                  \\      |       \\     \\   __    |  '   '  | | |     |  '    __   \s
-                   |     |        |    |.:--.'.  |  |   |  | | |     |  | .:--.'. \s
-                   |      \\      /    ./ |   \\ | |  |   |  | | |     ' .'/ |   \\ |\s
-                   |     |\\`'-.-'   .' `" __ | | |  |   |  | | |___.' /' `" __ | |\s
-                   |     | '-....-'`    .'.''| | |  |   |  |/_______.'/   .'.''| |\s
-                  .'     '.            / /   | |_|  |   |  |\\_______|/   / /   | |_
-                '-----------'          \\ \\._,\\ '/|  |   |  |             \\ \\._,\\ '/
-                                        `--'  `" '--'   '--'              `--'  `"\s
-                """;
-        String greeting = "Ah, you are here. Breathe, young warrior.\nWhat shall we face today?";
-        Ui.printMessage(isGui ? greeting : banner + "\n" + greeting);
+    private static void greet() {
+        Ui.printMessage("Ah, you are here. Breathe, young warrior.\nWhat shall we face today?");
     }
 }

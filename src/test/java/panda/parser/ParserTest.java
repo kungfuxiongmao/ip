@@ -16,6 +16,7 @@ import panda.command.DisplayDateCommand;
 import panda.command.FindCommand;
 import panda.command.ListTasksCommand;
 import panda.command.MarkTaskCommand;
+import panda.command.SaveCommand;
 import panda.command.TodayCommand;
 import panda.command.UnmarkTaskCommand;
 import panda.exception.parser.IllegalDateTimeException;
@@ -36,6 +37,17 @@ public class ParserTest {
     @Test
     public void parse_byeWithArguments_throwsInvalidArgumentException() {
         assertThrows(InvalidArgumentException.class, () -> Parser.parse("bye now"));
+    }
+
+    @Test
+    public void parse_validSaveCommand_returnsSaveCommand() throws Exception {
+        Command command = Parser.parse("save");
+        assertInstanceOf(SaveCommand.class, command);
+    }
+
+    @Test
+    public void parse_saveWithArguments_throwsInvalidArgumentException() {
+        assertThrows(InvalidArgumentException.class, () -> Parser.parse("save now"));
     }
 
     @Test
