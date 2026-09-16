@@ -4,7 +4,7 @@ import panda.exception.ApplicationException;
 import panda.task.TaskList;
 
 /**
- * Represents an action that Panda can perform for a user command.
+ * Represents an action Panda can perform for a trainee's command.
  */
 public interface Command {
 

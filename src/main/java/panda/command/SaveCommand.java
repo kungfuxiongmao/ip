@@ -12,12 +12,13 @@ import panda.ui.Ui;
 public class SaveCommand implements Command {
 
     /**
-     * Saves the current task list and sends an exit-confirmation response.
+     * Taunts the user, saves the current task list, and sends an exit-confirmation response.
      *
      * @param taskList Active task list.
      */
     @Override
     public void execute(TaskList taskList) {
+        Ui.printMessage("Running away already? Don't call me your master!");
         try {
             TerminationManager.saveState(taskList);
             Ui.printExitConfirmation(

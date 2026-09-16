@@ -94,6 +94,6 @@ public final class StartManager {
      * Prints Panda's initial graphical-interface greeting.
      */
     private static void greet() {
-        Ui.printMessage("Oh, you're back. I was just enjoying the peace. What's the issue today?");
+        Ui.printMessage("Oh, you're back, trainee. I was just enjoying the peace. What's the issue today?");
     }
 }

@@ -14,11 +14,16 @@ import panda.exception.task.EventClashException;
  */
 final class EventScheduleIndex {
     private final NavigableMap<LocalDateTime, Event> eventsByStart = new TreeMap<>();
+    private final List<Task> tasks;
 
     /**
-     * Creates an empty event schedule index.
+     * Creates an empty event schedule index associated with the supplied task list.
+     *
+     * @param tasks Tasks whose event numbers are reported for schedule clashes.
      */
-    EventScheduleIndex() {
+    EventScheduleIndex(List<Task> tasks) {
+        assert tasks != null : "Task list associated with schedule index must not be null";
+        this.tasks = tasks;
     }
 
     /**
@@ -31,7 +36,7 @@ final class EventScheduleIndex {
         assert event != null : "Event added to schedule index must not be null";
         List<Event> conflictingEvents = findOverlappingEvents(event);
         if (!conflictingEvents.isEmpty()) {
-            throw new EventClashException(conflictingEvents);
+            throw new EventClashException(tasks, conflictingEvents);
         }
         eventsByStart.put(event.getEffectiveStartDateTime(), event);
     }

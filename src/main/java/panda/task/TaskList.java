@@ -24,8 +24,8 @@ public final class TaskList {
      * Creates an empty task list.
      */
     public TaskList() {
-        this.eventScheduleIndex = new EventScheduleIndex();
         this.tasks = new ArrayList<>();
+        this.eventScheduleIndex = new EventScheduleIndex(tasks);
     }
 
     /**
@@ -93,11 +93,7 @@ public final class TaskList {
         assert task != null : "Task added to TaskList must not be null";
 
         if (task instanceof Event event) {
-            try {
-                eventScheduleIndex.add(event);
-            } catch (EventClashException exception) {
-                throw new EventClashException(tasks, exception.getConflictingEvents());
-            }
+            eventScheduleIndex.add(event);
         }
         return appendToList(task);
     }
@@ -213,8 +209,8 @@ public final class TaskList {
     @Override
     public String toString() {
         return formatMatchingTasks(task -> true,
-                "Behold, the consequences of your own planning:",
-                "No tasks. Productivity remains undefeated.");
+                "Behold your path to kungfu mastery:",
+                "Your path is empty. Kungfu mastery remains safely out of reach.");
     }
 
     /**

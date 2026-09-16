@@ -1,6 +1,7 @@
 # Panda Assistant
 
-Panda is a graphical personal assistant under development.
+Panda is a sarcastic kungfu master who guides a panda trainee. The trainee uses the task list as a path toward kungfu
+mastery, following Panda's questionable but effective advice along the way.
 
                                                             _______               
                 _________   _...._                  _..._   \  ___ `'.            
@@ -33,9 +34,9 @@ Run Panda's graphical interface from the project root:
 
 ## Current Features
 
-Panda is able to:
+Panda can help the trainee:
 
-- Greet users
+- Start each training session with a greeting
 - Add tasks to a list (**Todo**, **Deadline**, and **Event**)
 - Display the task list
 - Mark and unmark a task
@@ -52,7 +53,7 @@ Enter `list` to display the task list. Leading and trailing whitespace in a comm
 ### Add tasks to the task list
 #### Support for multiple types of tasks
 
-Panda supports three types of tasks: Todo, Deadline, and Event.
+The app supports three types of tasks: Todo, Deadline, and Event.
 
 - **Todo**: A task without a specific deadline or time period; it can be used as a gentle reminder.
 
@@ -101,18 +102,20 @@ An event whose end is not after its start is rejected with an invalid-range erro
 Tasks are added to the task list as undone. Upon completion, mark a task as completed with `mark TASK_NUMBER`, 
 where `TASK_NUMBER` is the one-based number displayed by `list`.
 
-If the task number is missing, not an integer, or followed by extra values, Panda displays the expected command format.
+If the task number is missing, not an integer, or followed by extra values, Panda displays the expected command
+format.
 
 ### Unmark tasks
 If a task was marked accidentally, unmark it with `unmark TASK_NUMBER`, 
 where `TASK_NUMBER` is the one-based number displayed by `list`.
 
-If the task number is missing, not an integer, or followed by extra values, Panda displays the expected command format.
+If the task number is missing, not an integer, or followed by extra values, Panda displays the expected command
+format.
 
 ### Delete tasks
 
 Remove a task with `delete TASK_NUMBER`, where `TASK_NUMBER` is the one-based number displayed by `list`. 
-Panda confirms the task that was removed, reports the new task count, and renumbers the remaining tasks. 
+Panda confirms the task that was removed, reports the new task count, and renumbers the remaining tasks.
 Panda rejects missing, non-numeric, or out-of-range task numbers.
 
 ### Find tasks
@@ -124,22 +127,22 @@ case-insensitive, and results retain the task numbers shown by `list`.
 Tasks are saved in `/data/tasks.txt`. 
 A saved file is automatically read and loaded into the task list on start up. 
 On termination, the state of the task list is also overwritten into the save file.
-Note that in the case that the file is corrupted, Panda will inform you and continue with
+If the file is corrupted, Panda informs the trainee and continues with
 an empty task list.
 
 The save-file format is unchanged by schedule-clash detection. If stored events overlap or contain an invalid range,
-Panda treats the file as corrupted and starts with an empty task list.
+The app treats the file as corrupted and starts with an empty task list.
 
 
 ### Input Validation with the Parser
 
-Panda first identifies the command keyword, then sends the remaining text to that command's parser. The command parser
+The app first identifies the command keyword, then sends the remaining text to that command's parser. The command parser
 checks that the arguments follow the required format before creating a command. 
 Unknown commands and malformed arguments cause an exception to be thrown.
 
 ### Exception Handling
 
-Panda checks command input before executing it and displays helpful messages when it cannot continue with a command.
+The app checks command input before executing it, and Panda responds when it cannot continue with a command.
 
 #### Customised Exceptions
 Exceptions thrown by the application are instances of ApplicationException. Each exception stores a user-facing 
@@ -151,59 +154,59 @@ for handling exceptions and standardises the presentation of error messages thro
 After valid input creates a command, application logic can still reject it. For example, `TaskList` checks whether a task
 number exists and whether a task can be marked, unmarked, or deleted. 
 These errors are thrown as application exceptions and passed to the global `ExceptionHandler`, 
-which displays the exception's message and keeps Panda running.
+which displays Panda's response and keeps the app running.
 
 For example:
 
 ```text
 unknown command                           ← User Input
 ____________________________________________________________
-OOPS! Panda does not know the "unknown command" command yet. :<
+"unknown command" isn't a command. Confidence: 10/10. Accuracy: 0/10.
 ____________________________________________________________
 todo read book                            ← User Input
 ____________________________________________________________
-Got it. I've added this task:
+A task? Groundbreaking. I've added it to your path to kungfu mastery:
   [T][ ] read book
-Now you have 1 tasks in the list.
+That's 1 task between you and kungfu mastery.
 ____________________________________________________________
 mark                                     ← User Input
 ____________________________________________________________
-OOPS! Panda needs the mark command written like this: "mark TASK_NUMBER"
+That command was almost impressive. Almost. Use mark like this: "mark TASK_NUMBER"
 ____________________________________________________________
 mark 0                                   ← User Input
 ____________________________________________________________
-OOPS! I think you made a mistake, task number cannot be 0
+Task 0? Bold. Counting starts at 1 where the rest of us live.
 ____________________________________________________________
 mark 1                                   ← User Input
 ____________________________________________________________
-Nice! I've marked this task as done:
+You actually finished something? Screenshot this historic moment:
   [T][X] read book
 ____________________________________________________________
 mark 1                                   ← User Input
 ____________________________________________________________
-OOPS! Panda has already marked this task as done:
+You already finished this. Is memory training next?
   [T][X] read book
-No extra tick needed. :>
+One victory lap was plenty.
 ____________________________________________________________
 unmark 1                                 ← User Input
 ____________________________________________________________
-OK, I've marked this task as not done yet:
+And there it is—the backslide. This task is back:
   [T][ ] read book
 ____________________________________________________________
 unmark 1                                 ← User Input
 ____________________________________________________________
-OOPS! Panda has already marked this task as not done:
+You can't undo what you never did. This task is still waiting:
   [T][ ] read book
-No extra un-tick needed. :>
+Creative escape attempt, though.
 ____________________________________________________________
 ```
 
 ### Terminate Program on Command
-To terminate the program, input `bye`. The program should print:
+To terminate the program, enter `bye`. The master responds before showing the exit confirmation:
 
 ```
 ____________________________________________________________
-Bye. Hope to see you again soon!
+Running away already? Don't call me your master!
 ____________________________________________________________
 ```
 
@@ -224,40 +227,39 @@ _________   _...._                  _..._   \  ___ `'.
 '-----------'          \ \._,\ '/|  |   |  |             \ \._,\ '/ 
                         `--'  `" '--'   '--'              `--'  `"  
 
-Hello! I'm Panda. 
-What can I do for you? 
+Oh, you're back, trainee. I was just enjoying the peace. What's the issue today?
 ____________________________________________________________ 
 list                                        ← User Input
 ____________________________________________________________ 
-~~~ Empty List ~~~ 
+No tasks. Productivity remains undefeated.
 ____________________________________________________________ 
 todo borrow book                            ← User Input
 ____________________________________________________________ 
-Got it. I've added this task: 
+A task? Groundbreaking. I've added it to your path to kungfu mastery:
   [T][ ] borrow book 
-Now you have 1 tasks in the list. 
+That's 1 task between you and kungfu mastery.
 ____________________________________________________________ 
 todo read book                              ← User Input
 ____________________________________________________________ 
-Got it. I've added this task: 
+A task? Groundbreaking. I've added it to your path to kungfu mastery:
   [T][ ] read book 
-Now you have 2 tasks in the list. 
+That's 2 tasks between you and kungfu mastery.
 ____________________________________________________________ 
 deadline return book /by Thursday           ← User Input
 ____________________________________________________________ 
-Got it. I've added this task: 
+A task? Groundbreaking. I've added it to your path to kungfu mastery:
   [D][ ] return book (by: Thursday) 
-Now you have 3 tasks in the list. 
+That's 3 tasks between you and kungfu mastery.
 ____________________________________________________________ 
 event meeting /from Wednesday 12pm /to 2pm  ← User Input
 ____________________________________________________________ 
-Got it. I've added this task: 
+A task? Groundbreaking. I've added it to your path to kungfu mastery:
   [E][ ] meeting (from: Wednesday 12pm to: 2pm) 
-Now you have 4 tasks in the list. 
+That's 4 tasks between you and kungfu mastery.
 ____________________________________________________________ 
 list                                        ← User Input
 ____________________________________________________________ 
-Here are the tasks in your list: 
+Behold your path to kungfu mastery:
 1.[T][ ] borrow book 
 2.[T][ ] read book 
 3.[D][ ] return book (by: Thursday) 
@@ -265,12 +267,12 @@ Here are the tasks in your list:
 ____________________________________________________________ 
 mark 2                                      ← User Input
 ____________________________________________________________ 
-Nice! I've marked this task as done: 
+You actually finished something? Screenshot this historic moment:
   [T][X] read book 
 ____________________________________________________________ 
 list                                        ← User Input
 ____________________________________________________________ 
-Here are the tasks in your list: 
+Behold your path to kungfu mastery:
 1.[T][ ] borrow book 
 2.[T][X] read book 
 3.[D][ ] return book (by: Thursday) 
@@ -278,12 +280,12 @@ Here are the tasks in your list:
 ____________________________________________________________ 
 unmark 2                                    ← User Input
 ____________________________________________________________ 
-OK, I've marked this task as not done yet: 
+And there it is—the backslide. This task is back:
   [T][ ] read book 
 ____________________________________________________________ 
 list                                        ← User Input
 ____________________________________________________________ 
-Here are the tasks in your list: 
+Behold your path to kungfu mastery:
 1.[T][ ] borrow book 
 2.[T][ ] read book 
 3.[D][ ] return book (by: Thursday) 
@@ -291,20 +293,20 @@ Here are the tasks in your list:
 ____________________________________________________________ 
 delete 3                                    ← User Input
 ____________________________________________________________ 
-Noted. I've removed this task:
+Ah, the ancient technique of giving up. Deleted:
   [D][ ] return book (by: Thursday)
-Now you have 3 tasks in the list.
+Your path still has 3 tasks. Try not to trip.
 ____________________________________________________________ 
 list                                        ← User Input
 ____________________________________________________________ 
-Here are the tasks in your list:
+Behold your path to kungfu mastery:
 1.[T][ ] borrow book
 2.[T][ ] read book
 3.[E][ ] meeting (from: Wednesday 12pm to: 2pm)
 ____________________________________________________________ 
 bye                                         ← User Input
 ____________________________________________________________ 
-Bye. Hope to see you again soon! 
+Running away already? Don't call me your master!
 ____________________________________________________________
 ```
 
