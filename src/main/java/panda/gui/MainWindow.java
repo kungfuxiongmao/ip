@@ -11,8 +11,10 @@ import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -44,6 +46,9 @@ public class MainWindow extends AnchorPane {
     @FXML
     private TextField userInput;
 
+    @FXML
+    private Button goButton;
+
     private PrintWriter pandaCommandWriter;
     private boolean isExitPending;
 
@@ -55,9 +60,13 @@ public class MainWindow extends AnchorPane {
         assert scrollPane != null : "FXML must inject scrollPane";
         assert dialogContainer != null : "FXML must inject dialogContainer";
         assert userInput != null : "FXML must inject userInput";
+        assert goButton != null : "FXML must inject goButton";
         dialogContainer.heightProperty().addListener((_, _, _) ->
                 Platform.runLater(() -> scrollPane.setVvalue(scrollPane.getVmax())));
         scrollPane.addEventFilter(ScrollEvent.SCROLL, this::scrollConversation);
+        goButton.disableProperty().bind(Bindings.createBooleanBinding(() ->
+                userInput.isDisabled() || userInput.getText().isBlank(),
+                userInput.disabledProperty(), userInput.textProperty()));
         selectRandomBackground();
     }
 
@@ -146,7 +155,7 @@ public class MainWindow extends AnchorPane {
      */
     @FXML
     private void sendUserCommand() {
-        if (isExitPending) {
+        if (isExitPending || userInput.getText().isBlank()) {
             return;
         }
 
