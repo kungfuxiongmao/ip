@@ -21,11 +21,11 @@ public class SaveCommand implements Command {
         try {
             TerminationManager.saveState(taskList);
             Ui.printExitConfirmation(
-                    "Your tasks were saved successfully. Confirm termination or go back.");
+                    "Miraculously, your training plan is safe.");
         } catch (TaskSavingException exception) {
             ExceptionHandler.handle(exception);
             Ui.printExitConfirmation(
-                    "Your tasks could not be saved. Confirm termination or go back.");
+                    "Your training plan refused to be saved. Even the file has standards. Quit anyway?");
         }
     }
 }

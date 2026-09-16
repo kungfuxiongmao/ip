@@ -29,8 +29,8 @@ public final class ExitConfirmationDialog extends Dialog<Boolean> {
     public ExitConfirmationDialog(Window owner, String message) {
         loadDialogPane();
         messageLabel.setText(Objects.requireNonNull(message));
-        setTitle("Terminate Panda");
-        setHeaderText("Are you sure you want to terminate Panda?");
+        setTitle("End Training");
+        setHeaderText("Getting out of here?");
         if (owner != null) {
             initOwner(owner);
         }
@@ -40,7 +40,7 @@ public final class ExitConfirmationDialog extends Dialog<Boolean> {
     /**
      * Shows the dialog and waits for the user to confirm or cancel termination.
      *
-     * @return Whether the user selected Confirm.
+     * @return Whether the user selected the exit option.
      */
     public boolean showAndWaitForConfirmation() {
         return showAndWait().orElse(false);
@@ -63,13 +63,13 @@ public final class ExitConfirmationDialog extends Dialog<Boolean> {
     }
 
     /**
-     * Adds Confirm and Go Back buttons and configures their keyboard behavior.
+     * Adds exit and cancel buttons and configures their keyboard behavior.
      */
     private void configureButtons() {
         ButtonType confirmButtonType = new ButtonType(
-                "Confirm", ButtonBar.ButtonData.OK_DONE);
+                "LET ME OUT!", ButtonBar.ButtonData.OK_DONE);
         ButtonType goBackButtonType = new ButtonType(
-                "Go Back", ButtonBar.ButtonData.CANCEL_CLOSE);
+                "Oops no", ButtonBar.ButtonData.CANCEL_CLOSE);
         getDialogPane().getButtonTypes().setAll(confirmButtonType, goBackButtonType);
 
         Button confirmButton = (Button) getDialogPane().lookupButton(confirmButtonType);

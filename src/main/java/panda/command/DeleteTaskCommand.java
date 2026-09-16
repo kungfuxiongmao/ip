@@ -31,9 +31,9 @@ public class DeleteTaskCommand implements Command {
         Task task = taskList.delete(taskNumber);
         int taskCount = taskList.getSize();
         String taskNoun = taskCount == 1 ? "task" : "tasks";
-        Ui.printMessage("Sometimes, young warrior, progress means letting go. This leaves your scroll:"
+        Ui.printMessage("Ah, the ancient technique of giving up. Deleted:"
                 + System.lineSeparator()
                 + "  " + task + System.lineSeparator()
-                + "You now carry " + taskCount + " " + taskNoun + " on your path.");
+                + "You still have " + taskCount + " " + taskNoun + " left to disappoint.");
     }
 }

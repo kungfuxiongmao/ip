@@ -29,7 +29,7 @@ public class UnmarkTaskCommand implements Command {
     @Override
     public void execute(TaskList taskList) throws ApplicationException {
         Task task = taskList.unmarkTask(taskNumber);
-        Ui.printMessage("Hmm. This lesson is not finished after all. It awaits you once more:"
+        Ui.printMessage("And there it is—the backslide. This task is back:"
                 + System.lineSeparator() + "  " + task);
     }
 }

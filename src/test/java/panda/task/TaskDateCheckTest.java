@@ -92,7 +92,7 @@ public class TaskDateCheckTest {
                 new Event("meeting",
                         LocalDateTime.of(2026, 10, 15, 14, 0),
                         LocalDateTime.of(2026, 10, 15, 14, 0)));
-        assertEquals("Time must move forward, young warrior. An event must end after it starts.",
+        assertEquals("Congratulations, you scheduled time backwards. The event must end after it starts.",
                 sameTimeException.getMessage());
 
         assertThrows(InvalidEventParametersException.class, () ->

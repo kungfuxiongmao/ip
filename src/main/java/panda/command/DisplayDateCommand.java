@@ -10,7 +10,7 @@ import panda.ui.Ui;
  */
 public class DisplayDateCommand implements Command {
     private static final String MESSAGE_NO_MATCHING_TASKS =
-            "The scroll is empty for the day, young warrior.";
+            "Nothing scheduled that day. Your calendar is carrying you.";
 
     private final Temporal date;
 

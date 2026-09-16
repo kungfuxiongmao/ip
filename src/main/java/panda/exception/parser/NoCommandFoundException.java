@@ -12,7 +12,7 @@ public class NoCommandFoundException extends ParseException {
      */
     public NoCommandFoundException(String input) {
         super(input.isEmpty()
-                ? "Even I cannot guide silence. Tell me what must be done."
-                : "Hmm. \"" + input + "\" is a move I have not taught you. Try one you know.");
+                ? "Amazing. You managed to submit absolutely nothing."
+                : "\"" + input + "\" isn't a command. Confidence: 10/10. Accuracy: 0/10.");
     }
 }

@@ -43,9 +43,9 @@ public abstract class AddTaskCommand implements Command {
 
         int taskCount = taskList.getSize();
         String taskNoun = taskCount == 1 ? "task" : "tasks";
-        Ui.printMessage("Good. Every journey moves one step at a time. This belongs on your scroll:"
+        Ui.printMessage("A task? Groundbreaking. I've added it to your training plan:"
                 + System.lineSeparator()
                 + "  " + task + System.lineSeparator()
-                + "You now carry " + taskCount + " " + taskNoun + " on your path.");
+                + "That's " + taskCount + " " + taskNoun + " standing between you and basic competence.");
     }
 }

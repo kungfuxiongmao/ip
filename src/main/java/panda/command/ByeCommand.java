@@ -16,7 +16,7 @@ public class ByeCommand implements Command {
      */
     @Override
     public void execute(TaskList taskList) {
-        Ui.printMessage("Bye. Hope to see you again soon!");
+        Ui.printMessage("Running away already? Fine. Try not to lose your white belt.");
         TerminationManager.terminate();
     }
 }

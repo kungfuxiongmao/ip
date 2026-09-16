@@ -26,13 +26,13 @@ public class TaskListEventClashTest {
         EventClashException exception = assertThrows(EventClashException.class, () ->
                 taskList.addEvent("workshop", dateTimeAt(9, 30), dateTimeAt(11, 30)));
 
-        assertEquals("Two paths cannot occupy the same moment, young warrior. This event clashes with:"
+        assertEquals("Unless your kungfu includes cloning, this event clashes with:"
                 + System.lineSeparator()
                 + "4.[E][ ] lecture (from: 10 Sep 2026 9:00 to: 10 Sep 2026 10:00)"
                 + System.lineSeparator()
                 + "1.[E][X] laboratory (from: 10 Sep 2026 11:00 to: 10 Sep 2026 12:00)"
                 + System.lineSeparator()
-                + "Choose another time for this event.", exception.getMessage());
+                + "Pick another time. Yes, schedules have rules too.", exception.getMessage());
         assertEquals(4, taskList.getSize());
 
         taskList.delete(4);
