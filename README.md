@@ -1,324 +1,106 @@
 # Panda Assistant
 
-Panda is a sarcastic kungfu master who guides a panda trainee. The trainee uses the task list as a path toward kungfu
-mastery, following Panda's questionable but effective advice along the way.
+Panda is a desktop task manager with the personality of a sarcastic kungfu master. It guides a panda trainee through
+their tasks as a path toward kungfu mastery, offering questionable but effective advice along the way.
 
-                                                            _______               
-                _________   _...._                  _..._   \  ___ `'.            
-                \        |.'      '-.             .'     '.  ' |--.\  \           
-                 \        .'```'.    '.          .   .-.   . | |    \  '          
-                  \      |       \     \   __    |  '   '  | | |     |  '    __   
-                   |     |        |    |.:--.'.  |  |   |  | | |     |  | .:--.'. 
-                   |      \      /    ./ |   \ | |  |   |  | | |     ' .'/ |   \ |
-                   |     |\`'-.-'   .' `" __ | | |  |   |  | | |___.' /' `" __ | |
-                   |     | '-....-'`    .'.''| | |  |   |  |/_______.'/   .'.''| |
-                  .'     '.            / /   | |_|  |   |  |\_______|/   / /   | |_
-                '-----------'          \ \._,\ '/|  |   |  |             \ \._,\ '/
-                                        `--'  `" '--'   '--'              `--'  `"
-## Setting up of Panda
-
-### Prerequisites
+## Prerequisites
 
 - JDK 25
 - IntelliJ IDEA (optional)
 
-1. Clone the repository: `git clone https://github.com/kungfuxiongmao/ip.git`
-2. Run the program
+## Running Panda
 
-Run Panda's graphical interface from the project root:
+Clone the repository:
+
+```sh
+git clone https://github.com/kungfuxiongmao/ip.git
+cd ip
+```
+
+Start the JavaFX graphical interface from the project root:
 
 ```sh
 ./gradlew run
 ```
 
+On Windows, use `gradlew.bat run` instead.
 
-## Current Features
+## Features
 
-Panda can help the trainee:
+Panda can:
 
-- Start each training session with a greeting
-- Add tasks to a list (**Todo**, **Deadline**, and **Event**)
-- Display the task list
-- Mark and unmark a task
-- Delete a task
-- Find tasks whose descriptions contain a keyword
-- Reject events that clash with existing events
-- Save task list and read task list from saves
-- Terminate the program on command
+- Add to-dos, deadlines, and events.
+- Display all tasks while preserving their task numbers.
+- Mark, unmark, and delete tasks.
+- Find tasks by a case-insensitive whole word or phrase in their descriptions.
+- Display deadlines and events that occur on a specified date or on the current date.
+- Reject events that overlap existing events, including events marked as done.
+- Load tasks when the application starts and save them when the user requests to exit.
+- Validate commands and display errors without ending the session.
 
-### Display the task list
-Enter `list` to display the task list. Leading and trailing whitespace in a command is ignored.
+## Command Reference
 
+Leading and trailing whitespace around a command is ignored. `TASK_NUMBER` is the one-based number shown by `list`.
 
-### Add tasks to the task list
-#### Support for multiple types of tasks
+| Command | Purpose                                                                                        |
+| --- |------------------------------------------------------------------------------------------------|
+| `todo DESCRIPTION` | Adds a task without a date or time.                                                            |
+| `deadline DESCRIPTION /by DATE` | Adds a task due on the given date or date-time.                                                |
+| `event DESCRIPTION /from START /to END` | Adds an event with a start and end.<br/> New time period should not clash with stored events.  |
+| `list` | Displays every task.                                                                           |
+| `mark TASK_NUMBER` | Marks a task as done.                                                                          |
+| `unmark TASK_NUMBER` | Marks a task as not done.                                                                      |
+| `delete TASK_NUMBER` | Deletes a task and renumbers the remaining tasks.                                              |
+| `find KEYWORD` | Displays tasks whose descriptions contain the whole keyword or phrase.                         |
+| `today` | Displays deadlines and events that occur today.                                                |
+| `display /date DATE` | Displays deadlines and events that occur on the specified date.                                |
+| `bye` | Saves the task list and opens the exit-confirmation dialog.                                    |
 
-The app supports three types of tasks: Todo, Deadline, and Event.
+Dates use `d/M/yyyy`, and date-times use `d/M/yyyy H:mm`. Panda displays them as `d MMM yyyy` and
+`d MMM yyyy H:mm`, respectively.
 
-- **Todo**: A task without a specific deadline or time period; it can be used as a gentle reminder.
+## Event Scheduling
 
+An event's duration must not clash with the duration of any stored event. Its start is inclusive and its end is
+exclusive, so adjacent events do not clash.
 
-```
-    todo <description>
-```
+When a date is entered without a time, Panda treats a `/from` date as starting at `00:00` and a `/to` date as covering
+through `23:59`. Internally, the `/to` boundary is `00:00` on the following day so that it remains exclusive while
+still reserving the whole date. This is a conservative blocking policy: when the exact times are unknown, Panda blocks
+the complete date to prevent another event from being scheduled in a period that may already be occupied.
 
+Panda rejects an event that overlaps any existing event. Its response identifies all conflicting events in
+chronological order using the task numbers from the full list. Deleting an event frees its scheduled time. An event is
+also rejected if its end is not after its start.
 
+## Storage and Exit Behavior
 
-- **Deadline**: A task with a specific deadline. Use `/by` to specify the deadline.
+Panda stores tasks in `data/tasks.txt`, relative to the directory from which the application is run. It loads that file
+automatically at startup; if the file does not exist, Panda starts with an empty task list.
 
-```
-    deadline task-description /by task-deadline
-```
-- **Event**: A task with a specific start and end time. Use `/from` and `/to` to specify the time period.
+Entering `bye` or closing the window causes Panda to save the current task list before displaying an exit-confirmation
+dialog. Cancelling the dialog returns to the application. If saving fails, Panda reports the error and still lets the
+user choose whether to exit.
 
-```
-    event task-description /from start-datetime /to end-datetime
-```
+If the save file contains a malformed task, an invalid event range, or overlapping events, Panda reports the problem
+and starts with an empty task list.
 
-Dates use `d/M/yyyy`, and date-times use `d/M/yyyy HH:mm`. An event's start is inclusive and its end is exclusive,
-so an event ending at `11:00` does not clash with one starting at `11:00`. A date-only event covers whole days,
-including the date supplied after `/to`.
+## Input Validation and Error Handling
 
-Panda rejects an event that overlaps any existing event, including an event marked as done. The response lists every
-conflicting event in chronological order with its task number and timings. Delete an event to free its scheduled time.
-
-For example, after adding an event from `10:00` to `11:00`, this adjacent event is accepted:
-
-```text
-event lunch /from 10/9/2026 11:00 /to 10/9/2026 12:00
-```
-
-This event is rejected because it overlaps the existing event:
-
-```text
-event consultation /from 10/9/2026 10:30 /to 10/9/2026 11:30
-```
-
-An event whose end is not after its start is rejected with an invalid-range error.
-
-
-### Mark tasks as done
-
-Tasks are added to the task list as undone. Upon completion, mark a task as completed with `mark TASK_NUMBER`, 
-where `TASK_NUMBER` is the one-based number displayed by `list`.
-
-If the task number is missing, not an integer, or followed by extra values, Panda displays the expected command
-format.
-
-### Unmark tasks
-If a task was marked accidentally, unmark it with `unmark TASK_NUMBER`, 
-where `TASK_NUMBER` is the one-based number displayed by `list`.
-
-If the task number is missing, not an integer, or followed by extra values, Panda displays the expected command
-format.
-
-### Delete tasks
-
-Remove a task with `delete TASK_NUMBER`, where `TASK_NUMBER` is the one-based number displayed by `list`. 
-Panda confirms the task that was removed, reports the new task count, and renumbers the remaining tasks.
-Panda rejects missing, non-numeric, or out-of-range task numbers.
-
-### Find tasks
-
-Enter `find KEYWORD` to display tasks whose descriptions contain `KEYWORD` as a whole word or phrase. Matching is
-case-insensitive, and results retain the task numbers shown by `list`.
-
-### Save System
-Tasks are saved in `/data/tasks.txt`. 
-A saved file is automatically read and loaded into the task list on start up. 
-On termination, the state of the task list is also overwritten into the save file.
-If the file is corrupted, Panda informs the trainee and continues with
-an empty task list.
-
-The save-file format is unchanged by schedule-clash detection. If stored events overlap or contain an invalid range,
-The app treats the file as corrupted and starts with an empty task list.
-
-
-### Input Validation with the Parser
-
-The app first identifies the command keyword, then sends the remaining text to that command's parser. The command parser
-checks that the arguments follow the required format before creating a command. 
-Unknown commands and malformed arguments cause an exception to be thrown.
-
-### Exception Handling
-
-The app checks command input before executing it, and Panda responds when it cannot continue with a command.
-
-#### Customised Exceptions
-Exceptions thrown by the application are instances of ApplicationException. Each exception stores a user-facing 
-error message that describes the error based on the application's current state. This provides a consistent mechanism 
-for handling exceptions and standardises the presentation of error messages throughout the application.
-
-#### Handling ApplicationException
-
-After valid input creates a command, application logic can still reject it. For example, `TaskList` checks whether a task
-number exists and whether a task can be marked, unmarked, or deleted. 
-These errors are thrown as application exceptions and passed to the global `ExceptionHandler`, 
-which displays Panda's response and keeps the app running.
-
-For example:
-
-```text
-unknown command                           ← User Input
-____________________________________________________________
-"unknown command" isn't a command. Confidence: 10/10. Accuracy: 0/10.
-____________________________________________________________
-todo read book                            ← User Input
-____________________________________________________________
-A task? Groundbreaking. I've added it to your path to kungfu mastery:
-  [T][ ] read book
-That's 1 task between you and kungfu mastery.
-____________________________________________________________
-mark                                     ← User Input
-____________________________________________________________
-That command was almost impressive. Almost. Use mark like this: "mark TASK_NUMBER"
-____________________________________________________________
-mark 0                                   ← User Input
-____________________________________________________________
-Task 0? Bold. Counting starts at 1 where the rest of us live.
-____________________________________________________________
-mark 1                                   ← User Input
-____________________________________________________________
-You actually finished something? Screenshot this historic moment:
-  [T][X] read book
-____________________________________________________________
-mark 1                                   ← User Input
-____________________________________________________________
-You already finished this. Is memory training next?
-  [T][X] read book
-One victory lap was plenty.
-____________________________________________________________
-unmark 1                                 ← User Input
-____________________________________________________________
-And there it is—the backslide. This task is back:
-  [T][ ] read book
-____________________________________________________________
-unmark 1                                 ← User Input
-____________________________________________________________
-You can't undo what you never did. This task is still waiting:
-  [T][ ] read book
-Creative escape attempt, though.
-____________________________________________________________
-```
-
-### Terminate Program on Command
-To terminate the program, enter `bye`. The master responds before showing the exit confirmation:
-
-```
-____________________________________________________________
-Running away already? Don't call me your master!
-____________________________________________________________
-```
-
-### Example Run
-
-```text
-____________________________________________________________ 
-                                            _______                 
-_________   _...._                  _..._   \  ___ `'.              
-\        |.'      '-.             .'     '.  ' |--.\  \             
- \        .'```'.    '.          .   .-.   . | |    \  '            
-  \      |       \     \   __    |  '   '  | | |     |  '    __     
-   |     |        |    |.:--.'.  |  |   |  | | |     |  | .:--.'.   
-   |      \      /    ./ |   \ | |  |   |  | | |     ' .'/ |   \ |  
-   |     |\`'-.-'   .' `" __ | | |  |   |  | | |___.' /' `" __ | |  
-   |     | '-....-'`    .'.''| | |  |   |  |/_______.'/   .'.''| |  
-  .'     '.            / /   | |_|  |   |  |\_______|/   / /   | |_ 
-'-----------'          \ \._,\ '/|  |   |  |             \ \._,\ '/ 
-                        `--'  `" '--'   '--'              `--'  `"  
-
-Oh, you're back, trainee. I was just enjoying the peace. What's the issue today?
-____________________________________________________________ 
-list                                        ← User Input
-____________________________________________________________ 
-No tasks. Productivity remains undefeated.
-____________________________________________________________ 
-todo borrow book                            ← User Input
-____________________________________________________________ 
-A task? Groundbreaking. I've added it to your path to kungfu mastery:
-  [T][ ] borrow book 
-That's 1 task between you and kungfu mastery.
-____________________________________________________________ 
-todo read book                              ← User Input
-____________________________________________________________ 
-A task? Groundbreaking. I've added it to your path to kungfu mastery:
-  [T][ ] read book 
-That's 2 tasks between you and kungfu mastery.
-____________________________________________________________ 
-deadline return book /by Thursday           ← User Input
-____________________________________________________________ 
-A task? Groundbreaking. I've added it to your path to kungfu mastery:
-  [D][ ] return book (by: Thursday) 
-That's 3 tasks between you and kungfu mastery.
-____________________________________________________________ 
-event meeting /from Wednesday 12pm /to 2pm  ← User Input
-____________________________________________________________ 
-A task? Groundbreaking. I've added it to your path to kungfu mastery:
-  [E][ ] meeting (from: Wednesday 12pm to: 2pm) 
-That's 4 tasks between you and kungfu mastery.
-____________________________________________________________ 
-list                                        ← User Input
-____________________________________________________________ 
-Behold your path to kungfu mastery:
-1.[T][ ] borrow book 
-2.[T][ ] read book 
-3.[D][ ] return book (by: Thursday) 
-4.[E][ ] meeting (from: Wednesday 12pm to: 2pm) 
-____________________________________________________________ 
-mark 2                                      ← User Input
-____________________________________________________________ 
-You actually finished something? Screenshot this historic moment:
-  [T][X] read book 
-____________________________________________________________ 
-list                                        ← User Input
-____________________________________________________________ 
-Behold your path to kungfu mastery:
-1.[T][ ] borrow book 
-2.[T][X] read book 
-3.[D][ ] return book (by: Thursday) 
-4.[E][ ] meeting (from: Wednesday 12pm to: 2pm) 
-____________________________________________________________ 
-unmark 2                                    ← User Input
-____________________________________________________________ 
-And there it is—the backslide. This task is back:
-  [T][ ] read book 
-____________________________________________________________ 
-list                                        ← User Input
-____________________________________________________________ 
-Behold your path to kungfu mastery:
-1.[T][ ] borrow book 
-2.[T][ ] read book 
-3.[D][ ] return book (by: Thursday) 
-4.[E][ ] meeting (from: Wednesday 12pm to: 2pm) 
-____________________________________________________________ 
-delete 3                                    ← User Input
-____________________________________________________________ 
-Ah, the ancient technique of giving up. Deleted:
-  [D][ ] return book (by: Thursday)
-Your path still has 3 tasks. Try not to trip.
-____________________________________________________________ 
-list                                        ← User Input
-____________________________________________________________ 
-Behold your path to kungfu mastery:
-1.[T][ ] borrow book
-2.[T][ ] read book
-3.[E][ ] meeting (from: Wednesday 12pm to: 2pm)
-____________________________________________________________ 
-bye                                         ← User Input
-____________________________________________________________ 
-Running away already? Don't call me your master!
-____________________________________________________________
-```
-
+Panda validates the command keyword and its arguments before executing the command. It reports unknown commands,
+malformed arguments, invalid task numbers, repeated mark or unmark operations, invalid dates, event clashes, and
+storage failures in the graphical interface while keeping the application running whenever recovery is possible.
 
 ## AI Declaration
-- AI (Codex) have been used in the development of this project up to level AI-4:
-  - 'Think' and compare: 
-  Think of how you would do the task manually. Get AI to do it. 
-  Compare the solution you 'imagined' with the one AI produced.
-  - Definitely, after AI has completed the tasks, I will modify the code (if necessary) to how I envision it to be.
-- Some portions of the code only use level AI-3:
-  - Hand-code to start, get AI to finish: You hand-code a minimal version, just a proof-of-concept. 
-  Get AI to strengthen it to a full-fledged version e.g., handle edge cases, add tests.
-  - This is generally so when developing new structure to the repository.
-  - This is to ensure that I retain control over the core components to build structure for AI to expand on.
+
+AI (Codex) has been used in the development of this project up to level AI-4:
+
+- **Think and compare:** First consider how to complete a task manually, ask AI to complete it, and compare the two
+  approaches. AI-generated code is reviewed and modified when necessary to match the intended design.
+- Some portions of the code use level AI-3 (**hand-code to start, get AI to finish**): begin with a minimal
+  proof-of-concept, then use AI to strengthen it into a fuller implementation, including edge-case handling and tests.
+  This approach is generally used when introducing new repository structure so that the developer retains control of
+  the core design before AI expands it.
+
+Additionally, AI has been used to generate content, such as the avatars, background pictures, and assist in refining 
+documentation.
