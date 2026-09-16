@@ -12,20 +12,21 @@ import panda.ui.Ui;
 public class SaveCommand implements Command {
 
     /**
-     * Saves the current task list and sends an exit-confirmation response.
+     * Taunts the user, saves the current task list, and sends an exit-confirmation response.
      *
      * @param taskList Active task list.
      */
     @Override
     public void execute(TaskList taskList) {
+        Ui.printMessage("Running away already? Don't call me your master!");
         try {
             TerminationManager.saveState(taskList);
             Ui.printExitConfirmation(
-                    "Your tasks were saved successfully. Confirm termination or go back.");
+                    "Miraculously, your training plan is safe.");
         } catch (TaskSavingException exception) {
             ExceptionHandler.handle(exception);
             Ui.printExitConfirmation(
-                    "Your tasks could not be saved. Confirm termination or go back.");
+                    "Your training plan refused to be saved. Even the file has standards. Quit anyway?");
         }
     }
 }

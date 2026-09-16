@@ -33,7 +33,7 @@ public final class TerminationManager {
             Storage.saveTasks(taskList.getTasks());
         } catch (IOException exception) {
             throw new TaskSavingException(
-                    "The ink has failed us. Your tasks could not be saved: "
+                    "Even my legendary technique couldn't save this mess: "
                             + exception.getMessage(),
                     exception);
         }

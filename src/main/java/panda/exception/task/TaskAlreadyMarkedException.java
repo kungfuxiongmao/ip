@@ -14,8 +14,8 @@ public class TaskAlreadyMarkedException extends ApplicationException {
      * @param task Marked task the user tried to mark again.
      */
     public TaskAlreadyMarkedException(Task task) {
-        super("Do not strike the same gong twice. This task is already complete:"
+        super("You already finished this. Is memory training next?"
                 + System.lineSeparator() + "  " + task + System.lineSeparator()
-                + "One mark is enough.");
+                + "One victory lap was plenty.");
     }
 }

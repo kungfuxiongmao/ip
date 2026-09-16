@@ -26,7 +26,7 @@ public class IllegalDateTimeException extends InvalidArgumentException {
 
     private static String createMessage(String illegalDateTime) {
         return String.format(
-                "Even time requires discipline. \"%s\" is not a valid date or time. Use \"d/M/yyyy\" "
+                "Time itself rejected \"%s\". Use \"d/M/yyyy\" "
                         + "(e.g. 2/12/2019) or \"d/M/yyyy HH:mm\" (e.g. 2/12/2019 18:00).",
                 illegalDateTime);
     }

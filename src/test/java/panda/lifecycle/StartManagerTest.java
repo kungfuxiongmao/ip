@@ -40,7 +40,7 @@ public class StartManagerTest {
         TaskLoadingException exception = assertThrows(TaskLoadingException.class, () ->
                 StartManager.createTaskList(tasks));
 
-        assertEquals("This scroll is damaged, young warrior. We must begin with an empty one."
+        assertEquals("Your old training plan is a mess. Honestly, this tracks. We're starting fresh."
                 + System.lineSeparator()
                 + "Stored events overlap.", exception.getMessage());
         assertInstanceOf(FileCorruptedException.class, exception.getCause());

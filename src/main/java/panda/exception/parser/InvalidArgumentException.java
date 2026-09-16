@@ -31,7 +31,7 @@ public class InvalidArgumentException extends ParseException {
      * @param usage Expected command format.
      */
     public InvalidArgumentException(String command, String usage) {
-        super(String.format("Patience, young warrior. To use %s, follow this form: \"%s\"",
+        super(String.format("That command was almost impressive. Almost. Use %s like this: \"%s\"",
                 command, usage));
     }
 }

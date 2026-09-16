@@ -29,7 +29,7 @@ public class MarkTaskCommand implements Command {
     @Override
     public void execute(TaskList taskList) throws ApplicationException {
         Task task = taskList.markTask(taskNumber);
-        Ui.printMessage("Well done. Discipline bears fruit. You have completed this:"
+        Ui.printMessage("You actually finished something? Screenshot this historic moment:"
                 + System.lineSeparator() + "  " + task);
     }
 }

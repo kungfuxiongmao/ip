@@ -2,7 +2,6 @@ package panda.command;
 
 import panda.lifecycle.TerminationManager;
 import panda.task.TaskList;
-import panda.ui.Ui;
 
 /**
  * Terminates Panda after confirmation from the graphical interface.
@@ -10,13 +9,12 @@ import panda.ui.Ui;
 public class ByeCommand implements Command {
 
     /**
-     * Displays Panda's farewell and terminates the program.
+     * Terminates the program after the graphical interface confirms the exit.
      *
      * @param taskList Active task list.
      */
     @Override
     public void execute(TaskList taskList) {
-        Ui.printMessage("Bye. Hope to see you again soon!");
         TerminationManager.terminate();
     }
 }

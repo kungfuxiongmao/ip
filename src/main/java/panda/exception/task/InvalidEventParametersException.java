@@ -7,7 +7,7 @@ import panda.exception.ApplicationException;
  */
 public class InvalidEventParametersException extends ApplicationException {
     private static final String MESSAGE_INVALID_RANGE =
-            "Time must move forward, young warrior. An event must end after it starts.";
+            "Congratulations, you scheduled time backwards. The event must end after it starts.";
 
     /**
      * Creates an exception explaining that an event must end after it starts.

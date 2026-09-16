@@ -14,7 +14,8 @@ public class TaskAlreadyUnmarkedException extends ApplicationException {
      * @param task Unmarked task the user tried to unmark again.
      */
     public TaskAlreadyUnmarkedException(Task task) {
-        super("Patience, young warrior. This task still awaits you:" + System.lineSeparator()
-                + "  " + task + System.lineSeparator() + "There is no mark to remove.");
+        super("You can't undo what you never did. This task is still waiting:"
+                + System.lineSeparator() + "  " + task + System.lineSeparator()
+                + "Creative escape attempt, though.");
     }
 }

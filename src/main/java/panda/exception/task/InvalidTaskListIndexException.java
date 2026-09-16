@@ -15,9 +15,9 @@ public class InvalidTaskListIndexException extends ApplicationException {
      */
     public InvalidTaskListIndexException(int taskNumber, int taskCount) {
         super(taskNumber == 0
-                ? String.format("A task number begins at 1, young warrior; %d cannot guide us.",
+                ? String.format("Task %d? Bold. Counting starts at 1 where the rest of us live.",
                         taskNumber)
-                : String.format("You seek task %d, but only %d %s on the scroll.",
-                        taskNumber, taskCount, taskCount == 1 ? "task rests" : "tasks rest"));
+                : String.format("Task %d exists only in your imagination. You have %d %s.",
+                        taskNumber, taskCount, taskCount == 1 ? "task" : "tasks"));
     }
 }

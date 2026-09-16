@@ -24,8 +24,8 @@ public final class TaskList {
      * Creates an empty task list.
      */
     public TaskList() {
-        this.eventScheduleIndex = new EventScheduleIndex();
         this.tasks = new ArrayList<>();
+        this.eventScheduleIndex = new EventScheduleIndex(tasks);
     }
 
     /**
@@ -93,11 +93,7 @@ public final class TaskList {
         assert task != null : "Task added to TaskList must not be null";
 
         if (task instanceof Event event) {
-            try {
-                eventScheduleIndex.add(event);
-            } catch (EventClashException exception) {
-                throw new EventClashException(tasks, exception.getConflictingEvents());
-            }
+            eventScheduleIndex.add(event);
         }
         return appendToList(task);
     }
@@ -187,7 +183,8 @@ public final class TaskList {
         if (date == null) {
             return "";
         }
-        String heading = "On " + DateTimeHelper.formatForDisplay(date) + ", these tasks await you:";
+        String heading = "Today's attempt at productivity for "
+                + DateTimeHelper.formatForDisplay(date) + ":";
         return formatMatchingTasks(task -> task.occursOn(date), heading, "");
     }
 
@@ -200,8 +197,8 @@ public final class TaskList {
      */
     public String getTasksWithKeyword(String keyword) {
         return formatMatchingTasks(task -> task.hasKeyword(keyword),
-                "Look again. These are the tasks you seek:",
-                "The scroll is empty, young warrior. Every journey begins with a single step.");
+                "I found them. You're welcome; that was apparently too hard:",
+                "No matches. Even the task is avoiding you.");
     }
 
     /**
@@ -212,8 +209,8 @@ public final class TaskList {
     @Override
     public String toString() {
         return formatMatchingTasks(task -> true,
-                "Look closely, young warrior. These tasks await you:",
-                "The scroll is empty, young warrior. Every journey begins with a single step.");
+                "Behold your path to kungfu mastery:",
+                "Your path is empty. Kungfu mastery remains safely out of reach.");
     }
 
     /**

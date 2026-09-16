@@ -135,7 +135,7 @@ public class MainWindow extends AnchorPane {
             } catch (IOException exception) {
                 Ui.UiMessage errorMessage = new Ui.UiMessage(
                         Ui.MessageType.APPLICATION_ERROR,
-                        "Master Shifu is offline: " + exception.getMessage());
+                        "Your master has left the chat. Probably your fault: " + exception.getMessage());
                 Platform.runLater(() -> displayPandaMessage(errorMessage));
             }
         });

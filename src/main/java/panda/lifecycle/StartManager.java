@@ -76,7 +76,7 @@ public final class StartManager {
             throw createTaskLoadingException(exception);
         } catch (IOException exception) {
             throw new TaskLoadingException(
-                    "Hmm. The scroll will not open. We must begin with an empty one: "
+                    "Your old training plan gave up before you did. We're starting fresh: "
                             + exception.getMessage(),
                     exception);
         }
@@ -84,7 +84,7 @@ public final class StartManager {
 
     private static TaskLoadingException createTaskLoadingException(FileCorruptedException exception) {
         return new TaskLoadingException(
-                "This scroll is damaged, young warrior. We must begin with an empty one."
+                "Your old training plan is a mess. Honestly, this tracks. We're starting fresh."
                         + System.lineSeparator()
                         + exception.getMessage(),
                 exception);
@@ -94,6 +94,6 @@ public final class StartManager {
      * Prints Panda's initial graphical-interface greeting.
      */
     private static void greet() {
-        Ui.printMessage("Ah, you are here. Breathe, young warrior.\nWhat shall we face today?");
+        Ui.printMessage("Oh, you're back, trainee. I was just enjoying the peace. What's the issue today?");
     }
 }
