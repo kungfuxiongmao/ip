@@ -1,6 +1,7 @@
 package panda.command;
 
 import panda.exception.ApplicationException;
+import panda.storage.Storage;
 import panda.task.Task;
 import panda.task.TaskList;
 import panda.ui.Ui;
@@ -29,6 +30,7 @@ public class UnmarkTaskCommand implements Command {
     @Override
     public void execute(TaskList taskList) throws ApplicationException {
         Task task = taskList.unmarkTask(taskNumber);
+        Storage.saveState(taskList);
         Ui.printMessage("And there it is—the backslide. This task is back:"
                 + System.lineSeparator() + "  " + task);
     }

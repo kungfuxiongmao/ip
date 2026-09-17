@@ -1,6 +1,7 @@
 package panda.command;
 
 import panda.exception.ApplicationException;
+import panda.storage.Storage;
 import panda.task.Task;
 import panda.task.TaskList;
 import panda.ui.Ui;
@@ -29,6 +30,7 @@ public class DeleteTaskCommand implements Command {
     @Override
     public void execute(TaskList taskList) throws ApplicationException {
         Task task = taskList.delete(taskNumber);
+        Storage.saveState(taskList);
         int taskCount = taskList.getSize();
         String taskNoun = taskCount == 1 ? "task" : "tasks";
         Ui.printMessage("Ah, the ancient technique of giving up. Deleted:"

@@ -1,6 +1,7 @@
 package panda.command;
 
 import panda.exception.ApplicationException;
+import panda.storage.Storage;
 import panda.task.Task;
 import panda.task.TaskList;
 import panda.ui.Ui;
@@ -29,6 +30,7 @@ public class MarkTaskCommand implements Command {
     @Override
     public void execute(TaskList taskList) throws ApplicationException {
         Task task = taskList.markTask(taskNumber);
+        Storage.saveState(taskList);
         Ui.printMessage("You actually finished something? Screenshot this historic moment:"
                 + System.lineSeparator() + "  " + task);
     }

@@ -1,7 +1,7 @@
 package panda.parser.commandparser;
 
 import panda.command.Command;
-import panda.command.SaveCommand;
+import panda.command.SaveBeforeExitCommand;
 import panda.exception.parser.InvalidArgumentException;
 
 /**
@@ -13,7 +13,7 @@ public class SaveCommandParser implements CommandParser {
      * Validates that the save command has no arguments.
      *
      * @param arguments Text following the save command.
-     * @return A {@link SaveCommand} instance.
+     * @return A {@link SaveBeforeExitCommand} instance.
      * @throws InvalidArgumentException If extraneous arguments are supplied.
      */
     @Override
@@ -21,6 +21,6 @@ public class SaveCommandParser implements CommandParser {
         if (!arguments.isEmpty()) {
             throw new InvalidArgumentException("save", "save");
         }
-        return new SaveCommand();
+        return new SaveBeforeExitCommand();
     }
 }

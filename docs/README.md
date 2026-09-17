@@ -89,7 +89,7 @@ Dates must use `d/M/yyyy`. To include a time, use `d/M/yyyy H:mm` with a 24-hour
 - [Check another date](#checking-another-date) for deadlines and events.
 - [Resolve event clashes](#handling-schedule-clashes) while allowing back-to-back events.
 - [Keep original task numbers](#searching-task-descriptions) in search results and dated task views.
-- [Save and exit](#saving-and-exiting), restore tasks at startup, and confirm before closing.
+- [Save changes automatically](#saving-and-exiting), restore tasks at startup, and confirm before closing.
 - Explain invalid commands and recoverable errors without closing the application.
 
 ## Command Summary
@@ -293,7 +293,8 @@ schedule.
 
 ## Saving and Exiting
 
-Panda saves the current task list before asking you to confirm that you want to exit.
+Panda saves the task list automatically after you add, mark, unmark, or delete a task. It also performs a final save
+before asking you to confirm that you want to exit.
 
 1. Enter the exit command, or use the window's close button:
 
@@ -301,7 +302,7 @@ Panda saves the current task list before asking you to confirm that you want to 
    bye
    ```
 
-2. Wait for Panda to save the task list and open the confirmation dialog.
+2. Wait for Panda to perform the final save and open the confirmation dialog.
 3. Choose **LET ME OUT!** to exit, or choose **Oops no** to return to Panda.
 4. When Panda is opened again, the saved tasks will be restored. 
 

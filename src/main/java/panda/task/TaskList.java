@@ -14,7 +14,6 @@ import panda.util.datetime.DateTimeHelper;
 
 /**
  * Stores tasks loaded for the current Panda session and provides operations for managing them.
- * Tasks are saved when Panda terminates normally.
  */
 public final class TaskList {
     private final EventScheduleIndex eventScheduleIndex;

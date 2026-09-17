@@ -1,7 +1,7 @@
 package panda.command;
 
 import panda.exception.storage.TaskSavingException;
-import panda.lifecycle.TerminationManager;
+import panda.storage.Storage;
 import panda.task.TaskList;
 import panda.ui.ExceptionHandler;
 import panda.ui.Ui;
@@ -9,7 +9,7 @@ import panda.ui.Ui;
 /**
  * Saves Panda's data and requests exit confirmation from the frontend.
  */
-public class SaveCommand implements Command {
+public class SaveBeforeExitCommand implements Command {
 
     /**
      * Taunts the user, saves the current task list, and sends an exit-confirmation response.
@@ -20,7 +20,7 @@ public class SaveCommand implements Command {
     public void execute(TaskList taskList) {
         Ui.printMessage("Running away already? Don't call me your master!");
         try {
-            TerminationManager.saveState(taskList);
+            Storage.saveState(taskList);
             Ui.printExitConfirmation(
                     "Miraculously, your training plan is safe.");
         } catch (TaskSavingException exception) {

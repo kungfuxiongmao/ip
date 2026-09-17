@@ -35,7 +35,7 @@ Panda can:
 - Find tasks by a case-insensitive whole word or phrase in their descriptions.
 - Display deadlines and events that occur on a specified date or on the current date.
 - Reject events that overlap existing events, including events marked as done.
-- Load tasks when the application starts and save them when the user requests to exit.
+- Load tasks when the application starts and save them whenever the task list changes.
 - Validate commands and display errors without ending the session.
 
 ## Command Reference
@@ -78,9 +78,9 @@ also rejected if its end is not after its start.
 Panda stores tasks in `data/tasks.txt`, relative to the directory from which the application is run. It loads that file
 automatically at startup; if the file does not exist, Panda starts with an empty task list.
 
-Entering `bye` or closing the window causes Panda to save the current task list before displaying an exit-confirmation
-dialog. Cancelling the dialog returns to the application. If saving fails, Panda reports the error and still lets the
-user choose whether to exit.
+Panda saves the task list immediately after a task is added, marked, unmarked, or deleted. Entering `bye` or closing
+the window performs a final save before displaying an exit-confirmation dialog. Cancelling the dialog returns to the
+application. If the final save fails, Panda reports the error and still lets the user choose whether to exit.
 
 If the save file contains a malformed task, an invalid event range, or overlapping events, Panda reports the problem
 and starts with an empty task list.

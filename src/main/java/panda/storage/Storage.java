@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import panda.exception.storage.FileCorruptedException;
+import panda.exception.storage.TaskSavingException;
 import panda.task.Task;
+import panda.task.TaskList;
 
 /**
  * Reads and writes Panda's task save file.
@@ -49,6 +51,23 @@ public final class Storage {
             tasks.add(TaskCodec.decode(line));
         }
         return tasks;
+    }
+
+    /**
+     * Saves the current task list.
+     *
+     * @param taskList Active task list to save.
+     * @throws TaskSavingException If the task list cannot be saved.
+     */
+    public static void saveState(TaskList taskList) throws TaskSavingException {
+        try {
+            saveTasks(taskList.getTasks());
+        } catch (IOException exception) {
+            throw new TaskSavingException(
+                    "Even my legendary technique couldn't save this mess: "
+                            + exception.getMessage(),
+                    exception);
+        }
     }
 
     /**

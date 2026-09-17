@@ -1,6 +1,7 @@
 package panda.command;
 
 import panda.exception.ApplicationException;
+import panda.storage.Storage;
 import panda.task.Task;
 import panda.task.TaskList;
 import panda.ui.Ui;
@@ -40,6 +41,7 @@ public abstract class AddTaskCommand implements Command {
         assert taskList.getSize() == previousTaskCount + 1
                 : "addTask() must increase TaskList size by exactly one: expected "
                         + (previousTaskCount + 1) + " but was " + taskList.getSize();
+        Storage.saveState(taskList);
 
         int taskCount = taskList.getSize();
         String taskNoun = taskCount == 1 ? "task" : "tasks";
